@@ -1,0 +1,30 @@
+2006-02-05 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* sampleBy modified allow for also 'systematic samples',
+	e.g. every 5th row.
+
+	* summaryBy takes ... arguments to FUN. No default NA action is
+	taken. 
+	
+2006-02-02 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* A sampleBy function has been added.
+
+	* A subsetBy function has been added.
+
+2006-01-26 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Function summaryBy modified so one can write log(x) on the left
+	hand side of '~'
+
+	* Function summaryBy modified such that NAs are removed. What to
+	do about Inf??
+	
+2006-01-17 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Function summaryBy modified to take . as lhs in formula and to
+	take idvar = ~formula
+
+	* Functions powerBy, histBy, qqnormBy have been removed (figure
+	out how to do histBy and qqnormBy using xyplot() in lattice).
+	

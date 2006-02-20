@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+Albrecht Gebhardt           email: albrecht.gebhardt@uni-klu.ac.at
+Institut fuer Mathematik    Tel. : (++43 463) 2700/837
+Universitaet Klagenfurt     Fax  : (++43 463) 2700/834
+Villacher Str. 161
+A-9020 Klagenfurt, Austria
+------------------------------------------------------------------
+
+
+R port of:
+####################################################################
+David Scott's ASH routines
+
+
+ash1		1D ash (density plot)
+bin1		forms bin counts
+
+bin2		2D bin counts used by
+ash2		2D ash
+
+########### not included in R version: #############################
+ashn		multi-D ash and 3D visualization program
