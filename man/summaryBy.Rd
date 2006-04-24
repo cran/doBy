@@ -7,7 +7,9 @@ Function to calculate groupwise summary statistics, much like
   the summary procedure of SAS
 }
 \usage{
-summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,...)
+summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
+keep.names=FALSE, prefix=NULL, ...)
+
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -16,8 +18,13 @@ summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,...)
   %\item{subset}{A specification of a subset of data to be used}
   \item{id}{A formula specifying variables which data are not grouped by
   but which should appear in the output. See examples below.}
-  \item{FUN}{A list of functions to be applied, see examples below.}
-  \item{...}{Additional arguments to FUN.}
+\item{FUN}{A list of functions to be applied, see examples below.}
+\item{keep.names}{If TRUE and if there is only ONE function in FUN, then
+the variables in the output will have the same name as the variables in
+the input, see 'examples'.}
+\item{prefix}{An optional vector of prefixes for the names of the output
+variables, see 'examples'.}
+  \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
   NAs are removed before calculating summary statistics
@@ -58,6 +65,12 @@ summaryBy(breaks ~., warpbreaks)
 summaryBy(.~ wool+tension, warpbreaks)
 
 summaryBy(Ozone~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE)
+
+summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
+  keep.names=TRUE)
+
+summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
+  prefix=c("m","v"))
 
 
 }

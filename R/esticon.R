@@ -117,9 +117,12 @@ esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.n
   ct <- cm %*% cf[, 1] 
   ct.diff <- cm %*% cf[, 1] - beta0      
   vc <- sqrt(diag(cm %*% vcv %*% t(cm)))
+
   if (is.null(rownames(cm))) 
     rn <- paste("(", apply(cm, 1, paste, collapse = " "), ")", sep = "")
   else rn <- rownames(cm)
+
+  rn <- NULL
   switch(stat.name,
          t.stat = {
            prob <- 2 * (1 - pt(abs(ct.diff/vc), df))

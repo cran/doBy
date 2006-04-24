@@ -6,7 +6,7 @@ splitBy<-function (formula, data = parent.frame())
     ff <- as.formula(eval(mf[[2]]))
 
     if (ff[[2]]==1){
-      print("JKLJLJLW")
+      #print("JKLJLJLW")
       groupData <- list(data)
       attr(groupData,"groupid") <- 1
     } else {
@@ -17,10 +17,10 @@ splitBy<-function (formula, data = parent.frame())
       groupid<-lapply(groupData,function(x)x[1,group])
       names(groupid)<-NULL
       groupid<-as.data.frame(do.call('rbind',groupid))
-      print.default(groupid)
+      #print.default(groupid)
       names(groupid) <- group
-      groupid <<- groupid
-      ##attr(groupData,"groupid") <- groupid
+      #groupid <<- groupid
+      attr(groupData,"groupid") <- groupid
     }
     return(groupData)
 }
