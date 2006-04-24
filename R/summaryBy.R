@@ -1,6 +1,7 @@
 
 summaryBy <- 
-function (formula, data = parent.frame(), id=NULL, FUN = mean, ...) 
+function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
+          prefix=NULL,  ...) 
 {
     mf <- match.call(expand.dots = FALSE)
 
@@ -9,7 +10,6 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, ...)
     ff <- as.formula(mf[[2]])
     d <- data
 
-    
     ## idvars are just copied to the output
     if (!is.null(id))
       if (class(id)!="formula"){
@@ -26,12 +26,12 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, ...)
       v<-setdiff(v,idvar)
       isFactor <- rep(NA,length(v))
       for (j in 1:length(v)){
-        isFactor[j]<-is.factor(d[,v[j]])
+        isFactor[j]<- (class(d[,v[j]])[1] %in% c("POSIXt", "factor", "character"))
       }      
       v<-v[!isFactor]
       v <- paste(v, collapse='+')
       ffc[[2]] <- paste(v) #paste("cbind(", v, ")")
-      ff <- as.formula(paste(ffc[[2]], ffc[[3]], sep = ffc[[1]]))
+      (ff <- as.formula(paste(ffc[[2]], ffc[[3]], sep = ffc[[1]])))
     }
 
     ## ff[[2]] : lhs of formula
@@ -54,13 +54,33 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, ...)
     if (!is.list(FUN)) 
         FUN <- list(FUN)
 
+
     group <- attr(terms(ff), "term.labels")
 
     resp <- respny
     colnames(yy) <- resp
     groupList <- NULL
 
-    s <- unlist(lapply(fun.names, paste, resp, sep = "."))
+    if (!is.null(prefix)){
+      if (length(prefix) != length(fun.names))
+        stop("Length of prefix not equal to the number of functions")
+      varPrefix <- prefix
+    } else {
+      varPrefix <- fun.names
+    }
+
+    
+    if (keep.names){
+      if (length(fun.names)==1)
+        newNames <- resp
+      else{
+        cat("Can not keep names of original variables because more than one function is applied \n")
+        newNames <- unlist(lapply(varPrefix, paste, resp, sep = "."))
+      }
+    } else {
+      newNames <- unlist(lapply(varPrefix, paste, resp, sep = "."))
+    }
+
 
     extra <- which(is.na(match(colnames(yy), names(d))))
     d <- cbind(d, yy[, extra, drop = FALSE])
@@ -90,7 +110,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, ...)
     val <- unlist(vv)
     val <- as.data.frame(matrix(val, ncol = length(vv[[1]]), 
         byrow = TRUE))
-    names(val) <- c(group, idvar, s)
+    names(val) <- c(group, idvar, newNames)
 
     grpi <- match(group, names(d))
     for (j in 1:length(group)) {
@@ -100,8 +120,8 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, ...)
         }
     }
 
-    for (j in 1:length(s)){
-      val[,s[j]] <- as.numeric(paste(val[,s[j]]))
+    for (j in 1:length(newNames)){
+      val[,newNames[j]] <- as.numeric(paste(val[,newNames[j]]))
     }
 
     return(val)
