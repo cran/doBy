@@ -58,6 +58,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     group <- attr(terms(ff), "term.labels")
 
     resp <- respny
+    resp<-gsub(" ","",resp) ## A hack to delete spaces...
     colnames(yy) <- resp
     groupList <- NULL
 
@@ -68,6 +69,9 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     } else {
       varPrefix <- fun.names
     }
+
+    ##print("RESPONSES:"); print(resp)
+
 
     
     if (keep.names){
@@ -81,7 +85,9 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
       newNames <- unlist(lapply(varPrefix, paste, resp, sep = "."))
     }
 
+    ##print(newNames)
 
+    
     extra <- which(is.na(match(colnames(yy), names(d))))
     d <- cbind(d, yy[, extra, drop = FALSE])
     
