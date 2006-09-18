@@ -1,9 +1,9 @@
 orderBy <- function (formula, data, na.last = TRUE, decreasing = FALSE){
-  dietox <- data
+  data <- data
   form <- unlist(strsplit(paste(formula)[2],"\\+"))
   form <- gsub(" ","",form)
   
-  dodo<-dietox[,form,drop=FALSE]
+  dodo<-data[,form,drop=FALSE]
   
   z <- NULL
   for (j in 1:ncol(dodo)){

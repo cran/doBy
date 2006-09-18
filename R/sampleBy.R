@@ -1,4 +1,4 @@
-
+ 
 sampleBy <- function(formula, frac=0.1, replace=FALSE, data=parent.frame(),
                      systematic=FALSE
                      ){

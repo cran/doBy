@@ -1,4 +1,4 @@
-
+ 
 esticon <- function(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE)
   UseMethod("esticon")
 
