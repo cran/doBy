@@ -15,3 +15,4 @@ subsetBy                Finds subsets of a dataframe which is split by
                         variables in a formula.
 summaryBy               Function to calculate groupwise summary
                         statistics
+transformBy             Function to make groupwise transformations

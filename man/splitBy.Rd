@@ -8,12 +8,13 @@
  can be given by a model formula. 
 }
 \usage{
-splitBy(formula, data = parent.frame())
+splitBy(formula, data = parent.frame(), drop=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{The right hand side of a formula}
   \item{data}{A data frame}
+  \item{drop}{Logical indicating if levels that do not occur should be dropped }
 }
 %\details{
 %  ~~ If necessary, more details than the description above ~~

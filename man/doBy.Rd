@@ -13,7 +13,7 @@
   }
 
 \details{
-  \item Functions summaryBy, splitBy, orderBy, sampleBy are the core doBy
+  \item Functions summaryBy, splitBy, orderBy, sampleBy, transformBy are the core doBy
   functions
   \item There is no need for a  plotBy function -- the 
   xyplot function in the lattice package already fulfills these needs
@@ -24,10 +24,10 @@
 %\references{ ~put references to the literature/web site here ~ }
 \author{Søren Højsgaard, sorenh@agrsci.dk}
 
-
 \seealso{
   \code{\link{summaryBy}},
   \code{\link{orderBy}},
+  \code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{sampleBy}},
   \code{\link{doby.xtabs}},

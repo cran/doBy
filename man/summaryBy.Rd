@@ -8,7 +8,7 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-keep.names=FALSE, prefix=NULL, ...)
+keep.names=FALSE, drop=FALSE, prefix=NULL, ...)
 
 }
 %- maybe also `usage' for other objects documented here.
@@ -23,7 +23,8 @@ keep.names=FALSE, prefix=NULL, ...)
 the variables in the output will have the same name as the variables in
 the input, see 'examples'.}
 \item{prefix}{An optional vector of prefixes for the names of the output
-variables, see 'examples'.}
+  variables, see 'examples'.}
+\item{drop}{Logical indicating if levels that do not occur should be dropped }
   \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
@@ -37,8 +38,8 @@ A data frame
 
 \seealso{
   \code{\link{orderBy}},
-  %\code{\link{qqnormBy}},
   %\code{\link{summaryBy}},
+  %\code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{doby.xtabs}},
   }

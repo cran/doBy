@@ -1,3 +1,14 @@
+2006-09-18 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* summaryBy has been reimplemented. 
+
+	* summaryBy takes . as argument on both lhs and rhs in formula
+
+	* summaryBy, splitBy takes drop=FALSE argument (just like split
+	does)
+
+	* transformBy function has been added
+
 2006-02-05 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* sampleBy modified allow for also 'systematic samples',
