@@ -34,11 +34,6 @@ Dietary Rapeseed Oli, Vitamin E, and Copper on Performance and
 data(dietox)
 str(dietox) ;
 plot(dietox)
-\dontrun{
-* SAS example;
-proc print data=aaa;
-run;
-}
 
 }
 \keyword{datasets}
