@@ -1,11 +1,9 @@
 summaryBy <- 
-function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE, drop=FALSE,
+function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
           prefix=NULL,  ...) {
 
   parseIt <- function(x){
-                                        #  cat("calling FOO with:\n");print(x); 
     if (class(x)=='name'){
-                                        #    print("NAME"); print(x)
       value <- x
     } else {
       s <- paste(x[[1]])
@@ -16,7 +14,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     }
     return(value)
   }
-
+  
   lhsString <- function(formula) {
     if (!is.null(formula))
       if (length(formula)>=3)
@@ -28,7 +26,6 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   }
 
   lhs      <- formula[[2]]
-  ##lhsvar   <- lhsString(formula)
   rhsvar   <- rhsString(formula)
   idvar    <- rhsString(id)
   datavar  <- names(data)
@@ -55,10 +52,10 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   transformData <- sapply(paste(lhsvar), function(x)eval(parse(text=x), data))
   ##print("transformData");  print(transformData[1:10,])
 
-  cat("status:\n")
-  cat("lhsvar     :", paste(lhsvar),"\n")
-  cat("rhsvar     :", paste(rhsvar),"\n")
-  cat("idvar      :", paste(idvar),"\n")
+#   cat("status:\n")
+#   cat("lhsvar     :", paste(lhsvar),"\n")
+#   cat("rhsvar     :", paste(rhsvar),"\n")
+#   cat("idvar      :", paste(idvar),"\n")
 
   
   ## Function names
@@ -66,7 +63,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     fun.names <- paste(deparse(substitute(FUN)))
   else
     fun.names <- unlist(lapply(substitute(FUN)[-1], function(a) paste(a)))
-  cat("fun.names  :", paste(fun.names), "\n")
+  ##cat("fun.names  :", paste(fun.names), "\n")
   if (!is.list(FUN)) 
     FUN <- list(FUN)
   
@@ -78,7 +75,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   } else {
     varPrefix <- fun.names
   }
-  cat("varPrefix  :", paste(varPrefix), "\n")
+  ##cat("varPrefix  :", paste(varPrefix), "\n")
 
   ## Names for new variables
   if (keep.names){
@@ -91,25 +88,21 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   } else {
     newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
   }
-  cat("newNames   :", paste(newNames),"\n")
+  ##cat("newNames   :", paste(newNames),"\n")
 
-  #print(data[1:5,c(rhsvar,idvar),drop=FALSE])
+  ##print(data[1:5,c(rhsvar,idvar),drop=FALSE])
   newdata <- cbind(transformData, data[,c(rhsvar,idvar),drop=FALSE])
-#  print(newdata[1:5,])
-#  print(colnames(newdata))
-#  print("JJJJJJJJJJJJJJJJJJJJJ")
+  ##print(newdata[1:5,])
   
-   ## Split data
+  ## Split data
   groupFormula <- formula
   groupFormula[[2]] <- NULL
-  ##print(groupFormula)
-  splitData <- splitBy(groupFormula, data=newdata, drop=drop)
-
+  splitData <- splitBy(groupFormula, data=newdata, drop=TRUE)
 
   ## Calculate groupwise statistics
   lhsvarvec <- paste(unlist(lhsvar)) 
   byList <- lapply(splitData, function(x){
-    xr <- x[, lhsvarvec, drop = FALSE]
+    xr  <- x[, lhsvarvec, drop = FALSE]
     v <- NULL
     for (j in 1:length(FUN)) {        
       currFUN <- FUN[[j]]
@@ -119,17 +112,32 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   })
   val        <- as.data.frame(do.call("rbind", byList))
   names(val) <- c(newNames)
-
+  
   if (!is.null(rhsvar)){
     group <- attr(terms(formula), "term.labels")  
     groupid <- attr(splitData, "groupid")
+
     for (j in 1:length(group)){
-      class(groupid[, group[j]]) <- class(data[, group[j]])
+      grpj <- group[j]
+      newclass <- class(data[, grpj])
+      class(groupid[, grpj]) <- newclass
+      if (newclass=='factor'){
+        levels(groupid[, grpj]) <- levels(data[, grpj])
+      }
     }
     val <- cbind(groupid, val)
   }
+
+  
+  if (!is.null(idvar)){
+    idList <- lapply(splitData, function(x){
+      x[1, idvar, drop=FALSE]
+    })
+    idid <- do.call("rbind", idList)
+    val <- cbind(val, idid)
+  }
+
   return(val)
 }
-
 
 

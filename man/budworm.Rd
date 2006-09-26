@@ -52,17 +52,5 @@ lines(log.dose[male],emp.logit[male],type='b',lty=1,col=1)
 lines(log.dose[female],emp.logit[female],type='b',lty=2,col=2)
 legend(0.5,2,legend=c('male','female'),lty=c(1,2),col=c(1,2))
 
-
-
-
-
-\dontrun{
-* SAS example;
-data budworm;
-infile 'budworm.txt' firstobs=2;
-input sex dose ndead ntotal;
-run;
-}
-
 }
 \keyword{datasets}

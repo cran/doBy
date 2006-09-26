@@ -8,7 +8,7 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-keep.names=FALSE, drop=FALSE, prefix=NULL, ...)
+keep.names=FALSE, prefix=NULL, ...)
 
 }
 %- maybe also `usage' for other objects documented here.
@@ -24,8 +24,7 @@ the variables in the output will have the same name as the variables in
 the input, see 'examples'.}
 \item{prefix}{An optional vector of prefixes for the names of the output
   variables, see 'examples'.}
-\item{drop}{Logical indicating if levels that do not occur should be dropped }
-  \item{...}{Additional arguments to FUN. This could for example be NA actions.}
+\item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
   NAs are removed before calculating summary statistics
@@ -72,7 +71,6 @@ summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
 
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
   prefix=c("m","v"))
-
 
 }
 \keyword{univar}% at least one, from doc/KEYWORDS
