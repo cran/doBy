@@ -8,26 +8,42 @@
  can be given by a model formula. 
 }
 \usage{
-splitBy(formula, data = parent.frame(), drop=FALSE)
+splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{The right hand side of a formula}
   \item{data}{A data frame}
-  \item{drop}{Logical indicating if levels that do not occur should be dropped }
+  \item{drop}{Logical indicating if levels that do not occur should be
+    dropped }
+  \item{return.matrix}{Should the returned list consist of dataframs or
+    matrices, see 'details' below}
 }
-%\details{
-%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+  The funcion transform the dataframe 'data' into a numerical matrix
+  (using the 'asNumericMatrix' function from the Hmisc package) and
+  makes the splitting operation on this. If return.matrix is TRUE, then
+  these matrices are returned, otherwise the matrices are turned into
+  dataframes and then these are returned. 
+}
 \value{
-  A list of data frames
+  A list of dataframes of matrixes
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{Søren Højsgaard, sorenh@agrsci.dk}
 %\note{ ~~further notes~~ 
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %}
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+
+
+\seealso{
+  \code{\link{orderBy}},
+  \code{\link{summaryBy}},
+  \code{\link{transformBy}},
+  %\code{\link{splitBy}},
+  \code{\link{doby.xtabs}},
+  }
+}
 \examples{
 data(dietox)
 splitBy(formula = ~Evit+Cu, data = dietox)
