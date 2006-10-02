@@ -38,7 +38,7 @@ A data frame
 \seealso{
   \code{\link{orderBy}},
   %\code{\link{summaryBy}},
-  %\code{\link{transformBy}},
+  \code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{doby.xtabs}},
   }

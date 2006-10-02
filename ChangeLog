@@ -1,3 +1,18 @@
+2006-09-27 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Version 0.7 built and uploaded
+
+	* splitBy is now based on functions in the Hmisc package for
+	representing dataframes as matrices, which makes the function work
+	also for 'large' (10000 rows) datasets.
+
+	* summaryBy can now take . on both lhs and rhs of "~"
+
+	
+2006-09-27 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Various bugs have been fixed
+
 2006-09-18 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* summaryBy has been reimplemented. 

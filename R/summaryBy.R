@@ -1,7 +1,7 @@
 summaryBy <- 
 function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
           prefix=NULL,  ...) {
-
+  
   parseIt <- function(x){
     if (class(x)=='name'){
       value <- x
@@ -25,8 +25,11 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
       unlist(strsplit(deparse(formula[[length(formula)]]),".\\+."))
   }
 
+  #########################################
+
   lhs      <- formula[[2]]
   rhsvar   <- rhsString(formula)
+  ##print(rhsvar)
   idvar    <- rhsString(id)
   datavar  <- names(data)
 
@@ -49,14 +52,21 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     lhsvar <- union(lhsvar, extralhsvar)    
   }
 
-  transformData <- sapply(paste(lhsvar), function(x)eval(parse(text=x), data))
-  ##print("transformData");  print(transformData[1:10,])
+  ## print(lhsvar)
 
+  if (is.null(rhsvar)){
+    rhsvar <- setdiff(datavar, c(lhsvar, idvar))
+    formula <- as.formula(paste(formula[[2]], "~", paste (rhsvar, collapse='+')))
+  }
+    
 #   cat("status:\n")
 #   cat("lhsvar     :", paste(lhsvar),"\n")
 #   cat("rhsvar     :", paste(rhsvar),"\n")
 #   cat("idvar      :", paste(idvar),"\n")
+#   print(formula)
 
+
+  transformData <- sapply(paste(lhsvar), function(x)eval(parse(text=x), data))
   
   ## Function names
   if (!is.list(FUN)) 
@@ -66,7 +76,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   ##cat("fun.names  :", paste(fun.names), "\n")
   if (!is.list(FUN)) 
     FUN <- list(FUN)
-  
+
   ## Prefix for new variables
   if (!is.null(prefix)){
     if (length(prefix) != length(fun.names))
@@ -75,7 +85,6 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   } else {
     varPrefix <- fun.names
   }
-  ##cat("varPrefix  :", paste(varPrefix), "\n")
 
   ## Names for new variables
   if (keep.names){
@@ -88,16 +97,13 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   } else {
     newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
   }
-  ##cat("newNames   :", paste(newNames),"\n")
 
-  ##print(data[1:5,c(rhsvar,idvar),drop=FALSE])
   newdata <- cbind(transformData, data[,c(rhsvar,idvar),drop=FALSE])
-  ##print(newdata[1:5,])
-  
+
   ## Split data
   groupFormula <- formula
   groupFormula[[2]] <- NULL
-  splitData <- splitBy(groupFormula, data=newdata, drop=TRUE)
+  splitData <- splitBy(groupFormula, data=newdata, drop=TRUE, return.matrix=TRUE)
 
   ## Calculate groupwise statistics
   lhsvarvec <- paste(unlist(lhsvar)) 
@@ -112,7 +118,7 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
   })
   val        <- as.data.frame(do.call("rbind", byList))
   names(val) <- c(newNames)
-  
+
   if (!is.null(rhsvar)){
     group <- attr(terms(formula), "term.labels")  
     groupid <- attr(splitData, "groupid")
@@ -136,8 +142,15 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     idid <- do.call("rbind", idList)
     val <- cbind(val, idid)
   }
-
+  
   return(val)
 }
 
+  ##cat("varPrefix  :", paste(varPrefix), "\n")
+  ##cat("newNames   :", paste(newNames),"\n")
 
+
+  ##print("transformData");  print(transformData[1:10,])
+
+  ##print(data[1:5,c(rhsvar,idvar),drop=FALSE])
+  ##print(newdata[1:5,])
