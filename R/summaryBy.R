@@ -67,10 +67,10 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
 
 
   transformData <- sapply(paste(lhsvar), function(x)eval(parse(text=x), data))
-  
+
   ## Function names
   if (!is.list(FUN)) 
-    fun.names <- paste(deparse(substitute(FUN)))
+    fun.names <- paste(deparse(substitute(FUN)), collapse = " ")
   else
     fun.names <- unlist(lapply(substitute(FUN)[-1], function(a) paste(a)))
   ##cat("fun.names  :", paste(fun.names), "\n")
@@ -127,13 +127,12 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
       grpj <- group[j]
       newclass <- class(data[, grpj])
       class(groupid[, grpj]) <- newclass
-      if (newclass=='factor'){
+      if (newclass[1]=='factor' | newclass[1]=='ordered'){        
         levels(groupid[, grpj]) <- levels(data[, grpj])
       }
     }
     val <- cbind(groupid, val)
   }
-
   
   if (!is.null(idvar)){
     idList <- lapply(splitData, function(x){
@@ -142,7 +141,6 @@ function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
     idid <- do.call("rbind", idList)
     val <- cbind(val, idid)
   }
-  
   return(val)
 }
 
