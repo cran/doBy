@@ -1,4 +1,12 @@
-2006-09-27 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-03 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Version 0.8 built and uploaded
+
+	* Handles now ordered factors
+
+	* Fixed bug so that summaryBy now works with do.call
+	
+2006-10-01 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Version 0.7 built and uploaded
 

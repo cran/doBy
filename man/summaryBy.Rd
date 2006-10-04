@@ -72,6 +72,11 @@ summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
   prefix=c("m","v"))
 
+summaryBy(conc ~ Plant, CO2)
+
+do.call("summaryBy", list(.~ Treatment, CO2[3:5], FUN = function(x) mean(range(x)), prefix = "midrange"))
+
+
 }
 \keyword{univar}% at least one, from doc/KEYWORDS
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
