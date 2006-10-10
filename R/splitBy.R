@@ -1,6 +1,12 @@
 splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE)
 {
     mf <- match.call(expand.dots = FALSE)
+
+#    if (!(class(data)[1] %in% c("matrix", "data.frame")))
+#      data <- as.data.frame(data)
+
+#    print(class(data))
+    
     m <- match(c("formula", "data", "subset", "weights", "na.action",
         "offset"), names(mf), 0)
     ff <- as.formula(eval.parent(mf[[2]]))
@@ -26,7 +32,6 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       }
       workinggroup <<- group[nonconstgroup]            
       ##}))
-
 
       ## grps: Recode groups into one vector
       grps <- data[, workinggroup,drop=FALSE]
@@ -56,8 +61,12 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       if (return.matrix==TRUE)
         groupData <- a
       else{
+        #print("HERE")
+        #print(a)
+        #aa<<-a
+        #print(at)
         ##print(system.time({
-        groupData <- lapply(a, matrix2dataFrame, at=at)
+        groupData <- lapply(a, matrix2dataFrame, at=at,restoreAll=FALSE)
         ##}))
       }
       

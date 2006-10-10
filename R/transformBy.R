@@ -1,10 +1,4 @@
 
-# transformBy <- function(formula, data=parent.frame(), ...){
-#   ddd<-splitBy(formula, data=data, drop=TRUE)
-#   ddd<-lapply(ddd, function(x){transform(x,...)})
-#   return(do.call("rbind",ddd))
-# }
-
 
 transformBy <- function (formula, data, ...) {
 
