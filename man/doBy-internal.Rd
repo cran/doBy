@@ -1,8 +1,9 @@
 \name{internal}
 \alias{internal}
 
-\alias{fitBy}
-\alias{returnByValues}
+\alias{changeNames}
+%\alias{fitBy}
+%\alias{returnByValues}
 
 
 % \alias{print.geeglm}
