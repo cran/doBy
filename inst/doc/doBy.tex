@@ -2,9 +2,9 @@
 \usepackage{inputenc,hyperref,a4,color,boxedminipage,Sweave}
 %\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
-%\VignetteDepends{}
 
-\title{Introduction to the \texttt{doBy} package}
+
+\title{The \texttt{doBy} package}
 \author{Søren Højsgaard}
 \begin{document}
 \maketitle
@@ -31,7 +31,8 @@
 
 The \doby{} package grew out of a need to calculate groupwise summary
 statistics in a simple way, much in the spirit of \code{PROC SUMMARY}
-of the \proglang{SAS} system.
+of the \proglang{SAS} system. We have tried to keep the interface to
+the functions based on specifying formulas. 
 
 \begin{Schunk}
 \begin{Sinput}
@@ -55,7 +56,7 @@ subsetting.  To get the old behavior of Hmisc type dropUnusedLevels().
 \subsection{CO2 data} 
 \label{sec:co2data}
 
-The \code{CO2} data frame has 84 rows and 5 columns of data from an
+The \code{CO2} data frame comes  from an
 experiment on the cold tolerance of the grass species {\em Echinochloa
 crus-galli}.  
 To limit the amount of output we modify names and levels of variables
@@ -114,18 +115,49 @@ The \code{airquality}
 dataset contains  air quality measurements in New York, May to
 September 1973. The months are coded as $5,\dots,9$.  
 To limit the output we only consider data for two months:
+\begin{Schunk}
+\begin{Sinput}
+> airquality <- subset(airquality, Month %in% c(5, 6))
+> head(airquality, n = 20)
+\end{Sinput}
+\begin{Soutput}
+   Ozone Solar.R Wind Temp Month Day
+1     41     190  7.4   67     5   1
+2     36     118  8.0   72     5   2
+3     12     149 12.6   74     5   3
+4     18     313 11.5   62     5   4
+5     NA      NA 14.3   56     5   5
+6     28      NA 14.9   66     5   6
+7     23     299  8.6   65     5   7
+8     19      99 13.8   59     5   8
+9      8      19 20.1   61     5   9
+10    NA     194  8.6   69     5  10
+11     7      NA  6.9   74     5  11
+12    16     256  9.7   69     5  12
+13    11     290  9.2   66     5  13
+14    14     274 10.9   68     5  14
+15    18      65 13.2   58     5  15
+16    14     334 11.5   64     5  16
+17    34     307 12.0   66     5  17
+18     6      78 18.4   57     5  18
+19    30     322 11.5   68     5  19
+20    11      44  9.7   62     5  20
+\end{Soutput}
+\end{Schunk}
 
 
 \section{The \code{summaryBy} function}
 \label{sec:summaryBy}
 
-The \summaryby function is used for calculating quantities like
+The \summaryby{} function is used for calculating quantities like
 ``the mean and variance of $x$ and $y$ for
-each combination of two factors $A$ and $B$''. 
+each combination of two factors $A$ and $B$''. Examples are based on
+the \code{CO2} data. 
 
 
-\begin{description}
-\item[Basic usage:] 
+\subsection{Basic usage}
+\label{sec:xxx}
+
 
 For example, the mean, median and variance of \code{uptake} and
 \code{conc} for each value of \code{Plant} is obtained by:
@@ -137,85 +169,122 @@ For example, the mean, median and variance of \code{uptake} and
 \end{Sinput}
 \begin{Soutput}
   Plant conc.m conc.v uptake.m uptake.v
-1   Mc1    435 100950    18.00    16.96
-2   Mn1    435 100950    26.40    75.59
-3   Qc1    435 100950    29.97    69.47
-4   Qn1    435 100950    33.23    67.48
-\end{Soutput}
-\end{Schunk}
-Alternatively,
-\begin{Schunk}
-\begin{Sinput}
-> myfun <- function(x) {
-+     c(m = mean(x), v = var(x))
-+ }
-> summaryBy(conc + uptake ~ Plant, data = CO2, FUN = myfun)
-\end{Sinput}
-\begin{Soutput}
-  Plant conc.m conc.v uptake.m uptake.v
-1   Mc1    435 100950    18.00    16.96
-2   Mn1    435 100950    26.40    75.59
-3   Qc1    435 100950    29.97    69.47
-4   Qn1    435 100950    33.23    67.48
+1   Qn1    435 100950    33.23    67.48
+2   Qc1    435 100950    29.97    69.47
+3   Mn1    435 100950    26.40    75.59
+4   Mc1    435 100950    18.00    16.96
 \end{Soutput}
 \end{Schunk}
 
 Defining the function to return named values as above is the
 recommended use of \summaryby. 
+The function can also be defined outside the call to \code{summaryBy}:
+\begin{Schunk}
+\begin{Sinput}
+> myfun1 <- function(x) {
++     c(m = mean(x), v = var(x))
++ }
+> summaryBy(conc + uptake ~ Plant, data = CO2, FUN = myfun1)
+\end{Sinput}
+\end{Schunk}
+
 If the result of the function(s) are not named, then the names in the
 output data in general become less intuitive:
 \begin{Schunk}
 \begin{Sinput}
-> summaryBy(conc + uptake ~ Plant, data = CO2, FUN = function(x) {
-+     c(mean(x), var(x))
-+ })
-\end{Sinput}
-\begin{Soutput}
-  Plant conc.stat1 conc.stat2 uptake.stat1 uptake.stat2
-1   Mc1        435     100950        18.00        16.96
-2   Mn1        435     100950        26.40        75.59
-3   Qc1        435     100950        29.97        69.47
-4   Qn1        435     100950        33.23        67.48
-\end{Soutput}
-\begin{Sinput}
-> myfun <- function(x) {
+> myfun2 <- function(x) {
 +     c(mean(x), var(x))
 + }
-> summaryBy(conc + uptake ~ Plant, data = CO2, FUN = myfun)
+> summaryBy(conc + uptake ~ Plant, data = CO2, FUN = myfun2)
 \end{Sinput}
 \begin{Soutput}
-  Plant conc1  conc2 uptake1 uptake2
-1   Mc1   435 100950   18.00   16.96
-2   Mn1   435 100950   26.40   75.59
-3   Qc1   435 100950   29.97   69.47
-4   Qn1   435 100950   33.23   67.48
+  Plant conc.myfun21 conc.myfun22 uptake.myfun21 uptake.myfun22
+1   Qn1          435       100950          33.23          67.48
+2   Qc1          435       100950          29.97          69.47
+3   Mn1          435       100950          26.40          75.59
+4   Mc1          435       100950          18.00          16.96
+\end{Soutput}
+\end{Schunk}
+
+The \code{postfix} argument gives an altertive way of naming the
+output variables:
+\begin{Schunk}
+\begin{Sinput}
+> summaryBy(conc + uptake ~ Plant, data = CO2, postfix = c("mymean", 
++     "myvar"), FUN = myfun2)
+\end{Sinput}
+\begin{Soutput}
+  Plant conc.mymean conc.myvar uptake.mymean uptake.myvar
+1   Qn1         435     100950         33.23        67.48
+2   Qc1         435     100950         29.97        69.47
+3   Mn1         435     100950         26.40        75.59
+4   Mc1         435     100950         18.00        16.96
 \end{Soutput}
 \end{Schunk}
 
 
-\item[Using a list of functions:] 
-It is possible to apply a list of functions (but note the difference
-in naming the output variables depending on whether the output of the
-functions are named or not):
+
+
+\subsection{Using a list of functions}
+\label{sec:xxx}
+
+
+It is possible to apply a list of functions. A typical usage will be
+by invoking a list of predefined functions:
+\begin{Schunk}
+\begin{Sinput}
+> summaryBy(uptake ~ Plant, data = CO2, FUN = c(mean, var, median))
+\end{Sinput}
+\begin{Soutput}
+  Plant uptake.mean uptake.var uptake.median
+1   Qn1       33.23      67.48          35.3
+2   Qc1       29.97      69.47          32.5
+3   Mn1       26.40      75.59          30.0
+4   Mc1       18.00      16.96          18.9
+\end{Soutput}
+\end{Schunk}
+
+Slightly more elaborate is 
 \begin{Schunk}
 \begin{Sinput}
 > mymed <- function(x) c(med = median(x))
-> foo <- function(x) c(median(x))
-> summaryBy(uptake ~ Plant, data = CO2, FUN = c(mean, var, mymed, 
-+     foo))
+> summaryBy(uptake ~ Plant, data = CO2, FUN = c(mean, var, myfun1, 
++     myfun2))
 \end{Sinput}
 \begin{Soutput}
-  Plant uptake.mean uptake.var uptake.med uptake.foo
-1   Mc1       18.00      16.96       18.9       18.9
-2   Mn1       26.40      75.59       30.0       30.0
-3   Qc1       29.97      69.47       32.5       32.5
-4   Qn1       33.23      67.48       35.3       35.3
+  Plant uptake.mean uptake.var uptake.m uptake.v uptake.myfun21 uptake.myfun22
+1   Qn1       33.23      67.48    33.23    67.48          33.23          67.48
+2   Qc1       29.97      69.47    29.97    69.47          29.97          69.47
+3   Mn1       26.40      75.59    26.40    75.59          26.40          75.59
+4   Mc1       18.00      16.96    18.00    16.96          18.00          16.96
+\end{Soutput}
+\end{Schunk}
+
+The naming of the output variables determined from what the functions
+returns. The names of the last two columns above are imposed
+by \summaryby{} because \code{myfun2} does not return named values.
+Specifying \code{postfix=} overrides these names but when \code{FUN}
+is a list of functions, the new names are not very informative
+either:\footnote{This may be improved on later.}
+\begin{Schunk}
+\begin{Sinput}
+> summaryBy(uptake ~ Plant, data = CO2, postfix = c("aa", "bb", 
++     "cc"), FUN = c(mean, var, myfun1, myfun2))
+\end{Sinput}
+\begin{Soutput}
+  Plant uptake.aa uptake.aa.1 uptake.aa.2 uptake.bb uptake.aa.3 uptake.bb.1
+1   Qn1     33.23       67.48       33.23     67.48       33.23       67.48
+2   Qc1     29.97       69.47       29.97     69.47       29.97       69.47
+3   Mn1     26.40       75.59       26.40     75.59       26.40       75.59
+4   Mc1     18.00       16.96       18.00     16.96       18.00       16.96
 \end{Soutput}
 \end{Schunk}
 
 
 
-\item[Copying variables out with the \code{id} argument:] 
+\subsection{Copying variables out with the \code{id} argument}
+\label{sec:xxx}
+
 To get the value of the \code{Type} and \code{Treat} in the first row of the
 groups (defined by the values of \code{Plant}) copied to the output
 dataframe we use the \code{id} argument:
@@ -228,19 +297,20 @@ as:
 \end{Sinput}
 \begin{Soutput}
   Plant conc.m conc.med conc.v uptake.m uptake.med uptake.v Type Treat
-1   Mc1    435      350 100950    18.00       18.9    16.96  Mis  chil
-2   Mn1    435      350 100950    26.40       30.0    75.59  Mis nchil
-3   Qc1    435      350 100950    29.97       32.5    69.47  Que  chil
-4   Qn1    435      350 100950    33.23       35.3    67.48  Que nchil
+1   Qn1    435      350 100950    33.23       35.3    67.48  Que nchil
+2   Qc1    435      350 100950    29.97       32.5    69.47  Que  chil
+3   Mn1    435      350 100950    26.40       30.0    75.59  Mis nchil
+4   Mc1    435      350 100950    18.00       18.9    16.96  Mis  chil
 \end{Soutput}
 \end{Schunk}
 
 
-\item[Statistics on functions of data:] 
+\subsection{Statistics on functions of data}
+\label{sec:xxx}
 We may want to calculate the mean and variance for the logarithm of
 \code{uptake}, for \code{uptake}+\code{conc} (not likely to be a
 useful statistic) as well as for \code{uptake} and
-\code{conc}. This can be achieved as
+\code{conc}. This can be achieved as:
 \begin{Schunk}
 \begin{Sinput}
 > summaryBy(log(uptake) + I(conc + uptake) + conc + uptake ~ Plant, 
@@ -248,11 +318,49 @@ useful statistic) as well as for \code{uptake} and
 +         c(m = mean(x), v = var(x))
 +     })
 \end{Sinput}
+\begin{Soutput}
+  Plant log(uptake).m log(uptake).v conc+uptake.m conc+uptake.v conc.m conc.v
+1   Qn1         3.467       0.10168         468.2        104747    435 100950
+2   Qc1         3.356       0.11873         465.0        105297    435 100950
+3   Mn1         3.209       0.17928         461.4        105642    435 100950
+4   Mc1         2.864       0.06874         453.0        103157    435 100950
+  uptake.m uptake.v
+1    33.23    67.48
+2    29.97    69.47
+3    26.40    75.59
+4    18.00    16.96
+\end{Soutput}
+\end{Schunk}
+
+If one does not want output variables to contain parentheses then
+setting \code{p2d=TRUE} causes the parentheses to be replaced by dots
+(``.''). 
+\begin{Schunk}
+\begin{Sinput}
+> summaryBy(log(uptake) + I(conc + uptake) ~ Plant, data = CO2, 
++     p2d = TRUE, FUN = function(x) {
++         c(m = mean(x), v = var(x))
++     })
+\end{Sinput}
+\begin{Soutput}
+  Plant log.uptake..m log.uptake..v conc+uptake.m conc+uptake.v
+1   Qn1         3.467       0.10168         468.2        104747
+2   Qc1         3.356       0.11873         465.0        105297
+3   Mn1         3.209       0.17928         461.4        105642
+4   Mc1         2.864       0.06874         453.0        103157
+\end{Soutput}
 \end{Schunk}
 
 
-\item[The dot (".") on the left hand side of a formula:] 
-However it is simpler to use the dot (".") on the left hand side of
+
+
+
+
+
+\subsection{The dot (".") on the left hand side of a formula}
+\label{sec:xxx}
+
+It is possible  to use the dot (".") on the left hand side of
 the formula. The dot means ``all numerical variables which do not
 appear elsewhere'' (i.e.\ on the right hand side of the formula and in
 the \code{id} statement): 
@@ -264,20 +372,23 @@ the \code{id} statement):
 +     })
 \end{Sinput}
 \begin{Soutput}
-  Plant log(uptake).m log(uptake).v conc + uptake.m conc + uptake.v conc.m
-1   Mc1         2.864       0.06874           453.0          103157    435
-2   Mn1         3.209       0.17928           461.4          105642    435
-3   Qc1         3.356       0.11873           465.0          105297    435
-4   Qn1         3.467       0.10168           468.2          104747    435
-  conc.v uptake.m uptake.v
-1 100950    18.00    16.96
-2 100950    26.40    75.59
-3 100950    29.97    69.47
-4 100950    33.23    67.48
+  Plant log(uptake).m log(uptake).v conc+uptake.m conc+uptake.v conc.m conc.v
+1   Qn1         3.467       0.10168         468.2        104747    435 100950
+2   Qc1         3.356       0.11873         465.0        105297    435 100950
+3   Mn1         3.209       0.17928         461.4        105642    435 100950
+4   Mc1         2.864       0.06874         453.0        103157    435 100950
+  uptake.m uptake.v
+1    33.23    67.48
+2    29.97    69.47
+3    26.40    75.59
+4    18.00    16.96
 \end{Soutput}
 \end{Schunk}
 
-\item[The dot (".") on the right hand side of a formula:] 
+
+\subsection{The dot (".") on the right hand side of a formula}
+\label{sec:xxx}
+
 The dot (".") can also be used on the right hand side of the formula
 where it refers to ``all non--numerical variables which are not
 specified elsewhere'':
@@ -289,15 +400,19 @@ specified elsewhere'':
 \end{Sinput}
 \begin{Soutput}
   Plant Type Treat log(uptake).m log(uptake).v
-1   Mc1  Mis  chil         2.864       0.06874
-2   Mn1  Mis nchil         3.209       0.17928
-3   Qc1  Que  chil         3.356       0.11873
-4   Qn1  Que nchil         3.467       0.10168
+1   Qn1  Que nchil         3.467       0.10168
+2   Qc1  Que  chil         3.356       0.11873
+3   Mn1  Mis nchil         3.209       0.17928
+4   Mc1  Mis  chil         2.864       0.06874
 \end{Soutput}
 \end{Schunk}
 
 
-\item[Using ``1'' on the right hand side of the formula:] Using 1 on the
+
+\subsection{Using ``1'' on the right hand side of the formula}
+\label{sec:xxx}
+
+Using 1 on the
   right hand side means no grouping:
 \begin{Schunk}
 \begin{Sinput}
@@ -312,7 +427,9 @@ specified elsewhere'':
 \end{Schunk}
 
 
-\item[Preserving names of variables:] 
+
+\subsection{Preserving names of variables using \code{keep.names}}
+\label{sec:xxx}
 If the function applied to data only returns one value, it is possible
 to force that the summary variables retain the original names by
 setting \code{keep.names=TRUE}. A
@@ -324,13 +441,12 @@ typical use of this could be
 \end{Sinput}
 \begin{Soutput}
   Plant conc uptake log(uptake) Type Treat
-1   Mc1  435  18.00       2.864  Mis  chil
-2   Mn1  435  26.40       3.209  Mis nchil
-3   Qc1  435  29.97       3.356  Que  chil
-4   Qn1  435  33.23       3.467  Que nchil
+1   Qn1  435  33.23       3.467  Que nchil
+2   Qc1  435  29.97       3.356  Que  chil
+3   Mn1  435  26.40       3.209  Mis nchil
+4   Mc1  435  18.00       2.864  Mis  chil
 \end{Soutput}
 \end{Schunk}
-\end{description}
 
 
 
@@ -344,7 +460,7 @@ Suppose we want to order the rows of the the \code{airquality} data by \code{Tem
 decreasing. This can be achieved by:
 \begin{Schunk}
 \begin{Sinput}
-> x <- orderBy(~Temp + Month, data = aq, decreasing = T)
+> x <- orderBy(~Temp + Month, data = airquality, decreasing = T)
 \end{Sinput}
 \end{Schunk}
 The first lines of the result are:
@@ -370,7 +486,7 @@ Suppose we want to split the \code{airquality} data into a list of dataframes, e
 dataframe for each month. This can be achieved by:
 \begin{Schunk}
 \begin{Sinput}
-> x <- splitBy(~Month, data = aq)
+> x <- splitBy(~Month, data = airquality)
 \end{Sinput}
 \end{Schunk}
 
@@ -395,7 +511,7 @@ Suppose we want a random sample of 50 \% of the observations from a
 dataframe. This can be achieved with:
 \begin{Schunk}
 \begin{Sinput}
-> sampleBy(~1, frac = 0.5, data = aq)
+> sampleBy(~1, frac = 0.5, data = airquality)
 \end{Sinput}
 \end{Schunk}
 
@@ -403,7 +519,7 @@ Suppose instead that we want a  systematic sample of  every fifth
 observation within each month. This is achieved with:
 \begin{Schunk}
 \begin{Sinput}
-> sampleBy(~Month, frac = 0.2, data = aq, systematic = T)
+> sampleBy(~Month, frac = 0.2, data = airquality, systematic = T)
 \end{Sinput}
 \end{Schunk}
 
@@ -439,14 +555,18 @@ function except that it works within groups. For example:
 
 
 
+\section{Miscellaneous}
+\label{sec:xxx}
 
-\section{The \code{esticon} function} 
+
+\subsection{The \code{esticon} function} 
 \label{esticon}
 
 Consider a linear model which explains \code{Ozone} as a linear
 function of \code{Month} and \code{Wind}:
 \begin{Schunk}
 \begin{Sinput}
+> data(airquality)
 > airquality <- transform(airquality, Month = factor(Month))
 > m <- lm(Ozone ~ Month * Wind, data = airquality)
 > coefficients(m)
@@ -472,6 +592,7 @@ the average wind speed over the whole period).
 The \code{esticon} function provides a way of doing so. 
  We can specify several $\lambda$ vectors at the same time. For example
 
+
 \begin{Schunk}
 \begin{Sinput}
 > Lambda
@@ -495,6 +616,7 @@ Confidence interval ( WALD ) level = 0.95
 4     0  15.9651     6.560  2.4337 106  0.01662    2.959   28.971
 \end{Soutput}
 \end{Schunk}
+
 
 In other cases, interest is in testing a hypothesis of a contrast
 $H_0: \Lambda \beta=\beta_0$ where $\Lambda$ is a matrix. For example
@@ -531,6 +653,17 @@ function provides an operational alternative.
 Observe that another function for calculating contrasts as above is the
 \code{contrast} function in the \pkg{Design} package but it applies to
 a narrower range of models than \code{esticon} does.
+
+
+
+\section{Final remarks} 
+\label{discussion}
+
+The \code{esticon} functions and other smaller functions are likely to
+be removed from the \doby{} package in the future. Credit is due to 
+Dennis Chabot, Gabor Grothendieck and Erik Jørgensen for reporting
+various bugs and making various suggestions to the functionality in
+the \doby{} package. 
 
 
 

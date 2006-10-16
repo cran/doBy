@@ -2,9 +2,9 @@
 \usepackage{inputenc,hyperref,a4,color,boxedminipage,Sweave}
 %\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
-%\VignetteDepends{}
 
-\title{Introduction to the \texttt{doBy} package}
+
+\title{The \texttt{doBy} package}
 \author{Søren Højsgaard}
 \begin{document}
 \maketitle
@@ -37,7 +37,8 @@ options("width"=80)
 
 The \doby{} package grew out of a need to calculate groupwise summary
 statistics in a simple way, much in the spirit of \code{PROC SUMMARY}
-of the \proglang{SAS} system.
+of the \proglang{SAS} system. We have tried to keep the interface to
+the functions based on specifying formulas. 
 
 @ 
 <<>>=
@@ -51,7 +52,7 @@ library(doBy)
 \subsection{CO2 data} 
 \label{sec:co2data}
 
-The \code{CO2} data frame has 84 rows and 5 columns of data from an
+The \code{CO2} data frame comes  from an
 experiment on the cold tolerance of the grass species {\em Echinochloa
 crus-galli}.  
 To limit the amount of output we modify names and levels of variables
@@ -78,22 +79,24 @@ dataset contains  air quality measurements in New York, May to
 September 1973. The months are coded as $5,\dots,9$.  
 To limit the output we only consider data for two months:
 @ 
-<<echo=FALSE, results=hide>>=
-aq <- subset(airquality, Month %in% c(5,6))
-head(aq)
+<<>>=
+airquality <- subset(airquality, Month %in% c(5,6))
+head(airquality, n=20)
 @ %def 
 
 
 \section{The \code{summaryBy} function}
 \label{sec:summaryBy}
 
-The \summaryby function is used for calculating quantities like
+The \summaryby{} function is used for calculating quantities like
 ``the mean and variance of $x$ and $y$ for
-each combination of two factors $A$ and $B$''. 
+each combination of two factors $A$ and $B$''. Examples are based on
+the \code{CO2} data. 
 
 
-\begin{description}
-\item[Basic usage:] 
+\subsection{Basic usage}
+\label{sec:xxx}
+
 
 For example, the mean, median and variance of \code{uptake} and
 \code{conc} for each value of \code{Plant} is obtained by:
@@ -102,43 +105,73 @@ For example, the mean, median and variance of \code{uptake} and
 summaryBy(conc+uptake~Plant, data=CO2,
 FUN=function(x){c(m=mean(x), v=var(x))})
 @ %def 
-Alternatively,
-@ 
-<<>>=
-myfun <- function(x){c(m=mean(x), v=var(x))} 
-summaryBy(conc+uptake~Plant, data=CO2,
-FUN=myfun)
-@ %def 
 
 Defining the function to return named values as above is the
 recommended use of \summaryby. 
+The function can also be defined outside the call to \code{summaryBy}:
+@ 
+<<results=hide>>=
+myfun1 <- function(x){c(m=mean(x), v=var(x))} 
+summaryBy(conc+uptake~Plant, data=CO2,
+FUN=myfun1)
+@ %def 
+
 If the result of the function(s) are not named, then the names in the
 output data in general become less intuitive:
 @ 
 <<>>=
-summaryBy(conc+uptake~Plant, data=CO2,
-FUN=function(x){c(mean(x), var(x))})
-myfun <- function(x){c(mean(x), var(x))} 
-summaryBy(conc+uptake~Plant, data=CO2,
-FUN=myfun)
+myfun2 <- function(x){c(mean(x), var(x))} 
+summaryBy(conc+uptake~Plant, data=CO2,FUN=myfun2)
+@ %def 
+
+The \code{postfix} argument gives an altertive way of naming the
+output variables:
+@ 
+<<>>=
+summaryBy(conc+uptake~Plant, data=CO2, postfix=c("mymean", "myvar"),
+FUN=myfun2)
 @ %def 
 
 
-\item[Using a list of functions:] 
-It is possible to apply a list of functions (but note the difference
-in naming the output variables depending on whether the output of the
-functions are named or not):
+
+
+\subsection{Using a list of functions}
+\label{sec:xxx}
+
+
+It is possible to apply a list of functions. A typical usage will be
+by invoking a list of predefined functions:
+@ 
+<<>>=
+summaryBy(uptake~Plant, data=CO2, FUN=c(mean,var,median))
+@ %def 
+
+Slightly more elaborate is 
 @ 
 <<>>=
 mymed <- function(x)c(med=median(x))
-foo  <- function(x)c(median(x))
-summaryBy(uptake~Plant, data=CO2,
-FUN=c(mean,var,mymed,foo))
+summaryBy(uptake~Plant, data=CO2, 
+FUN=c(mean,var,myfun1,myfun2))
+@ %def 
+
+The naming of the output variables determined from what the functions
+returns. The names of the last two columns above are imposed
+by \summaryby{} because \code{myfun2} does not return named values.
+Specifying \code{postfix=} overrides these names but when \code{FUN}
+is a list of functions, the new names are not very informative
+either:\footnote{This may be improved on later.}
+@ 
+<<>>=
+summaryBy(uptake~Plant, data=CO2, 
+postfix=c("aa","bb","cc"),
+FUN=c(mean,var,myfun1,myfun2))
 @ %def 
 
 
 
-\item[Copying variables out with the \code{id} argument:] 
+\subsection{Copying variables out with the \code{id} argument}
+\label{sec:xxx}
+
 To get the value of the \code{Type} and \code{Treat} in the first row of the
 groups (defined by the values of \code{Plant}) copied to the output
 dataframe we use the \code{id} argument:
@@ -151,20 +184,37 @@ id=~Type+Treat)
 @ %def 
 
 
-\item[Statistics on functions of data:] 
+\subsection{Statistics on functions of data}
+\label{sec:xxx}
 We may want to calculate the mean and variance for the logarithm of
 \code{uptake}, for \code{uptake}+\code{conc} (not likely to be a
 useful statistic) as well as for \code{uptake} and
-\code{conc}. This can be achieved as
+\code{conc}. This can be achieved as:
 @ 
-<<results=hide>>=
+<<>>=
 summaryBy(log(uptake)+I(conc+uptake)+ conc+uptake~Plant, data=CO2,
 FUN=function(x){c(m=mean(x), v=var(x))})
 @ %def 
 
+If one does not want output variables to contain parentheses then
+setting \code{p2d=TRUE} causes the parentheses to be replaced by dots
+(``.''). 
+@ 
+<<>>=
+summaryBy(log(uptake)+I(conc+uptake)~Plant, data=CO2, p2d=TRUE,
+FUN=function(x){c(m=mean(x), v=var(x))})
+@ %def 
 
-\item[The dot (".") on the left hand side of a formula:] 
-However it is simpler to use the dot (".") on the left hand side of
+
+
+
+
+
+
+\subsection{The dot (".") on the left hand side of a formula}
+\label{sec:xxx}
+
+It is possible  to use the dot (".") on the left hand side of
 the formula. The dot means ``all numerical variables which do not
 appear elsewhere'' (i.e.\ on the right hand side of the formula and in
 the \code{id} statement): 
@@ -174,7 +224,10 @@ summaryBy(log(uptake)+I(conc+uptake)+. ~Plant, data=CO2,
 FUN=function(x){c(m=mean(x), v=var(x))})
 @ %def 
 
-\item[The dot (".") on the right hand side of a formula:] 
+
+\subsection{The dot (".") on the right hand side of a formula}
+\label{sec:xxx}
+
 The dot (".") can also be used on the right hand side of the formula
 where it refers to ``all non--numerical variables which are not
 specified elsewhere'':
@@ -185,7 +238,11 @@ FUN=function(x){c(m=mean(x), v=var(x))})
 @ %def 
 
 
-\item[Using ``1'' on the right hand side of the formula:] Using 1 on the
+
+\subsection{Using ``1'' on the right hand side of the formula}
+\label{sec:xxx}
+
+Using 1 on the
   right hand side means no grouping:
 @ 
 <<>>=
@@ -194,7 +251,9 @@ FUN=function(x){c(m=mean(x), v=var(x))})
 @ %def 
 
 
-\item[Preserving names of variables:] 
+
+\subsection{Preserving names of variables using \code{keep.names}}
+\label{sec:xxx}
 If the function applied to data only returns one value, it is possible
 to force that the summary variables retain the original names by
 setting \code{keep.names=TRUE}. A
@@ -204,7 +263,6 @@ typical use of this could be
 summaryBy(conc+uptake+log(uptake)~Plant, 
 data=CO2, FUN=mean, id=~Type+Treat, keep.names=TRUE)
 @ %def 
-\end{description}
 
 
 
@@ -218,7 +276,7 @@ Suppose we want to order the rows of the the \code{airquality} data by \code{Tem
 decreasing. This can be achieved by:
 @ 
 <<results=hide>>=
-x<-orderBy(~Temp+Month, data=aq,decreasing=T)
+x<-orderBy(~Temp+Month, data=airquality,decreasing=T)
 @ %def 
 The first lines of the result are:
 @ 
@@ -233,7 +291,7 @@ Suppose we want to split the \code{airquality} data into a list of dataframes, e
 dataframe for each month. This can be achieved by:
 @ 
 <<results=hide>>=
-x<-splitBy(~Month, data=aq)
+x<-splitBy(~Month, data=airquality)
 @ %def 
 
 Information about the grouping is stored as a dataframe 
@@ -250,14 +308,14 @@ Suppose we want a random sample of 50 \% of the observations from a
 dataframe. This can be achieved with:
 @ 
 <<results=hide>>=
-sampleBy(~1, frac=0.5, data=aq)
+sampleBy(~1, frac=0.5, data=airquality)
 @ %def 
 
 Suppose instead that we want a  systematic sample of  every fifth
 observation within each month. This is achieved with:
 @ 
 <<results=hide>>=
-sampleBy(~Month, frac=0.2, data=aq,systematic=T)
+sampleBy(~Month, frac=0.2, data=airquality,systematic=T)
 @ %def 
 
 
@@ -290,14 +348,18 @@ transformBy(~Month, data=airquality, minW=min(Wind), maxW=max(Wind),
 
 
 
+\section{Miscellaneous}
+\label{sec:xxx}
 
-\section{The \code{esticon} function} 
+
+\subsection{The \code{esticon} function} 
 \label{esticon}
 
 Consider a linear model which explains \code{Ozone} as a linear
 function of \code{Month} and \code{Wind}:
 @ 
 <<>>=
+data(airquality)
 airquality <- transform(airquality, Month=factor(Month))
 m<-lm(Ozone~Month*Wind, data=airquality)
 coefficients(m)
@@ -315,6 +377,7 @@ the average wind speed over the whole period).
 
 The \code{esticon} function provides a way of doing so. 
  We can specify several $\lambda$ vectors at the same time. For example
+
 @ 
 <<echo=FALSE>>=
 Lambda <- rbind(
@@ -331,6 +394,7 @@ Lambda
 esticon(m, Lambda
 )
 @ %def 
+
 
 In other cases, interest is in testing a hypothesis of a contrast
 $H_0: \Lambda \beta=\beta_0$ where $\Lambda$ is a matrix. For example
@@ -364,9 +428,20 @@ Observe that another function for calculating contrasts as above is the
 a narrower range of models than \code{esticon} does.
 
 
+
+\section{Final remarks} 
+\label{discussion}
+
+The \code{esticon} functions and other smaller functions are likely to
+be removed from the \doby{} package in the future. Credit is due to 
+Dennis Chabot, Gabor Grothendieck and Erik Jørgensen for reporting
+various bugs and making various suggestions to the functionality in
+the \doby{} package. 
+
 @ 
 <<echo=F>>=
 options(oopt)
 @ %def 
+
 
 \end{document}
