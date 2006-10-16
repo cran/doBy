@@ -8,7 +8,7 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-keep.names=FALSE, prefix=NULL, ...)
+keep.names=FALSE, postfix=NULL, p2d=FALSE, order=TRUE, ...)
 
 }
 %- maybe also `usage' for other objects documented here.
@@ -22,8 +22,11 @@ keep.names=FALSE, prefix=NULL, ...)
 \item{keep.names}{If TRUE and if there is only ONE function in FUN, then
 the variables in the output will have the same name as the variables in
 the input, see 'examples'.}
-\item{prefix}{An optional vector of prefixes for the names of the output
+\item{postfix}{An optional vector of postfixes for the names of the output
   variables, see 'examples'.}
+\item{p2d}{Should parentheses in output variable names be replaced by dots?}
+\item{order}{Should the resulting dataframe be ordered according to the
+  variables on the right hand side of the formula? (using \link{orderBy}}
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
@@ -70,11 +73,11 @@ summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
   keep.names=TRUE)
 
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
-  prefix=c("m","v"))
+  postfix=c("m","v"))
 
 summaryBy(conc ~ Plant, CO2)
 
-do.call("summaryBy", list(.~ Treatment, CO2[3:5], FUN = function(x) mean(range(x)), prefix = "midrange"))
+do.call("summaryBy", list(.~ Treatment, CO2[3:5], FUN = function(x) mean(range(x)), postfix = "midrange"))
 
 
 }

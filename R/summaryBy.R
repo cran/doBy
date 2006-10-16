@@ -1,23 +1,22 @@
 
-
 summaryBy <- 
-function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
-          prefix=NULL,  ...) {
+function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
+          postfix=NULL,  p2d=FALSE, order=TRUE, ...) {
 
     
-parseIt <- function(x){
-  ##cat("parseIt:"); print(x); print(class(x))
-  if (class(x)=='name'){
-    value <- x
-  } else {
-    s <- paste(x[[1]])
-    value <- switch(s,
-                    '+'={  c(parseIt(x[[2]]),parseIt(x[[3]]))},
-                    'I'={  x[[2]]},
-                    {  deparse(x)})
+  parseIt <- function(x){
+    ###cat("parseIt:"); print(x); print(class(x))
+    if (class(x)=='name'){
+      value <- x
+    } else {
+      s <- paste(x[[1]])
+      value <- switch(s,
+                      '+'={  c(parseIt(x[[2]]),parseIt(x[[3]]))},
+                      'I'={  x[[2]]},
+                      {  deparse(x)})
+    }
+    return(value)
   }
-  return(value)
-}
 
 
   lhsString <- function(formula) {
@@ -34,14 +33,14 @@ parseIt <- function(x){
 
   trace <- 0
   lhs      <- formula[[2]]
-  rhsvar   <<- rhsString(formula)
+  rhsvar   <- rhsString(formula)
   idvar    <- rhsString(id)
   datavar  <- names(data)
 
-  cls <<- lapply(data, class)
+  cls <- lapply(data, class)
 
-  numvar <<- datavar[cls %in% c("numeric","integer")]
-  facvar <<- datavar[!(cls %in% c("numeric","integer"))]
+  numvar <- datavar[  cls %in% c("numeric","integer")]
+  facvar <- datavar[!(cls %in% c("numeric","integer"))]
   if (trace>=1){
     cat("datavar:"); print(datavar)
     cat("numvar :"); print(numvar)
@@ -50,14 +49,12 @@ parseIt <- function(x){
   }
   
   lhsAtoms <- parseIt(lhs)
-  lhsvar   <<- lhsAtoms
+  lhsvar   <- lhsAtoms
   
   
   if (length(lhsvar)==1)
     lhsvar <- list(lhsvar)
 
-
-  
   if (paste(rhsvar)[1]=='.')
     rhsvar <- NULL
   
@@ -111,14 +108,14 @@ parseIt <- function(x){
   if (!is.list(FUN)) 
     FUN <- list(FUN)
 
-### Prefix for new variables
-  if (!is.null(prefix)){
-    if (length(prefix) != length(fun.names))
-      stop("Length of prefix not equal to the number of functions")
-    varPrefix <- prefix
-  } else {
-    varPrefix <- fun.names
-  }
+### Postfix for new variables
+#   if (!is.null(postfix)){
+#     if (length(postfix) != length(fun.names))
+#       stop("Length of postfix not equal to the number of functions")
+#     varPostfix <- postfix
+#   } else {
+#     varPostfix <- fun.names
+#   }
 
   
 ### Names for new variables
@@ -150,10 +147,11 @@ parseIt <- function(x){
     for (j in 1:length(FUN)) {        
       currFUN <- FUN[[j]]
       vf2 <- lapply(xr, currFUN, ...)
-      vf2 <- changeNames(vf2,fun.names[j],j,keep.names)
+      vf2 <- changeNames(vf2,fun.names[j],j,postfix, keep.names)
       v <- c(v,vf2)
     }
   })
+
 
   val        <- as.data.frame(do.call("rbind", byList))
   
@@ -182,122 +180,105 @@ parseIt <- function(x){
   if (length(unique(names(val))) != length(names(val)))
     warning("dataframe contains replicate names \n", call.=FALSE)
 
+
+  if (order==TRUE){
+    if (rhsstr!="1")
+      val <- orderBy(as.formula(paste("~", rhsstr)), data=val)
+  }
+
+  names(val) <- gsub(" ","",names(val))
+  if (p2d)
+    names(val) <- gsub("\\)","\.",gsub("\\(","\.",names(val)))
+
+  
   rownames(val) <- 1:nrow(val)
   return(val)
 }
 
 
-changeNames <- function(vv, fname, funnum, keep.names=FALSE){
-  ##fname <<-fname
-  #print(keep.names)
+changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
+
+  trace <- 0
   varnames     <- names(vv)
   vectordim    <- length(vv[[1]])
   statnames    <- names(vv[[1]])
-  vv2          <- unlist(vv)
-  #cat("fname:", fname, "varnames:", varnames, "vectordim:", vectordim,
-  #    "statnames:", statnames,"\n")
-  ##print(vv)
+
+  defaultStatnames <-
+    if (vectordim>1)
+      defaultStatnames <- paste('stat',  1:vectordim, sep="")
+    else
+      'stat'
+
+  newStatnames     <-
+    if (is.null(statnames))
+      rep("", vectordim)
+    else
+      statnames
   
-  if (is.null(statnames)){
-    #cat("stats are not named...\n")
-    if (!is.na(pmatch("function",fname)) ||!is.na(pmatch("list(",fname)) ){
-      ## fname is not function(x)....
-      #cat("fname is function(x).....\n")
-      #print(varnames); print(fname); print(vv)
-      if (keep.names==TRUE){
-        statnames2 <- varnames
-      } else {
-        statnames2 <- paste("stat", 1:vectordim, sep="")
-        vv<- lapply(vv, "names<-", statnames2)
-      }
+  newStatnames[newStatnames==''] <- defaultStatnames[newStatnames=='']
 
-      ##print(vv)
+  if (vectordim>1)
+    keep.names <- FALSE
+
+  
+  if (!is.null(postfix))
+    if (length(postfix) >= vectordim){
+      postfix <- postfix[1:vectordim]
     } else {
-      #print("fname is NOT function(x).....")
-      if (vectordim>1)
-        statnames2 <- paste(fname, 1:vectordim, sep="")
-      else {
-
-        if (keep.names==FALSE){
-          statnames2 <- paste(fname,  sep="")
-          vv<- lapply(vv, "names<-", statnames2); #print(vv)                
-        }        
-      }
+      postfix <- NULL
     }
-  } else {
-    #cat ("At least one stats has a name\n");  #print(statnames)
-    if (keep.names==TRUE){
-      vv <- lapply(vv, "names<-", NULL)
-    } else {
-      if (vectordim>1)
-        statnames2 <- paste('stat',  1:vectordim, sep="")
-      else
-        statnames2 <- 'stat'
 
-      statnames[statnames==''] <- statnames2[statnames=='']
-      vv<- lapply(vv, "names<-", statnames);    #print(vv)      
+  functionORlist <- (!is.na(pmatch("function",fname)) ||!is.na(pmatch("list(",fname))) 
+  if (trace>=1){
+    cat("status:\n")
+    cat(".fname             : ", fname,
+        "\n.functionORlist    : ", functionORlist,
+        "\n.keep.names        : ", keep.names,
+        "\n.postfix            : ", postfix, 
+        "\n.varnames          : ", varnames,
+        "\n.vectordim         : ", vectordim,
+        "\n.statnames         : ", statnames,
+        "\n.defaultStatnames  : ", defaultStatnames,
+        "\n.newStatnames      : ", newStatnames,
+        "\n.functionORlist    : ", functionORlist,
+        "\n")
+  }
+
+
+    
+  if (!is.null(postfix)){
+    ##vv <<- vv; postfix <<- postfix
+    vv2 <- lapply(vv, "names<-", postfix);
+    vv2 <- unlist(vv2)
+  } else {
+    if (keep.names==TRUE){
+      ## vv <<- vv; varnames<<-varnames ;print(vv); print(varnames)
+      vv2 <- lapply(vv, "names<-", NULL);
+      vv2 <- unlist(vv2);
+    } else {
+      if (is.null(statnames)){
+        if (functionORlist){ ## E.g. FUN=function(x)... or FUN=c(function()..., function(x)..)
+          vv<- lapply(vv, "names<-", newStatnames)
+        } else { ## E.g. FUN=c(mean,var)
+          if (vectordim>1){
+            newStatnames  <- paste(fname, 1:vectordim, sep="")
+            vv<- lapply(vv, "names<-", newStatnames);
+          } else { 
+            newStatnames <- paste(fname,  sep="")
+            vv<- lapply(vv, "names<-", newStatnames);
+          }    
+        } 
+      } else {    
+        vv <- lapply(vv, "names<-", newStatnames);    
+      }
+      vv2          <- unlist(vv)
     }
   }
-  vv2          <- unlist(vv)
-  ##print(vv2)  
-  val <- vv2 ##unlist(vv)
   return(vv2)
 }
+  
 
 
-
-
-# changeNames <- function(vv, fname, keep.names=FALSE){
-#   if (is.matrix(vv)){
-#     cn <- colnames(vv)
-#     rn <- 
-#     if (!is.null(rownames(vv))){
-#         rownames(vv)
-#       } else {
-#         paste(1:nrow(vv))
-#       }      
-#     vv2<-as.numeric(vv)
-#     names(vv2) <- unlist(lapply(cn, paste, rn, sep='.'))
-#   } else {
-#     vv2 <- vv
-#     if (!keep.names)
-#       names(vv2) <- lapply(names(vv), paste, fname, sep='.')
-#   }
-#   return(vv2)
-# }
-
-
-
-#   if (keep.names){
-#     if (length(fun.names)==1)
-#       newNames <- lhsvar
-#     else {
-#       keep.names <- FALSE
-#       cat("Can not keep names of original variables, more than one function is applied \n")
-#       newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
-#     }
-#   } else {
-#     newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
-#   }
-
-#    xr  <- newdata[, lhsvarvec, drop = FALSE]
-#    v <- NULL
-#    for (j in 1:length(FUN)) {        
-#      currFUN <- FUN[[j]]
-#      print(fun.names[j])
-     
-#      vf <- apply(xr, 2, currFUN, ...)
-#      vf <- print(changeNames(vf,fun.names[j]))
-     
-#      print(vf)
-#      v <- c(v,vf)
-
-#    }
-#   vv<<-v
-
-# summaryByOld <- 
-# function (formula, data = parent.frame(), id=NULL, FUN = mean, keep.names=FALSE,
-#           prefix=NULL,  ...) {
   
 #   parseIt <- function(x){
 #     if (class(x)=='name'){
@@ -374,13 +355,13 @@ changeNames <- function(vv, fname, funnum, keep.names=FALSE){
 #   if (!is.list(FUN)) 
 #     FUN <- list(FUN)
 
-#   ## Prefix for new variables
-#   if (!is.null(prefix)){
-#     if (length(prefix) != length(fun.names))
-#       stop("Length of prefix not equal to the number of functions")
-#     varPrefix <- prefix
+#   ## Postfix for new variables
+#   if (!is.null(postfix)){
+#     if (length(postfix) != length(fun.names))
+#       stop("Length of postfix not equal to the number of functions")
+#     varPostfix <- postfix
 #   } else {
-#     varPrefix <- fun.names
+#     varPostfix <- fun.names
 #   }
 
 #   ## Names for new variables
@@ -389,10 +370,10 @@ changeNames <- function(vv, fname, funnum, keep.names=FALSE){
 #       newNames <- lhsvar
 #     else {
 #       cat("Can not keep names of original variables because more than one function is applied \n")
-#       newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
+#       newNames <- unlist(lapply(varPostfix, paste, lhsvar, sep = "."))
 #     }
 #   } else {
-#     newNames <- unlist(lapply(varPrefix, paste, lhsvar, sep = "."))
+#     newNames <- unlist(lapply(varPostfix, paste, lhsvar, sep = "."))
 #   }
 
 #   newdata <- cbind(transformData, data[,c(rhsvar,idvar),drop=FALSE])
@@ -446,7 +427,7 @@ changeNames <- function(vv, fname, funnum, keep.names=FALSE){
 #   return(val)
 # }
 
-#   ##cat("varPrefix  :", paste(varPrefix), "\n")
+#   ##cat("varPostfix  :", paste(varPostfix), "\n")
 #   ##cat("newNames   :", paste(newNames),"\n")
 
 
