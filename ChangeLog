@@ -1,3 +1,13 @@
+2006-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Version 1.1 built and uploaded
+
+	* codstom.Rd updated 
+
+	* asNumericMatrix2 added because asNumericMatrix in Hmisc does not
+	work if a variable is of type 'character'
+
+
 2006-10-16 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Version 1.0 built and uploaded

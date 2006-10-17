@@ -1,8 +1,8 @@
 \name{internal}
 \alias{internal}
-
 \alias{changeNames}
-%\alias{fitBy}
+
+\alias{asNumericMatrix2}
 %\alias{returnByValues}
 
 

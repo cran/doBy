@@ -11,7 +11,7 @@
 \format{
   A data frame with 10000 observations on the following 10 variables.
   \describe{
-    \item{\code{region}}{a factor with levels \code{SGSL} \code{NGSL}}
+    \item{\code{region}}{a factor with levels \code{SGSL} \code{NGSL}.}
     \item{\code{ship.type}}{a factor with levels \code{2} \code{3} \code{31} \code{34} \code{90} \code{99}}
     \item{\code{ship.id}}{a factor with levels \code{11558} \code{11712}
       \code{136148} \code{136885}
@@ -39,9 +39,38 @@
   }
 }
 \details{
-  For ship.type of 90 and 99, ship.id is also required to obtain a
-  unique ship identification.
-  Origin, ship.type, ship.id, trip, set and fish.id are all required to discriminate individual stomachs. 
+  The cod are collected either by contracted commerical fishing vessels
+  (\code{ship.type} 90 or 99) or by research vessels.  Commercial
+  vessels are identified by a unqiue \code{ship.id}.
+
+  Either
+  one research vessel or several commercial vessels conduct a
+  trip, during which nets or hooked lines are set 
+  several times.
+
+  Each trip takes place within one of the \code{region}s.  The
+  \code{trip} label is only guaranteed to be unique within a region and
+  the \code{set} label is only guaranteed to be unique within a
+  \code{trip}.
+
+  For each fish caught, the \code{fish.length} is recorded
+  and the fish is allocated a \code{fish.id}, but the \code{fish.id}
+  is only guaranteed to be unique within a \code{set}. 
+  
+  The basic experimental unit in this data set is a cod stomach
+  (one stomach per fish).  Each stomach is uniquely identified by
+  a combination of \code{region}, \code{ship.type}, \code{ship.id},
+  \code{trip}, \code{set}, and \code{fish.id}.
+  
+  For each prey item found in a stomach,
+  the species and mass of the prey item are recorded, so there can be
+  multiple observations per stomach.  There may also
+  be several prey items with the same \code{prey.type} in the one
+  stomach.
+
+  If a stomach is empty, a single observation is recorded
+  with \code{prey.type} 
+  \code{Empty} and a \code{prey.mass} of zero.
 }
 \source{
   Small subset from a larger dataset collected by D. Chabot and
@@ -53,9 +82,11 @@
 \examples{
 data(codstom)
 str(codstom)
+# removes multiple occurences of prey.type in stomachs
 summaryBy(prey.mass ~ region+ship.type+ship.id+trip+set+fish.id,
-data = codstom, id = ~fish.length, FUN = sum)  # removes multiple occurences of prey.type in stomachs
+          data = codstom, id = ~fish.length, FUN = sum) 
+# mean prey mass per stomach for each trip
 summaryBy(prey.mass ~ region+ship.type+ship.id+trip,
-data = codstom, FUN = mean)  # mean prey mass per stomach for each trip
+          data = codstom, FUN = mean)  
 }
 \keyword{datasets}
