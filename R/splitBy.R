@@ -1,23 +1,18 @@
 splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE)
 {
     mf <- match.call(expand.dots = FALSE)
-
-#    if (!(class(data)[1] %in% c("matrix", "data.frame")))
-#      data <- as.data.frame(data)
-
-#    print(class(data))
     
     m <- match(c("formula", "data", "subset", "weights", "na.action",
-        "offset"), names(mf), 0)
+                 "offset"), names(mf), 0)
     ff <- as.formula(eval.parent(mf[[2]]))
     if (ff[[2]]==1){
       groupData <- list(data)
       attr(groupData,"groupid") <- 1
     } else {
-
+      
       ff <- terms(ff, data = data)
       m <- match.call(expand.dots = TRUE)
-      group <<- attr(terms(ff), "term.labels")
+      group <- attr(terms(ff), "term.labels")
       
       ## workinggroup: Those variables in 'group' which are not constant.
       nonconstgroup <- rep(TRUE, length(group))
@@ -30,9 +25,9 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         if (nunique==1)
           nonconstgroup[i] <- FALSE
       }
-      workinggroup <<- group[nonconstgroup]            
+      workinggroup <- group[nonconstgroup]            
       ##}))
-
+      
       ## grps: Recode groups into one vector
       grps <- data[, workinggroup,drop=FALSE]
       grpsvec<-paste(grps[,1])
@@ -44,32 +39,35 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       
       ##print(data)
       ##print(system.time({
-        dataMatrix <<- asNumericMatrix(data)
+      dataMatrix <- asNumericMatrix2(data)
+
+
       ##}))
             
       ##print(system.time({
-        at <- subsAttr(data)
+      at <- subsAttr(data)
+
       ##}))
       
       ##print(system.time({
-      a <<- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
+      a <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
       ##}))
-                
+
       if (drop==TRUE)
-        a<<- a[lapply(a,nrow)>0]
+        a<- a[lapply(a,nrow)>0]
 
       if (return.matrix==TRUE)
         groupData <- a
       else{
         #print("HERE")
         #print(a)
-        #aa<<-a
+        #aa<-a
         #print(at)
         ##print(system.time({
         groupData <- lapply(a, matrix2dataFrame, at=at,restoreAll=FALSE)
         ##}))
       }
-      
+      ##print("JJJJJJJJJJJJJ")                      
       ##print(system.time({
         groupid<-lapply(groupData, function(x) x[1,group])
         names(groupid)<-NULL
@@ -82,8 +80,20 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       
       ##print.default(groupid)
       names(groupid) <- group
-      #groupid <<- groupid
+      #groupid <- groupid
       attr(groupData,"groupid") <- groupid
     }
     return(groupData)
+}
+
+
+
+asNumericMatrix2 <- function (x) 
+{
+    a <- attributes(x)
+    k <- length(a$names)
+    y <- matrix(as.numeric(unlist(x)), ncol = k, dimnames = list(a$row.names,  a$names))
+    #if (storage.mode(y) == "character") 
+    #    warning("x had at least one character vector")
+    y
 }
