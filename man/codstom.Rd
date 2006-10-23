@@ -11,8 +11,10 @@
 \format{
   A data frame with 10000 observations on the following 10 variables.
   \describe{
-    \item{\code{region}}{a factor with levels \code{SGSL} \code{NGSL}.}
-    \item{\code{ship.type}}{a factor with levels \code{2} \code{3} \code{31} \code{34} \code{90} \code{99}}
+    \item{\code{region}}{a factor with levels \code{SGSL} \code{NGSL} 
+          representing the southern and northern Gulf of St. Lawrence, respectively}
+    \item{\code{ship.type}}{a factor with levels \code{2} \code{3} \code{31} 
+    \code{34} \code{90} \code{99}}
     \item{\code{ship.id}}{a factor with levels \code{11558} \code{11712}
       \code{136148} \code{136885}
       \code{136902} \code{137325} \code{151225} \code{151935} \code{99433}}
@@ -23,8 +25,8 @@
       \code{88} \code{9} \code{95}}     
     \item{\code{set}}{a numeric vector}
     \item{\code{fish.id}}{a numeric vector}
-    \item{\code{fish.length}}{a numeric vector}
-    \item{\code{prey.mass}}{a numeric vector}
+    \item{\code{fish.length}}{a numeric vector, length in mm}
+    \item{\code{prey.mass}}{a numeric vector, mass of item in stomach, in g}
     \item{\code{prey.type}}{a factor with levels \code{Ammodytes_sp}
       \code{Argis_dent}
       \code{Chion_opil} \code{Detritus} \code{Empty} \code{Eualus_fab}
@@ -39,14 +41,15 @@
   }
 }
 \details{
-  The cod are collected either by contracted commerical fishing vessels
+  Cod are collected either by contracted commerical fishing vessels
   (\code{ship.type} 90 or 99) or by research vessels.  Commercial
-  vessels are identified by a unqiue \code{ship.id}.
+  vessels are identified by a unique \code{ship.id}.
 
   Either
-  one research vessel or several commercial vessels conduct a
-  trip, during which nets or hooked lines are set 
-  several times.
+  one research vessel or several commercial vessels conduct a survey 
+  (\code{trip}), during which a trawl, gillnets or hooked lines are set 
+  several times. Most trips are random stratified surveys (depth-based
+  stratification).
 
   Each trip takes place within one of the \code{region}s.  The
   \code{trip} label is only guaranteed to be unique within a region and
@@ -55,25 +58,33 @@
 
   For each fish caught, the \code{fish.length} is recorded
   and the fish is allocated a \code{fish.id}, but the \code{fish.id}
-  is only guaranteed to be unique within a \code{set}. 
-  
+  is only guaranteed to be unique within a \code{set}. A subset of the
+  fish caught are selected for stomach analysis (stratified random 
+  selection according to fish length; unit of
+  stratification is the set for research surveys, the combination ship.id 
+  and stratum for surveys conducted by commercial vessels, although strata
+  are not shown in codstom).
+
   The basic experimental unit in this data set is a cod stomach
   (one stomach per fish).  Each stomach is uniquely identified by
   a combination of \code{region}, \code{ship.type}, \code{ship.id},
   \code{trip}, \code{set}, and \code{fish.id}.
-  
+
   For each prey item found in a stomach,
   the species and mass of the prey item are recorded, so there can be
   multiple observations per stomach.  There may also
   be several prey items with the same \code{prey.type} in the one
-  stomach.
+  stomach (for example many \code{prey.types} have been recoded \code{Other}, 
+  which produced many instances of \code{Other} in the same stomach).
 
   If a stomach is empty, a single observation is recorded
   with \code{prey.type} 
   \code{Empty} and a \code{prey.mass} of zero.
 }
 \source{
-  Small subset from a larger dataset collected by D. Chabot and
+  Small subset from a larger dataset (more stomachs, more variables, more 
+  \code{prey.types})
+  collected by D. Chabot and
   M. Hanson,
   Fisheries & Oceans Canada (chabotd@dfo-mpo.gc.ca).
 }
@@ -82,11 +93,34 @@
 \examples{
 data(codstom)
 str(codstom)
-# removes multiple occurences of prey.type in stomachs
-summaryBy(prey.mass ~ region+ship.type+ship.id+trip+set+fish.id,
-          data = codstom, id = ~fish.length, FUN = sum) 
+# removes multiple occurences of same prey.type in stomachs
+codstom1 <- summaryBy(prey.mass ~ 
+                      region+ship.type+ship.id+trip+set+fish.id+prey.type,
+                      data = codstom, id = ~fish.length, 
+                      keep.names=TRUE, FUN = sum) 
+
+# keeps a single line per stomach with the total mass of stomach content
+codstom2 <- summaryBy(prey.mass ~ region+ship.type+ship.id+trip+set+fish.id,
+                      data = codstom, id = ~fish.length, 
+                      keep.names=TRUE, FUN = sum) 
+
 # mean prey mass per stomach for each trip
-summaryBy(prey.mass ~ region+ship.type+ship.id+trip,
-          data = codstom, FUN = mean)  
+codstom3 <- summaryBy(prey.mass ~ region+ship.type+ship.id+trip,
+                      data = codstom2, keep.names=TRUE, FUN = mean) 
+
+\dontrun{          
+# wide version, one line per stomach, one column per prey type
+library(reshape)
+codstom4 <- melt(codstom, id = c(1:7, 9))
+codstom5 <- cast(codstom4, 
+                 region+ship.type+ship.id+trip+set+fish.id+fish.length ~ 
+                 prey.type, sum)
+k <- length(names(codstom5))
+prey_col <- 8:k
+out <- codstom5[,prey_col]
+out[is.na(out)] <- 0
+codstom5[,prey_col] <- out
+codstom5$total.content <- rowSums(codstom5[, prey_col])
+}
 }
 \keyword{datasets}

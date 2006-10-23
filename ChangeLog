@@ -1,3 +1,14 @@
+2006-10-23 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Version 1.2 built and uploaded
+	
+	* Description of codstom data updated. 
+
+	* matrix2dataFrame2 and subsAttr2 added
+
+	* postfix argument in summaryBy can be a list
+
+	
 2006-10-17 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Version 1.1 built and uploaded

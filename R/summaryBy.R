@@ -18,7 +18,6 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
     return(value)
   }
 
-
   lhsString <- function(formula) {
     if (!is.null(formula))
       if (length(formula)>=3)
@@ -138,13 +137,13 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
     for (j in 1:length(FUN)) {        
       currFUN <- FUN[[j]]
       vf2 <- lapply(xr, currFUN, ...)
-      vf2 <- changeNames(vf2,fun.names[j],j,postfix, keep.names)
+      vf2 <- changeNames(vf2,fun.names[j],j,postfix[j], keep.names)
       v <- c(v,vf2)
     }
   })
 
 
-  val        <- as.data.frame(do.call("rbind", byList))
+  val  <- as.data.frame(do.call("rbind", byList))
   
   if (!is.null(rhsvar) && rhsvar!="1"){
     group <- attr(terms(formula), "term.labels")  
@@ -211,7 +210,7 @@ changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
   if (vectordim>1)
     keep.names <- FALSE
 
-  
+  postfix <- unlist(postfix)
   if (!is.null(postfix))
     if (length(postfix) >= vectordim){
       postfix <- postfix[1:vectordim]
@@ -225,7 +224,7 @@ changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
     cat(".fname             : ", fname,
         "\n.functionORlist    : ", functionORlist,
         "\n.keep.names        : ", keep.names,
-        "\n.postfix            : ", postfix, 
+        "\n.postfix           : ", postfix, 
         "\n.varnames          : ", varnames,
         "\n.vectordim         : ", vectordim,
         "\n.statnames         : ", statnames,
@@ -235,10 +234,7 @@ changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
         "\n")
   }
 
-
-    
   if (!is.null(postfix)){
-    ##vv <<- vv; postfix <<- postfix
     vv2 <- lapply(vv, "names<-", postfix);
     vv2 <- unlist(vv2)
   } else {
