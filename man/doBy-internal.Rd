@@ -3,6 +3,8 @@
 \alias{changeNames}
 
 \alias{asNumericMatrix2}
+\alias{matrix2dataFrame2}
+\alias{subsAttr2}
 %\alias{returnByValues}
 
 

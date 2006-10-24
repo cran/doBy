@@ -433,10 +433,10 @@ a narrower range of models than \code{esticon} does.
 \label{discussion}
 
 The \code{esticon} functions and other smaller functions are likely to
-be removed from the \doby{} package in the future. Credit is due to 
-Dennis Chabot, Gabor Grothendieck and Erik Jørgensen for reporting
-various bugs and making various suggestions to the functionality in
-the \doby{} package. 
+be removed from the \doby{} package in the future. Credit is due to
+Dennis Chabot, Gabor Grothendieck, Paul Murrell and Erik Jørgensen for
+reporting various bugs and making various suggestions to the
+functionality in the \doby{} package.
 
 @ 
 <<echo=F>>=
