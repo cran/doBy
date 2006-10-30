@@ -36,51 +36,26 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
           grpsvec <- paste(grpsvec,paste(grps[,j]),sep='|')
         }}
       grps <- grpsvec
-      
-      ##print(data)
-      ##print(system.time({
-      dataMatrix <- asNumericMatrix2(data)
 
+      dataMatrix <<- asNumericMatrix2(data)
 
-      ##}))
-            
-      ##print(system.time({
-      at <- subsAttr(data)
+      at <<- subsAttr2(data)
 
-      ##}))
-      
-      ##print(system.time({
-      a <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
-      ##}))
-
+      a <<- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
       if (drop==TRUE)
-        a<- a[lapply(a,nrow)>0]
+        a<<- a[lapply(a,nrow)>0]
 
       if (return.matrix==TRUE)
         groupData <- a
       else{
-        #print("HERE")
-        #print(a)
-        #aa<-a
-        #print(at)
-        ##print(system.time({
-        groupData <- lapply(a, matrix2dataFrame, at=at,restoreAll=FALSE)
-        ##}))
+        groupData <- lapply(a, matrix2dataFrame2, at=at,restoreAll=FALSE)
       }
-      ##print("JJJJJJJJJJJJJ")                      
-      ##print(system.time({
-        groupid<-lapply(groupData, function(x) x[1,group])
-        names(groupid)<-NULL
-      ##}))
-
-
-      ##print(system.time({
-        groupid<-as.data.frame(do.call('rbind',groupid))
-      ##}))
       
-      ##print.default(groupid)
+      groupid        <- lapply(groupData, function(x) x[1,group])
+      names(groupid) <- NULL
+
+      groupid        <- as.data.frame(do.call('rbind',groupid))
       names(groupid) <- group
-      #groupid <- groupid
       attr(groupData,"groupid") <- groupid
     }
     return(groupData)
@@ -88,12 +63,12 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
 
 
 
-asNumericMatrix2 <- function (x) 
-{
-    a <- attributes(x)
-    k <- length(a$names)
-    y <- matrix(as.numeric(unlist(x)), ncol = k, dimnames = list(a$row.names,  a$names))
-    #if (storage.mode(y) == "character") 
-    #    warning("x had at least one character vector")
-    y
-}
+# asNumericMatrix2 <- function (x) 
+# {
+#     a <- attributes(x)
+#     k <- length(a$names)
+#     y <- matrix(as.numeric(unlist(x)), ncol = k, dimnames = list(a$row.names,  a$names))
+#     #if (storage.mode(y) == "character") 
+#     #    warning("x had at least one character vector")
+#     y
+# }

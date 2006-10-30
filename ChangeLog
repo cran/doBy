@@ -1,5 +1,14 @@
 2006-10-23 Søren Højsgaard <sorenh@agrsci.dk>
 
+	* Version 1.3 built and uploaded
+
+	* Bug in splitBy corrected so that it works when rhs includes a
+	character variable.
+
+
+
+2006-10-23 Søren Højsgaard <sorenh@agrsci.dk>
+
 	* Version 1.2 built and uploaded
 	
 	* Description of codstom data updated. 
