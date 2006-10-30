@@ -6,35 +6,35 @@ matrix2dataFrame2 <- function (x, at, restoreAll = TRUE)
     nam <- names(w) <- d[[2]]
     sm <- storage.mode(x)
     for (i in 1:k) {
-        a <- at[[nam[i]]]
-        if (!length(a))
-            next
-        xi <- x[, i]
-        names(xi) <- NULL
-        ## Add:
-            if (a$storage.mode == "character"){
-              xi <- a$flevels[xi]
-              a$flevels <- NULL
-              }
-        ## End !
-        if (restoreAll) {
-            if (a$storage.mode != sm)
-                storage.mode(xi) <- a$storage.mode
-            a$storage.mode <- NULL
-            attributes(xi) <- a
-        }
-        else {
-            if (length(l <- a$label))
-                label(xi) <- l
-            if (length(u <- a$units))
-                units(xi) <- u
-            if (length(lev <- a$levels))
-                xi <- factor(xi, 1:length(lev), lev)
-        }
-        w[[i]] <- xi
+      a <- at[[nam[i]]]; # print("a"); print(a)
+      if (!length(a))
+        next
+      xi <- x[, i]
+      names(xi) <- NULL
+      ## Add:
+      if (!is.null(a$storage.mode) && a$storage.mode == "character"){
+        xi <- a$flevels[xi]
+        a$flevels <- NULL
+      }
+      ## End !
+      if (restoreAll) {
+        if (a$storage.mode != sm)
+          storage.mode(xi) <- a$storage.mode
+        a$storage.mode <- NULL
+        attributes(xi) <- a
+      }
+      else {
+        if (length(l <- a$label))
+          label(xi) <- l
+        if (length(u <- a$units))
+          units(xi) <- u
+        if (length(lev <- a$levels))
+          xi <- factor(xi, 1:length(lev), lev)
+      }
+      w[[i]] <- xi
     }
     structure(w, class = "data.frame", row.names = d[[1]])
-}
+  }
 
 
 subsAttr2<-function (x)
@@ -55,6 +55,10 @@ subsAttr2<-function (x)
 }
 
 
+
+
+
+
 asNumericMatrix2 <- function (x)
 {
     a <- attributes(x)
@@ -66,7 +70,7 @@ asNumericMatrix2 <- function (x)
         x[,j] <- as.factor(x[,j])
       }
     }
-
+    
 
 #     val <- lapply(x, function(xx){
 #       if (class(xx)=="character")
