@@ -10,7 +10,7 @@ esticon.lmer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.tes
     cf <- matrix(fixef(obj))
     vcv <- vcov(obj)
     df <- 1
-    esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
   }
 }
 
@@ -22,7 +22,7 @@ esticon.geeglm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.t
     cf  <- summary(obj)$coef
     vcv <- summary(obj)$cov.scaled
     df <- 1
-    esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
   }
 }
 
@@ -34,7 +34,7 @@ esticon.lm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=
     cf <- summary.lm(obj)$coefficients
     vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
     df <- obj$df.residual
-    esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
   }
 }
 
@@ -51,9 +51,46 @@ esticon.glm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
       stat.name <- "t.stat"
       df <- obj$df.residual
     }
-    esticonCore(obj, cm, beta0, conf.int=conf.int,level=level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level=level,cf,vcv,df,stat.name)
   }
 }
+
+
+##########################################################################################
+###
+### esticon.lme needs better testing at some point
+###
+##########################################################################################
+esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test=FALSE){
+  warning("The esticon function has not been thoroughly teste on 'lme' objects")
+  if (joint.test==TRUE){
+    .wald(obj, cm, beta0)
+  } else { 
+    stat.name <- "t.stat"
+    cf <- summary(obj)$tTable
+    rho <- summary(obj)$cor
+    vcv <- rho * outer(cf[, 2], cf[, 2])
+    tmp <- cm
+    tmp[tmp == 0] <- NA
+    df.all <- t(abs(t(tmp) * obj$fixDF$X))
+    df <- apply(df.all, 1, min, na.rm = TRUE)
+    #print(df)
+    problem <- apply(df.all != df, 1, any, na.rm = TRUE)
+    #print(problem)
+    if (any(problem)) 
+      warning(paste("Degrees of freedom vary among parameters used to ", 
+                    "construct linear contrast(s): ",
+                    paste((1:nrow(tmp))[problem], 
+                          collapse = ","),
+                    ". Using the smallest df among the set of parameters.", 
+                    sep = ""))
+    df <- min(df)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+  }    
+}
+
+
+### .functions below here ###
 
 .wald <- function (obj, cm,beta0)
 {
@@ -92,7 +129,7 @@ esticon.glm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
     return(as.data.frame(retval))
 }
 
-esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.name ) {
+.esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.name ) {
 
   if (conf.int != FALSE){
     conf.int <- "wald"
@@ -166,36 +203,3 @@ esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.n
   return(as.data.frame(retval))
 }
 
-
-##########################################################################################
-###
-### esticon.lme needs better testing at some point
-###
-##########################################################################################
-esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test=FALSE){
-  warning("The esticon function has not been thoroughly teste on 'lme' objects")
-  if (joint.test==TRUE){
-    .wald(obj, cm, beta0)
-  } else { 
-    stat.name <- "t.stat"
-    cf <- summary(obj)$tTable
-    rho <- summary(obj)$cor
-    vcv <- rho * outer(cf[, 2], cf[, 2])
-    tmp <- cm
-    tmp[tmp == 0] <- NA
-    df.all <- t(abs(t(tmp) * obj$fixDF$X))
-    df <- apply(df.all, 1, min, na.rm = TRUE)
-    #print(df)
-    problem <- apply(df.all != df, 1, any, na.rm = TRUE)
-    #print(problem)
-    if (any(problem)) 
-      warning(paste("Degrees of freedom vary among parameters used to ", 
-                    "construct linear contrast(s): ",
-                    paste((1:nrow(tmp))[problem], 
-                          collapse = ","),
-                    ". Using the smallest df among the set of parameters.", 
-                    sep = ""))
-    df <- min(df)
-    esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
-  }    
-}

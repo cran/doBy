@@ -178,7 +178,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
 
   names(val) <- gsub(" ","",names(val))
   if (p2d)
-    names(val) <- gsub("\\)","\.",gsub("\\(","\.",names(val)))
+    names(val) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(val)))
 
   
   rownames(val) <- 1:nrow(val)

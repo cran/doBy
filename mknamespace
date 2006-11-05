@@ -1,0 +1,10 @@
+##
+## Automatic generation of NAMESPACE file. Internal functions start with '.'
+## 
+xx <- ls()
+xx <- xx[-match(c("f","fl"), xx)]
+write("export(", file="NAMESPACE.txt")
+xx2<-paste('\"',xx,'\"',sep='')
+xx2<-paste(xx2,collapse=',\n')
+write(xx2, file="NAMESPACE.txt",append=T)
+write(")", file="NAMESPACE.txt",append=T)

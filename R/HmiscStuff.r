@@ -1,4 +1,4 @@
-matrix2dataFrame2 <- function (x, at, restoreAll = TRUE)
+.matrix2dataFrame2 <- function (x, at, restoreAll = TRUE)
 {
     d <- dimnames(x)
     k <- length(d[[2]])
@@ -37,7 +37,7 @@ matrix2dataFrame2 <- function (x, at, restoreAll = TRUE)
   }
 
 
-subsAttr2<-function (x)
+.subsAttr2<-function (x)
 {
     g <- function(y) {
         a <- attributes(y)
@@ -59,7 +59,7 @@ subsAttr2<-function (x)
 
 
 
-asNumericMatrix2 <- function (x)
+.asNumericMatrix2 <- function (x)
 {
     a <- attributes(x)
     k <- length(a$names)

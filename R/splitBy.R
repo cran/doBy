@@ -37,18 +37,18 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         }}
       grps <- grpsvec
 
-      dataMatrix <<- asNumericMatrix2(data)
+      dataMatrix <- .asNumericMatrix2(data)
 
-      at <<- subsAttr2(data)
+      at <- .subsAttr2(data)
 
-      a <<- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
+      a <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
       if (drop==TRUE)
-        a<<- a[lapply(a,nrow)>0]
+        a<- a[lapply(a,nrow)>0]
 
       if (return.matrix==TRUE)
         groupData <- a
       else{
-        groupData <- lapply(a, matrix2dataFrame2, at=at,restoreAll=FALSE)
+        groupData <- lapply(a, .matrix2dataFrame2, at=at,restoreAll=FALSE)
       }
       
       groupid        <- lapply(groupData, function(x) x[1,group])
