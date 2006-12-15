@@ -1,3 +1,11 @@
+2006-12-14 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Version 1.6 uploaded
+
+	* .asNumericMatrix2 etc now work correctly with date formats
+
+
+	
 2006-11-05 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Version 1.5 uploaded

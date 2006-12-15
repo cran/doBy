@@ -3,7 +3,6 @@ summaryBy <-
 function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
           postfix=NULL,  p2d=FALSE, order=TRUE, ...) {
 
-    
   parseIt <- function(x){
     ###cat("parseIt:"); print(x); print(class(x))
     if (class(x)=='name'){
@@ -49,8 +48,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   
   lhsAtoms <- parseIt(lhs)
   lhsvar   <- lhsAtoms
-  
-  
+    
   if (length(lhsvar)==1)
     lhsvar <- list(lhsvar)
 
@@ -59,7 +57,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   
   if ("." %in% lhsvar){
     lhsvar <- setdiff(lhsvar, ".")
-    v <- setdiff(numvar, c(lhsvar, intersect(rhsvar,numvar), intersect(idvar, numvar)))
+    v  <- setdiff(numvar, c(lhsvar, intersect(rhsvar,numvar), intersect(idvar, numvar)))
     isSpecial <- rep(NA,length(v))
     for (j in 1:length(v)){
       isSpecial[j]<- (class(data[,v[j]])[1] %in% c("POSIXt", "factor", "character"))
@@ -73,21 +71,18 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   lhsstr <- paste(lhsvar, collapse='+')
   if (trace>=1)
     cat("lhsstr:", lhsstr, "\n")
-  
-  ## print(lhsvar)
+
   if (is.null(rhsvar) | "." %in% rhsvar){
     rhsvar <- setdiff(facvar, c(lhsvar, idvar))
     if (trace>=1)
       {cat(".rhsvar: "); print(rhsvar)}
   }
-  #if (rhsvar=="1")
-    
-
+  
   rhsstr <- paste (rhsvar, collapse='+')
   str <- paste(paste(lhsstr, "~", rhsstr, collape=''))
   formula <- as.formula(str)
 
-  ###cat("Updated formula: ");  print(formula)
+  ##cat("Updated formula: ");  print(formula)
   
   if (trace>=1){
     cat("status:\n")
@@ -98,6 +93,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   transformData <- sapply(paste(lhsvar), function(x)eval(parse(text=x), data))
 
 ### Function names
+###
   if (!is.list(FUN)) 
     fun.names <- paste(deparse(substitute(FUN)), collapse = " ")
   else
@@ -109,6 +105,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
 
   
 ### Names for new variables
+###  
   if (keep.names){
     if (length(fun.names)>1){
       cat("Can not keep names of original variables, more than one function is applied.\n")
@@ -124,12 +121,13 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   }
   
 ### Split data
+###
   groupFormula <- formula
   groupFormula[[2]] <- NULL
   splitData <- splitBy(groupFormula, data=newdata, drop=TRUE, return.matrix=FALSE)
 
 ### Calculate groupwise statistics
-
+###
   lhsvarvec <- paste(unlist(lhsvar)) 
   byList <- lapply(splitData, function(x){
     xr  <- x[, lhsvarvec, drop = FALSE]
@@ -141,7 +139,6 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
       v <- c(v,vf2)
     }
   })
-
 
   val  <- as.data.frame(do.call("rbind", byList))
   
@@ -170,16 +167,14 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   if (length(unique(names(val))) != length(names(val)))
     warning("dataframe contains replicate names \n", call.=FALSE)
 
-
   if (order==TRUE){
     if (rhsstr!="1")
       val <- orderBy(as.formula(paste("~", rhsstr)), data=val)
   }
-
+  
   names(val) <- gsub(" ","",names(val))
   if (p2d)
     names(val) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(val)))
-
   
   rownames(val) <- 1:nrow(val)
   return(val)
@@ -219,6 +214,7 @@ changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
     }
 
   functionORlist <- (!is.na(pmatch("function",fname)) ||!is.na(pmatch("list(",fname))) 
+
   if (trace>=1){
     cat("status:\n")
     cat(".fname             : ", fname,
@@ -244,9 +240,11 @@ changeNames <- function(vv, fname, funnum, postfix, keep.names=FALSE){
       vv2 <- unlist(vv2);
     } else {
       if (is.null(statnames)){
-        if (functionORlist){ ## E.g. FUN=function(x)... or FUN=c(function()..., function(x)..)
+        if (functionORlist){
+          ## E.g. FUN=function(x)... or FUN=c(function()..., function(x)..)
           vv<- lapply(vv, "names<-", newStatnames)
-        } else { ## E.g. FUN=c(mean,var)
+        } else {
+          ## E.g. FUN=c(mean,var)
           if (vectordim>1){
             newStatnames  <- paste(fname, 1:vectordim, sep="")
             vv<- lapply(vv, "names<-", newStatnames);

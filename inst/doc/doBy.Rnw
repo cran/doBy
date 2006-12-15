@@ -3,7 +3,6 @@
 %\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
 
-
 \title{The \texttt{doBy} package}
 \author{Søren Højsgaard}
 \begin{document}
@@ -65,11 +64,7 @@ levels(CO2$Treat) <- c("nchil","chil")
 levels(CO2$Type)  <- c("Que","Mis")
 CO2 <- subset(CO2, Plant %in% c("Qn1", "Qc1", "Mn1", "Mc1"))
 @ %def 
-whereby the data becomes
-@ 
-<<>>=
-CO2
-@ %def 
+Data is shown in Section~\ref{sec:appdata}.
 
 
 \subsection{Airquality data} 
@@ -81,9 +76,8 @@ To limit the output we only consider data for two months:
 @ 
 <<>>=
 airquality <- subset(airquality, Month %in% c(5,6))
-head(airquality, n=20)
 @ %def 
-
+Data is shown in Section~\ref{sec:appdata}.
 
 \section{The \code{summaryBy} function}
 \label{sec:summaryBy}
@@ -98,7 +92,7 @@ the \code{CO2} data.
 \label{sec:xxx}
 
 
-For example, the mean, median and variance of \code{uptake} and
+For example, the mean and variance of \code{uptake} and
 \code{conc} for each value of \code{Plant} is obtained by:
 @ 
 <<>>=
@@ -116,6 +110,8 @@ summaryBy(conc+uptake~Plant, data=CO2,
 FUN=myfun1)
 @ %def 
 
+Note that the values returned by the function has been named as
+\code{m} and \code{v}.
 If the result of the function(s) are not named, then the names in the
 output data in general become less intuitive:
 @ 
@@ -124,13 +120,7 @@ myfun2 <- function(x){c(mean(x), var(x))}
 summaryBy(conc+uptake~Plant, data=CO2,FUN=myfun2)
 @ %def 
 
-The \code{postfix} argument gives an altertive way of naming the
-output variables:
-@ 
-<<>>=
-summaryBy(conc+uptake~Plant, data=CO2, postfix=c("mymean", "myvar"),
-FUN=myfun2)
-@ %def 
+
 
 
 
@@ -139,7 +129,7 @@ FUN=myfun2)
 \label{sec:xxx}
 
 
-It is possible to apply a list of functions. A typical usage will be
+It is possible use a list of functions. A typical usage will be
 by invoking a list of predefined functions:
 @ 
 <<>>=
@@ -151,21 +141,38 @@ Slightly more elaborate is
 <<>>=
 mymed <- function(x)c(med=median(x))
 summaryBy(uptake~Plant, data=CO2, 
-FUN=c(mean,var,myfun1,myfun2))
+FUN=c(mean,var,mymed))
 @ %def 
 
 The naming of the output variables determined from what the functions
 returns. The names of the last two columns above are imposed
 by \summaryby{} because \code{myfun2} does not return named values.
-Specifying \code{postfix=} overrides these names but when \code{FUN}
-is a list of functions, the new names are not very informative
-either:\footnote{This may be improved on later.}
+
+
+
+\subsection{Naming output variables with the \code{postfix} argument}
+\label{sec:postfix}
+
+The \code{postfix} argument gives an altertive way of naming the
+output variables: For example, the functions \code{myfun1} and
+\code{myfun2} both returns
+two values. These can be named as: 
 @ 
 <<>>=
-summaryBy(uptake~Plant, data=CO2, 
-postfix=c("aa","bb","cc"),
-FUN=c(mean,var,myfun1,myfun2))
+summaryBy(conc+uptake~Plant, data=CO2, postfix=list(
+c("mean1", "var1"),c("mean2", "var2")),
+FUN=c(myfun1,myfun2))
 @ %def 
+
+% Specifying \code{postfix=} overrides these names but when \code{FUN}
+% is a list of functions, the new names are not very informative
+% either:\footnote{This may be improved on later.}
+% @ 
+% <<>>=
+% summaryBy(uptake~Plant, data=CO2, 
+% postfix=c("aa","bb","cc"),
+% FUN=c(mean,var,myfun1,myfun2))
+% @ %def 
 
 
 
@@ -179,7 +186,7 @@ as:
 @ 
 <<>>=
 summaryBy(conc+uptake~Plant, data=CO2,
-FUN=function(x){c(m=mean(x),med=median(x), v=var(x))},
+FUN=myfun1,
 id=~Type+Treat)
 @ %def 
 
@@ -193,7 +200,7 @@ useful statistic) as well as for \code{uptake} and
 @ 
 <<>>=
 summaryBy(log(uptake)+I(conc+uptake)+ conc+uptake~Plant, data=CO2,
-FUN=function(x){c(m=mean(x), v=var(x))})
+FUN=myfun1)
 @ %def 
 
 If one does not want output variables to contain parentheses then
@@ -202,7 +209,7 @@ setting \code{p2d=TRUE} causes the parentheses to be replaced by dots
 @ 
 <<>>=
 summaryBy(log(uptake)+I(conc+uptake)~Plant, data=CO2, p2d=TRUE,
-FUN=function(x){c(m=mean(x), v=var(x))})
+FUN=myfun1)
 @ %def 
 
 
@@ -211,7 +218,7 @@ FUN=function(x){c(m=mean(x), v=var(x))})
 
 
 
-\subsection{The dot (".") on the left hand side of a formula}
+\subsection{Using "." on the left hand side of a formula}
 \label{sec:xxx}
 
 It is possible  to use the dot (".") on the left hand side of
@@ -221,11 +228,11 @@ the \code{id} statement):
 @ 
 <<>>=
 summaryBy(log(uptake)+I(conc+uptake)+. ~Plant, data=CO2,
-FUN=function(x){c(m=mean(x), v=var(x))})
+FUN=myfun1)
 @ %def 
 
 
-\subsection{The dot (".") on the right hand side of a formula}
+\subsection{Using "." on the right hand side of a formula}
 \label{sec:xxx}
 
 The dot (".") can also be used on the right hand side of the formula
@@ -234,10 +241,8 @@ specified elsewhere'':
 @ 
 <<>>=
 summaryBy(log(uptake) ~Plant+., data=CO2,
-FUN=function(x){c(m=mean(x), v=var(x))})
+FUN=myfun1)
 @ %def 
-
-
 
 \subsection{Using ``1'' on the right hand side of the formula}
 \label{sec:xxx}
@@ -246,8 +251,8 @@ Using 1 on the
   right hand side means no grouping:
 @ 
 <<>>=
-summaryBy(log(uptake) ~ 1, data=CO2,
-FUN=function(x){c(m=mean(x), v=var(x))})
+summaryBy(log(uptake) ~ 1, data=CO2, 
+FUN=myfun1)
 @ %def 
 
 
@@ -441,6 +446,23 @@ functionality in the \doby{} package.
 @ 
 <<echo=F>>=
 options(oopt)
+@ %def 
+
+\appendix
+
+\section{The data}
+\label{sec:appdata}
+
+The reduced \code{C02} are:
+@ 
+<<>>=
+CO2
+@ %def 
+
+The reduced \code{airquality} data are:
+@ 
+<<>>=
+head(airquality, n=20)
 @ %def 
 
 

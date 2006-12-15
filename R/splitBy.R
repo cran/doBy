@@ -10,14 +10,13 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       attr(groupData,"groupid") <- 1
     } else {
       
-      ff <- terms(ff, data = data)
-      m <- match.call(expand.dots = TRUE)
+      ff    <- terms(ff, data = data)
+      m     <- match.call(expand.dots = TRUE)
       group <- attr(terms(ff), "term.labels")
       
       ## workinggroup: Those variables in 'group' which are not constant.
       nonconstgroup <- rep(TRUE, length(group))
       
-      ##print(system.time({
       names(nonconstgroup) <- group
       for (i in 1:length(group)){
         nunique <- length(unique(data[,group[i]]))
@@ -26,7 +25,6 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
           nonconstgroup[i] <- FALSE
       }
       workinggroup <- group[nonconstgroup]            
-      ##}))
       
       ## grps: Recode groups into one vector
       grps <- data[, workinggroup,drop=FALSE]
@@ -61,14 +59,3 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
     return(groupData)
 }
 
-
-
-# asNumericMatrix2 <- function (x) 
-# {
-#     a <- attributes(x)
-#     k <- length(a$names)
-#     y <- matrix(as.numeric(unlist(x)), ncol = k, dimnames = list(a$row.names,  a$names))
-#     #if (storage.mode(y) == "character") 
-#     #    warning("x had at least one character vector")
-#     y
-# }
