@@ -2,6 +2,19 @@
 esticon <- function(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE)
   UseMethod("esticon")
 
+
+esticon.gls <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
+  if (joint.test==TRUE){
+    .wald(obj, cm, beta0)
+  } else {
+    stat.name <- "X2.stat"
+    vcv <- vcov(obj)
+    cf  <- matrix(coef(obj))
+    df <- 1
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+  }
+}
+
 esticon.lmer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
   if (joint.test==TRUE){
     .wald(obj, cm, beta0)
@@ -102,28 +115,31 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
 
     df <- nrow(cm)
     if ("geese" %in% class(obj)) {
-        cf <- obj$beta
-        vcv <- obj$vbeta
+      cf <- obj$beta
+      vcv <- obj$vbeta
     } else if ("geeglm" %in% class(obj)) {
       cf <- obj$coef
       vcv <- summary(obj)$cov.scaled
-    }
-    else if ("gee" %in% class(obj)) {
-        cf <- obj$coef
-        vcv <- obj$robust.variance
+    } else if ("gls" %in% class(obj)) {
+      vcv <- vcov(obj)
+      cf  <- matrix(coef(obj))
+    } else if ("gee" %in% class(obj)) {
+      cf <- obj$coef
+      vcv <- obj$robust.variance
     }
     else if ("lm" %in% class(obj)) {
-        cf <- summary.lm(obj)$coefficients[, 1]
-        vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
-        if ("glm" %in% class(obj)) {
-            vcv <- summary(obj)$cov.scaled
-        }
+      cf <- summary.lm(obj)$coefficients[, 1]
+      vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
+      if ("glm" %in% class(obj)) {
+        vcv <- summary(obj)$cov.scaled
+      }
     }
-    else stop("obj must be of class 'lm', 'glm', 'aov', 'gee' or 'geese'")
-    u <- (cm %*% cf)-beta0
-    vcv.u <- cm %*% vcv %*% t(cm)
-    W <- t(u) %*% solve(vcv.u) %*% u
-    prob <- 1 - pchisq(W, df = df)
+    else
+      stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee' or 'geese'")
+    u      <- (cm %*% cf)-beta0
+    vcv.u  <- cm %*% vcv %*% t(cm)
+    W      <- t(u) %*% solve(vcv.u) %*% u
+    prob   <- 1 - pchisq(W, df = df)
     retval <- as.data.frame(cbind(W, df, prob))
     names(retval) <- c("X2.stat", "DF", "Pr(>|X^2|)")
     return(as.data.frame(retval))
