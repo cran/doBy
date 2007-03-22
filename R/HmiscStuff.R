@@ -71,10 +71,6 @@
     }
   }
 
-
-
-
-
 .asNumericMatrix2 <- function (x)
 {
     a <- attributes(x)
