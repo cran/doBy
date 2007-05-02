@@ -6,7 +6,7 @@
 \title{Effect of Insecticide on survivial of tobacco budworms}
 \usage{data(budworm)}
 \description{
- number of killed budworms exposed to an insecticide 
+ Number of killed budworms after exposure to an insecticide.
 }
 \format{
   This data frame contains  12 rows and 4 columns:
@@ -18,9 +18,9 @@
   }
 }
 \details{
-mortality of the moth  tobacco budworm 'Heliothis virescens'
+Mortality of the moth  tobacco budworm 'Heliothis virescens'
 for 6 doses of the pyrethroid  trans-cypermethrin differentiated with
-respect to sex
+respect to sex.
 }
 \source{
  Collet, D. (1991) Modelling Binary Data, Chapman & Hall, London, 
@@ -32,25 +32,23 @@ Heidelberg, Springer, 3rd edition, chapter 7.2
 }
 \examples{
 data(budworm)
-
-#function to caclulate the empirical logits
+## function to caclulate the empirical logits
 empirical.logit<- function(nevent,ntotal) {
-y<-log ((nevent+0.5)/(ntotal-nevent+0.5))
-y
+  y<-log ((nevent+0.5)/(ntotal-nevent+0.5))
+  y
 }
 
+## plot the empirical logits against log-dose
 
-#plot the empirical logits against log-dose
-
-log.dose<-log(budworm$dose)
-emp.logit<-empirical.logit(budworm$ndead,budworm$ntotal)
+log.dose  <- log(budworm$dose)
+emp.logit <- empirical.logit(budworm$ndead,budworm$ntotal)
 plot(log.dose,emp.logit,type='n',xlab='log-dose',ylab='emprirical logit')
 title('budworm: emprirical logits of probability to die ')
-male<-budworm$sex=='male'
-female<-budworm$sex=='female'
+
+male   <- budworm$sex=='male'
+female <- budworm$sex=='female'
 lines(log.dose[male],emp.logit[male],type='b',lty=1,col=1)
 lines(log.dose[female],emp.logit[female],type='b',lty=2,col=2)
 legend(0.5,2,legend=c('male','female'),lty=c(1,2),col=c(1,2))
-
 }
 \keyword{datasets}

@@ -35,10 +35,13 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         }}
       grps <- grpsvec
 
+      ##print("IIIIIIIIIIIII")
       dataMatrix <- .asNumericMatrix2(data)
 
+      
       at <- .subsAttr2(data)
-
+      
+      
       a <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
       if (drop==TRUE)
         a<- a[lapply(a,nrow)>0]
@@ -48,14 +51,22 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       else{
         groupData <- lapply(a, .matrix2dataFrame2, at=at,restoreAll=FALSE)
       }
-      
-      groupid        <- lapply(groupData, function(x) x[1,group])
-      names(groupid) <- NULL
+      ##at <<- at
+      ##a  <<- a
+      #print(group)
+      #print(groupData)
+      ##print("IIIIIIIIJJJJJJJJJJ")
+      #print(groupData)
+      groupid        <- lapply(groupData, function(x) x[1,group,drop=FALSE])
+      #print(groupid)
 
+      names(groupid) <- NULL
       groupid        <- as.data.frame(do.call('rbind',groupid))
       names(groupid) <- group
+
       attr(groupData,"groupid") <- groupid
     }
+
     return(groupData)
 }
 

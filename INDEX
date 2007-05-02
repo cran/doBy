@@ -6,9 +6,9 @@ dietox                  Growth curves of pigs in a 3x3 factorial
                         experiment
 doBy                    Various utilities which includes functions for
                         creating groupwise calculations etc.
-doby.xtabs              Function to do groupwise calculations
 dose.LD50               Calculate LD50
 esticon                 Contrasts for lm, glm, lme, and geeglm objects
+lapplyBy                Formula based version of lapply
 orderBy                 Ordering (sorting) rows of a data frame
 recodevar               recode levels of variable
 sampleBy                Sampling from a data frame

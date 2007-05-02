@@ -27,7 +27,7 @@ splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
   dataframes and then these are returned. 
 }
 \value{
-  A list of dataframes of matrixes
+  A list of dataframes of matrices
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{Søren Højsgaard, sorenh@agrsci.dk}
@@ -41,7 +41,7 @@ splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
   \code{\link{summaryBy}},
   \code{\link{transformBy}},
   %\code{\link{splitBy}},
-  \code{\link{doby.xtabs}},
+  \code{\link{lapplyBy}},
   }
 }
 \examples{

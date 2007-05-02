@@ -30,7 +30,6 @@
   \code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{sampleBy}},
-  \code{\link{doby.xtabs}},
   }
 }
 

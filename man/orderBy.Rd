@@ -9,20 +9,21 @@
  can be given by a model formula.
 }
 \usage{
-orderBy(formula, data, na.last = TRUE, decreasing = FALSE)
+orderBy(formula, data)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{The right hand side of a formula}
   \item{data}{A data frame}
-  \item{na.last}{for controlling the treatment of 'NA's. If 'TRUE', missing
-          values in the data are put last; if 'FALSE', they are put
-          first; if 'NA', they are removed. }
-  \item{decreasing}{logical. Should the sort order be increasing or decreasing?}
+%  \item{na.last}{for controlling the treatment of 'NA's. If 'TRUE', missing
+%          values in the data are put last; if 'FALSE', they are put
+%          first; if 'NA', they are removed. }
+%  \item{decreasing}{logical. Should the sort order be increasing or decreasing?}
 }
-% \details{
-%   ~~ If necessary, more details than the description above ~~
-% }
+\details{
+  The sign of the terms in the formula determines whether sorting should
+  be ascending or decreasing; see examples below
+}
 \value{
   The ordered data frame
 }
@@ -36,6 +37,8 @@ orderBy(formula, data, na.last = TRUE, decreasing = FALSE)
 \examples{
 data(dietox)
 orderBy(~Time+Evit, data=dietox)
+# Sort decreasingly by Time
+orderBy(~-Time+Evit, data=dietox)
 }
 \keyword{utilities}% at least one, from doc/KEYWORDS
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
