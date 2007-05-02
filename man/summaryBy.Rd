@@ -30,7 +30,11 @@ the input, see 'examples'.}
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
-  NAs are removed before calculating summary statistics
+  Extra arguments ('...') are passed onto the functions in FUN. Hence
+  care must be taken that all functions in FUN accept these arguments -
+  OR one can explicitly write a functions which get around this.  This
+  can particularly be an issue in connection with handling NAs. See
+  examples below.
 }
 
 \value{
@@ -43,34 +47,56 @@ A data frame
   %\code{\link{summaryBy}},
   \code{\link{transformBy}},
   \code{\link{splitBy}},
-  \code{\link{doby.xtabs}},
+  \code{\link{lapplyBy}},
   }
 }
 
 \examples{
-data(dietox)
-dietox12    <- subset(dietox,dietox$Time==12)
 
-%myvar <- function(x) var(x,na.rm=TRUE)
-summaryBy(Weight+Feed~Evit+Cu,      data=dietox12, FUN=c(mean,var), na.rm=TRUE)  
+data(dietox)
+dietox12    <- subset(dietox,Time==12)
+
+summaryBy(Weight+Feed~Evit+Cu,      data=dietox12,
+   FUN=c(mean,var,length))  
 
 summaryBy(Weight+Feed~Evit+Cu+Time, data=subset(dietox,Time>1),
-FUN=c(mean,var), na.rm=TRUE)  
+   FUN=c(mean,var,length))  
 
-summaryBy(Weight+Feed~Evit+Cu,      data=dietox12, FUN=length)  
+## Calculations on transformed data:
 
-summaryBy(log(Weight)+Feed~Evit+Cu,      data=dietox12)  
-summaryBy(.~Evit+Cu,      data=dietox12, id=~Litter, FUN=mean)
+summaryBy(log(Weight)+Feed~Evit+Cu, data=dietox12)  
+
+## Calculations on all numerical variables (not mentioned elsewhere): 
+
+summaryBy(.~Evit+Cu,                data=dietox12,
+   id=~Litter, FUN=mean)
+
+## There are missing values in the 'airquality' data, so we remove these
+## before calculating mean and variance with 'na.rm=TRUE'. However the
+## length function does not accept any such argument. Hence we get
+## around this by defining our own summary function in which length is
+## not supplied with this argument while mean and var are:
+
+sumfun <- function(x, ...){
+  c(m=mean(x, ...), v=var(x, ...), l=length(x))
+}
+summaryBy(Ozone+Solar.R~Month, data=airquality, FUN=sumfun, na.rm=TRUE)
+
+## Using '.' on the right hand side of a formula means to stratify by
+## all variables not used elsewhere:
 
 data(warpbreaks)
 summaryBy(breaks ~ wool+tension, warpbreaks)
 summaryBy(breaks ~., warpbreaks)
 summaryBy(.~ wool+tension, warpbreaks)
 
-summaryBy(Ozone~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE)
+## Keep the names of the variables (works only if FUN only returns one
+## value):
 
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
   keep.names=TRUE)
+
+## Control the names of resultning variables by setting postfix:
 
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
   postfix=c("m","v"))
@@ -78,12 +104,6 @@ summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
 summaryBy(Ozone+Wind~Month, data=airquality,
   FUN=c(function(x,...){c(mean(x,...),var(x,...))},function(x,...){median(x,...)}),
   postfix=list(c("m","v"),"med"), na.rm=TRUE)
-
-
-summaryBy(conc ~ Plant, CO2)
-
-do.call("summaryBy", list(.~ Treatment, CO2[3:5], FUN = function(x) mean(range(x)), postfix = "midrange"))
-
 
 }
 \keyword{univar}% at least one, from doc/KEYWORDS

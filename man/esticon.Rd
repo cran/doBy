@@ -36,10 +36,11 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE)
   }
 }
 \details{
-  Let the estimated rparameters of the model be 
+  
+  Let the estimated parameters of the model be
   \deqn{latex}{\beta_1, \beta_2, \dots,\beta_p}
   A linear function of the estimates is of the form
-  \deqn{latex}{c=\lambda_1 \beta_1+\lambda2 \beta_2+ \dots+\lambda_p \beta_p}
+  \deqn{latex}{c=\lambda_1 \beta_1+\lambda_2 \beta_2+ \dots+\lambda_p \beta_p}
   where \eqn{latex}{\lambda_1, \lambda_2, \dots,\lambda_p} is specified
   by the user.
 
@@ -73,11 +74,9 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE)
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{Søren Højsgaard, sorenh@agrsci.dk}
-\note{'esticon' is modification of the 'estimable' function from the
-  gregmisc package: First, 'esticon' works on geese objects from the
-  geepack package (for Generalized Estimating Equations). Secondly, and
-  contrary to 'estimable', bases all inference for glms on the Wald
-  statistic.
+\note{'esticon' works on geese/geeglm objects from the
+  geepack package (for Generalized Estimating Equations), on 'lm' and 'glm'
+  objects, and on 'gls' objects.
 }
 
 %\seealso{\code{\link{wald}}}

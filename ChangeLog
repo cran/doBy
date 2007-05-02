@@ -1,3 +1,18 @@
+2007-05-01 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Miscellaneous corrections in the .Rd files
+
+	* lapplyBy function has been added
+
+	* Vignette has been updated
+
+	* Version 1.8 uploaded
+
+2007-04-21 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* orderBy changed so that signs in formula determines whether to
+	sort ascendingly or decreasingly
+
 2007-03-21 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* esticon extended to handle gls objects.

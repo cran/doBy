@@ -25,18 +25,23 @@ sampleBy(formula, frac = 0.1, replace=FALSE, data = parent.frame(),systematic=FA
 \value{
 A data frame
 }
-\references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, soreng@agrsci.dk}
+%\references{ ~put references to the literature/web site here ~ }
+\author{Søren Højsgaard, sorenh@agrsci.dk}
 % \note{ ~~further notes~~ 
 
 %  ~Make other sections like Warning with \section{Warning }{....} ~
 % }
-\seealso{See also \code{\link{splitBy}}}
+\seealso{
+  \code{\link{orderBy}},
+  \code{\link{summaryBy}},
+  \code{\link{transformBy}},
+  \code{\link{splitBy}},
+  }
+}
+
 \examples{
 data(dietox)
 sampleBy(formula = ~Evit+Cu, frac=.1, data = dietox)
-
-
 }
 \keyword{utilities}% at least one, from doc/KEYWORDS
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -126,6 +126,8 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   groupFormula[[2]] <- NULL
   splitData <- splitBy(groupFormula, data=newdata, drop=TRUE, return.matrix=FALSE)
 
+
+  
 ### Calculate groupwise statistics
 ###
   lhsvarvec <- paste(unlist(lhsvar)) 
@@ -140,6 +142,8 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
     }
   })
 
+
+  ##print("BUUUUUUUUUUUUUUUUUU")
   val  <- as.data.frame(do.call("rbind", byList))
   
   if (!is.null(rhsvar) && rhsvar!="1"){
@@ -156,7 +160,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
     }
     val <- cbind(groupid, val)
   }
-  
+
   if (!is.null(idvar)){
     idList <- lapply(splitData, function(x){
       x[1, idvar, drop=FALSE]
@@ -167,11 +171,14 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   if (length(unique(names(val))) != length(names(val)))
     warning("dataframe contains replicate names \n", call.=FALSE)
 
+  ##print("SSSSBBBB")
+  ##val <<- val
+  ##print(rhsstr)
   if (order==TRUE){
     if (rhsstr!="1")
       val <- orderBy(as.formula(paste("~", rhsstr)), data=val)
   }
-  
+
   names(val) <- gsub(" ","",names(val))
   if (p2d)
     names(val) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(val)))

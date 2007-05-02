@@ -14,5 +14,6 @@ export(
 "splitBy",
 "subsetBy",
 "summaryBy",
-"transformBy"
+"transformBy",
+"lapplyBy"
 )
