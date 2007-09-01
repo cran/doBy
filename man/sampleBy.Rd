@@ -36,8 +36,8 @@ A data frame
   \code{\link{summaryBy}},
   \code{\link{transformBy}},
   \code{\link{splitBy}},
-  }
 }
+
 
 \examples{
 data(dietox)

@@ -48,8 +48,8 @@ A data frame
   \code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{lapplyBy}},
-  }
 }
+
 
 \examples{
 

@@ -29,9 +29,9 @@
   \code{\link{orderBy}},
   \code{\link{transformBy}},
   \code{\link{splitBy}},
-  \code{\link{sampleBy}},
+  \code{\link{sampleBy}}
   }
-}
+
 
 \examples{
 
