@@ -38,8 +38,8 @@ transformBy(formula, data, ...)
   \code{\link{summaryBy}},
   \code{\link{splitBy}},
   \code{\link{doby.xtabs}},
-  }
 }
+
 
 
 \examples{

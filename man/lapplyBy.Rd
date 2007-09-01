@@ -35,8 +35,8 @@ lapplyBy(formula, data = parent.frame(), FUN)
   \code{\link{transformBy}},
   \code{\link{splitBy}},
   %\code{\link{lapplyBy}},
-  }
 }
+
 
 \examples{
 data(dietox)

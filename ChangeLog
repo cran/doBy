@@ -1,5 +1,13 @@
 2007-05-01 Søren Højsgaard <sorenh@agrsci.dk>
 
+	* summaryBy: Behaviour with . on rhs of formula when data contains
+	no factors has been corrected.
+
+	* Version 1.9 uploaded
+
+
+2007-05-01 Søren Højsgaard <sorenh@agrsci.dk>
+
 	* Miscellaneous corrections in the .Rd files
 
 	* lapplyBy function has been added

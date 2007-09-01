@@ -35,6 +35,7 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         }}
       grps <- grpsvec
 
+      grps<<-grps
       ##print("IIIIIIIIIIIII")
       dataMatrix <- .asNumericMatrix2(data)
 
@@ -69,4 +70,9 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
 
     return(groupData)
 }
+
+
+
+
+
 

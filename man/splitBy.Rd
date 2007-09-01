@@ -42,8 +42,8 @@ splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
   \code{\link{transformBy}},
   %\code{\link{splitBy}},
   \code{\link{lapplyBy}},
-  }
 }
+
 \examples{
 data(dietox)
 splitBy(formula = ~Evit+Cu, data = dietox)

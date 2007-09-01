@@ -74,6 +74,15 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
 
   if (is.null(rhsvar) | "." %in% rhsvar){
     rhsvar <- setdiff(facvar, c(lhsvar, idvar))
+
+    if (length(rhsvar)==0){
+      stop("No factors are identified for grouping...")
+    }
+
+    ##
+    ##print(facvar); print(rhsvar)
+    ##rhsvar <- setdiff(datavar, c(lhsvar, idvar))
+
     if (trace>=1)
       {cat(".rhsvar: "); print(rhsvar)}
   }
