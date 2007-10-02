@@ -1,3 +1,5 @@
+importFrom(Hmisc,mApply)
+
 export(
 "changeNames",
 "doby.xtabs",
