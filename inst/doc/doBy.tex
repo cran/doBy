@@ -449,9 +449,9 @@ in an attribute called \code{groupid} and can be retrieved with:
 > attr(x, "groupid")
 \end{Sinput}
 \begin{Soutput}
-   Month
-1      5
-32     6
+  Month
+1     5
+2     6
 \end{Soutput}
 \end{Schunk}
 
@@ -484,10 +484,10 @@ wind speed is larger than the mean wind speed (within the month). This
 is achieved by:
 \begin{Schunk}
 \begin{Sinput}
-> subsetBy(~Month, subset = "Wind>mean(Wind)", data = airquality)
+> subsetBy(~Month, subset = Wind > mean(Wind), data = airquality)
 \end{Sinput}
 \end{Schunk}
-Note that the statement \code{"Wind>mean(Wind)"} is evaluated within
+Note that the statement \code{Wind>mean(Wind)} is evaluated within
 each month.
 
 

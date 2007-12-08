@@ -348,9 +348,9 @@ wind speed is larger than the mean wind speed (within the month). This
 is achieved by:
 @ 
 <<results=hide>>=
-subsetBy(~Month, subset='Wind>mean(Wind)', data=airquality)
+subsetBy(~Month, subset=Wind>mean(Wind), data=airquality)
 @ %def 
-Note that the statement \code{"Wind>mean(Wind)"} is evaluated within
+Note that the statement \code{Wind>mean(Wind)} is evaluated within
 each month.
 
 

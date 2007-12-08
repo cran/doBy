@@ -88,8 +88,8 @@
   M. Hanson,
   Fisheries & Oceans Canada (chabotd@dfo-mpo.gc.ca).
 }
-\references{
-}
+%\references{
+%}
 \examples{
 data(codstom)
 str(codstom)
