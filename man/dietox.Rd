@@ -1,6 +1,6 @@
 \name{dietox}
 \alias{dietox}
-\non_function{}
+
 \title{Growth curves of pigs in a 3x3 factorial experiment}
 \usage{data(dietox)}
 \description{

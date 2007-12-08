@@ -37,7 +37,8 @@
 
 data(dietox)
 
-summaryBy(Weight+Feed~Evit+Cu+Time,      data=dietox, FUN=c(mean,var), na.rm=TRUE)  
+summaryBy(Weight+Feed~Evit+Cu+Time,      data=dietox, FUN=c(mean,var),
+na.rm=TRUE, use="pair")  
 
 orderBy(~Time+Evit, data=dietox)
 

@@ -3,6 +3,7 @@ summaryBy <-
 function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
           postfix=NULL,  p2d=FALSE, order=TRUE, ...) {
 
+
   parseIt <- function(x){
     ###cat("parseIt:"); print(x); print(class(x))
     if (class(x)=='name'){
@@ -48,7 +49,7 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   
   lhsAtoms <- parseIt(lhs)
   lhsvar   <- lhsAtoms
-    
+
   if (length(lhsvar)==1)
     lhsvar <- list(lhsvar)
 
@@ -139,20 +140,25 @@ function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
   
 ### Calculate groupwise statistics
 ###
+
   lhsvarvec <- paste(unlist(lhsvar)) 
   byList <- lapply(splitData, function(x){
     xr  <- x[, lhsvarvec, drop = FALSE]
     v <- NULL
     for (j in 1:length(FUN)) {        
       currFUN <- FUN[[j]]
+      ##print(currFUN)
+      ##cf <<- currFUN; xr <<- xr
       vf2 <- lapply(xr, currFUN, ...)
+      ##print("aaaaa")
       vf2 <- changeNames(vf2,fun.names[j],j,postfix[j], keep.names)
+      ##print("bbbbb")
       v <- c(v,vf2)
     }
   })
 
 
-  ##print("BUUUUUUUUUUUUUUUUUU")
+
   val  <- as.data.frame(do.call("rbind", byList))
   
   if (!is.null(rhsvar) && rhsvar!="1"){

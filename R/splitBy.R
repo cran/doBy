@@ -25,7 +25,7 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
           nonconstgroup[i] <- FALSE
       }
       workinggroup <- group[nonconstgroup]            
-      
+
       ## grps: Recode groups into one vector
       grps <- data[, workinggroup,drop=FALSE]
       grpsvec<-paste(grps[,1])
@@ -33,15 +33,10 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         for (j in 2:ncol(grps)){
           grpsvec <- paste(grpsvec,paste(grps[,j]),sep='|')
         }}
-      grps <- grpsvec
+      grps <- grpsvec ## aa|b|xx etc...
 
-      grps<<-grps
-      ##print("IIIIIIIIIIIII")
       dataMatrix <- .asNumericMatrix2(data)
-
-      
       at <- .subsAttr2(data)
-      
       
       a <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
       if (drop==TRUE)
@@ -52,25 +47,37 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       else{
         groupData <- lapply(a, .matrix2dataFrame2, at=at,restoreAll=FALSE)
       }
-      ##at <<- at
-      ##a  <<- a
-      #print(group)
-      #print(groupData)
-      ##print("IIIIIIIIJJJJJJJJJJ")
-      #print(groupData)
       groupid        <- lapply(groupData, function(x) x[1,group,drop=FALSE])
-      #print(groupid)
-
+      
       names(groupid) <- NULL
       groupid        <- as.data.frame(do.call('rbind',groupid))
       names(groupid) <- group
-
+      rownames(groupid) <- 1:nrow(groupid)
+      
       attr(groupData,"groupid") <- groupid
-    }
 
+      uniqval <- sapply(1:nrow(groupid), function(k){
+        x <- groupid[k,,drop=TRUE]
+        paste(x,collapse='|')
+      })
+      
+      idxvec <- as.list(rep(NA, length(uniqval)))
+      names(idxvec) <- uniqval
+      for (i in 1:length(uniqval)){
+        idxvec[[i]] <- which(grps==uniqval[i])
+      }
+      
+      attr(groupData,"idxvec") <- idxvec
+      attr(groupData,"grps") <- grps
+    }
+    class(groupData) <- c("splitByData", "list")
     return(groupData)
 }
 
+print.splitByData <- function(x,...){
+  print(attr(x,"groupid"))
+  return(invisible(x))
+}
 
 
 

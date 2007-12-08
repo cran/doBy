@@ -64,10 +64,10 @@ orderBy <- function (formula, data){
   for(i in 1:length(vars)){
     csign <- signs[i]
     cvar  <- vars[i]
-    ## cat("csign:", csign, "cvar:", cvar, "\n")
+    #cat("csign:", csign, "cvar:", cvar, "\n")
     cdat  <- dat[,cvar]
-    ##print(cdat)
-    ##cdat<<-cdat
+    #print(cdat)
+    #cdat<<-cdat
     if(is.factor(cdat)){
       if(csign=="-")
         orderlist[[i]] <- -myrank(cdat)
@@ -82,7 +82,8 @@ orderBy <- function (formula, data){
     }
   }
 
-  ##print(orderlist)
+  orderlist <<- orderlist
+  #print(orderlist)
   dat[do.call("order",orderlist),]
 
 

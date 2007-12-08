@@ -2,7 +2,7 @@
 \alias{budworm}
 
 
-\non_function{}
+
 \title{Effect of Insecticide on survivial of tobacco budworms}
 \usage{data(budworm)}
 \description{
@@ -23,12 +23,12 @@ for 6 doses of the pyrethroid  trans-cypermethrin differentiated with
 respect to sex.
 }
 \source{
- Collet, D. (1991) Modelling Binary Data, Chapman & Hall, London, 
-Example 3.7
-        }
+  Collet, D. (1991) Modelling Binary Data, Chapman & Hall, London, 
+  Example 3.7
+}
 \references{
-Venables, W.N; Ripley, B.D.(1999) Modern Applied Statistics with S-Plus,
-Heidelberg, Springer, 3rd edition, chapter 7.2
+  Venables, W.N; Ripley, B.D.(1999) Modern Applied Statistics with S-Plus,
+  Heidelberg, Springer, 3rd edition, chapter 7.2
 }
 \examples{
 data(budworm)
