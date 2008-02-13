@@ -8,6 +8,7 @@ doBy                    Various utilities which includes functions for
                         creating groupwise calculations etc.
 dose.LD50               Calculate LD50
 esticon                 Contrasts for lm, glm, lme, and geeglm objects
+firstobs                Locate the index of the first/last unique value
 lapplyBy                Formula based version of lapply
 orderBy                 Ordering (sorting) rows of a data frame
 recodevar               recode levels of variable

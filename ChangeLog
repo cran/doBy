@@ -1,3 +1,11 @@
+2008-02-13 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* firstobs and lastobs functions added
+
+	* Version 2.2 uploaded
+
+	
+
 2007-12-05 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* splitBy: Results becomes a splitByData object. Two attributes
@@ -9,6 +17,7 @@
 	follows the ordering given by formula. 
 
 	* subsetBy: Now subset is a logical expression, not a character string
+
 	* Version 2.1 uploaded
 
 

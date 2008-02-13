@@ -633,6 +633,45 @@ Observe that another function for calculating contrasts as above is the
 \code{contrast} function in the \pkg{Design} package but it applies to
 a narrower range of models than \code{esticon} does.
 
+\subsection{The \code{firstobs} / \code{lastobs} function} 
+\label{firstlast}
+
+To obtain the indices of the first/last occurences of an item in a
+vector do:
+\begin{Schunk}
+\begin{Sinput}
+> x <- c(1, 1, 1, 2, 2, 2, 1, 1, 1, 3)
+> firstobs(x)
+\end{Sinput}
+\begin{Soutput}
+[1]  1  4 10
+\end{Soutput}
+\begin{Sinput}
+> lastobs(x)
+\end{Sinput}
+\begin{Soutput}
+[1]  6  9 10
+\end{Soutput}
+\end{Schunk}
+
+The same can be done on a data frame, e.g.
+\begin{Schunk}
+\begin{Sinput}
+> firstobs(~Plant, data = CO2)
+\end{Sinput}
+\begin{Soutput}
+[1]  1  8 15 22
+\end{Soutput}
+\begin{Sinput}
+> lastobs(~Plant, data = CO2)
+\end{Sinput}
+\begin{Soutput}
+[1]  7 14 21 28
+\end{Soutput}
+\end{Schunk}
+
+
+
 
 
 \section{Final remarks} 
