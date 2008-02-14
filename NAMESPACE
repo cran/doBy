@@ -1,21 +1,28 @@
 importFrom(Hmisc,mApply)
 
 export(
-"changeNames",
-"doby.xtabs",
-"dose.LD50",
-"esticon",
-"esticon.geeglm",
-"esticon.glm",
-"esticon.lm",
-"esticon.lme",
-"esticon.lmer",
-"orderBy",
-"recodevar",
-"sampleBy",
-"splitBy",
-"subsetBy",
-"summaryBy",
-"transformBy",
-"lapplyBy"
-)
+       "changeNames",
+       "doby.xtabs",
+       "dose.LD50",
+       "esticon",
+       "esticon.geeglm",
+       "esticon.glm",
+       "esticon.lm",
+       "esticon.lme",
+       "esticon.lmer",
+       "firstobs",
+       "firstobs.default",
+       "firstobs.formula",
+       "lastobs",
+       "lastobs.default",
+       "lastobs.formula",
+       "lapplyBy",
+       "orderBy",
+       "recodevar",
+       "sampleBy",
+       "splitBy",
+       "subsetBy",
+       "summaryBy",
+       "transformBy"
+       
+       )
