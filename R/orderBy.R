@@ -82,7 +82,7 @@ orderBy <- function (formula, data){
     }
   }
 
-  orderlist <<- orderlist
+  ##orderlist <<- orderlist
   #print(orderlist)
   dat[do.call("order",orderlist),]
 
