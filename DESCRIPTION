@@ -1,5 +1,5 @@
 Package: doBy
-Version: 2.3
+Version: 3.0
 Title:   Groupwise computations of summary statistics and other utilities
 Author:  Søren Højsgaard <sorenh@agrsci.dk>
 Maintainer: Søren Højsgaard <sorenh@agrsci.dk>
@@ -8,4 +8,4 @@ Encoding: latin1
 ZipData: no
 License: GPL (>= 2)
 Imports: Hmisc
-Packaged: Wed Mar 26 18:00:08 2008; shd
+Packaged: Wed May 21 10:33:30 2008; shd
