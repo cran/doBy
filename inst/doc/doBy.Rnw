@@ -103,22 +103,16 @@ For example, the mean and variance of \code{uptake} and
 \code{conc} for each value of \code{Plant} is obtained by:
 @ 
 <<>>=
-summaryBy(conc+uptake~Plant, data=CO2,
-FUN=function(x){c(m=mean(x), v=var(x))})
-@ %def 
-
-Defining the function to return named values as above is the
-recommended use of \summaryby. 
-The function can also be defined outside the call to \code{summaryBy}:
-@ 
-<<results=hide>>=
 myfun1 <- function(x){c(m=mean(x), v=var(x))} 
 summaryBy(conc+uptake~Plant, data=CO2,
 FUN=myfun1)
 @ %def 
 
+Defining the function to return named values as above is the
+recommended use of \summaryby. 
 Note that the values returned by the function has been named as
 \code{m} and \code{v}.
+
 If the result of the function(s) are not named, then the names in the
 output data in general become less intuitive:
 @ 
@@ -129,14 +123,11 @@ summaryBy(conc+uptake~Plant, data=CO2,FUN=myfun2)
 
 
 
-
-
-
-\subsection{Using a list of functions}
+\subsection{Using predefined functions}
 \label{sec:xxx}
 
 
-It is possible use a list of functions. A typical usage will be
+It is possible use a vector of predefined functions. A typical usage will be
 by invoking a list of predefined functions:
 @ 
 <<>>=
@@ -157,19 +148,19 @@ by \summaryby{} because \code{myfun2} does not return named values.
 
 
 
-\subsection{Naming output variables with the \code{postfix} argument}
-\label{sec:postfix}
+% \subsection{Naming output variables with the \code{postfix} argument}
+% \label{sec:postfix}
 
-The \code{postfix} argument gives an altertive way of naming the
-output variables: For example, the functions \code{myfun1} and
-\code{myfun2} both returns
-two values. These can be named as: 
-@ 
-<<>>=
-summaryBy(conc+uptake~Plant, data=CO2, postfix=list(
-c("mean1", "var1"),c("mean2", "var2")),
-FUN=c(myfun1,myfun2))
-@ %def 
+% The \code{postfix} argument gives an altertive way of naming the
+% output variables: For example, the functions \code{myfun1} and
+% \code{myfun2} both returns
+% two values. These can be named as: 
+% @ 
+% <<>>=
+% summaryBy(conc+uptake~Plant, data=CO2, postfix=list(
+% c("mean1", "var1"),c("mean2", "var2")),
+% FUN=c(myfun1,myfun2))
+% @ %def 
 
 % Specifying \code{postfix=} overrides these names but when \code{FUN}
 % is a list of functions, the new names are not very informative
@@ -501,9 +492,9 @@ lastobs(~Plant, data=CO2)
 
 The \code{esticon} functions and other smaller functions are likely to
 be removed from the \doby{} package in the future. Credit is due to
-Dennis Chabot, Gabor Grothendieck, Paul Murrell and Erik Jørgensen for
+Dennis Chabot, Gabor Grothendieck, Paul Murrell, Jim Robison-Cox  and Erik Jørgensen for
 reporting various bugs and making various suggestions to the
-functionality in the \doby{} package.
+functionality in the \doby{} package. 
 
 @ 
 <<echo=F>>=

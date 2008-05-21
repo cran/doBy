@@ -1,7 +1,7 @@
 importFrom(Hmisc,mApply)
 
 export(
-       "changeNames",
+       ##"changeNames",
        "doby.xtabs",
        "dose.LD50",
        "esticon",

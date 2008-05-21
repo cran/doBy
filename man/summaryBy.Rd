@@ -8,7 +8,7 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-keep.names=FALSE, postfix=NULL, p2d=FALSE, order=TRUE, ...)
+keep.names=FALSE, p2d=FALSE, order=TRUE, ...)
 
 }
 %- maybe also `usage' for other objects documented here.
@@ -22,8 +22,8 @@ keep.names=FALSE, postfix=NULL, p2d=FALSE, order=TRUE, ...)
 \item{keep.names}{If TRUE and if there is only ONE function in FUN, then
 the variables in the output will have the same name as the variables in
 the input, see 'examples'.}
-\item{postfix}{An optional vector of postfixes for the names of the output
-  variables, see 'examples'.}
+%\item{postfix}{An optional vector of postfixes for the names of the output
+%  variables, see 'examples'.}
 \item{p2d}{Should parentheses in output variable names be replaced by dots?}
 \item{order}{Should the resulting dataframe be ordered according to the
   variables on the right hand side of the formula? (using \link{orderBy}}
@@ -35,6 +35,8 @@ the input, see 'examples'.}
   OR one can explicitly write a functions which get around this.  This
   can particularly be an issue in connection with handling NAs. See
   examples below.
+
+  Some code for this function has been suggested by Jim Robison-Cox. 
 }
 
 \value{
@@ -96,16 +98,7 @@ summaryBy(.~ wool+tension, warpbreaks)
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
   keep.names=TRUE)
 
-## Control the names of resultning variables by setting postfix:
-
-summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean,var),na.rm=TRUE,
-  postfix=c("m","v"))
-
-summaryBy(Ozone+Wind~Month, data=airquality,
-  FUN=c(function(x,...){c(mean(x,...),var(x,...))},function(x,...){median(x,...)}),
-  postfix=list(c("m","v"),"med"), na.rm=TRUE)
 
 }
 \keyword{univar}% at least one, from doc/KEYWORDS
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
-

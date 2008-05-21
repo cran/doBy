@@ -1,3 +1,10 @@
+2008-05-20 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* summaryBy speeded up; postfix argument removed
+
+	* Version 3.0 uploaded
+
+
 2008-03-26 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Minor bugs removed.
