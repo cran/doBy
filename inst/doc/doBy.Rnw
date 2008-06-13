@@ -302,8 +302,16 @@ head(x)
 Suppose we want to split the \code{airquality} data into a list of dataframes, e.g.\ one
 dataframe for each month. This can be achieved by:
 @ 
-<<results=hide>>=
+<<>>=
 x<-splitBy(~Month, data=airquality)
+x
+@ %def 
+Hence for month 5, the relevant entry-name in the list is '5' and this
+part of data  can
+be extracted as
+@ 
+<<results=hide>>=
+x[['5']]
 @ %def 
 
 Information about the grouping is stored as a dataframe 
@@ -361,8 +369,9 @@ transformBy(~Month, data=airquality, minW=min(Wind), maxW=max(Wind),
 \section{The \code{lapplyBy} function} 
 \label{sec:transformby}
 
-This \code{lapplyBy} function is a wrapper for calling lapply on the list resulting
-from first calling splitBy.
+This \code{lapplyBy} function is a wrapper for first splitting data
+into a list according to the formula (using splitBy) and then applying
+a function to each element of the list (using apply).
 
 Suppose we want to calculate the weekwise feed efficiency of the pigs
 in the \code{dietox} data, i.e. weight gain divided by feed intake.
