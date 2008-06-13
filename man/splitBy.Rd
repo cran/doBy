@@ -1,14 +1,16 @@
 \name{splitBy}
 \alias{splitBy}
+\alias{print.splitByData}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Split a data frame}
 \description{
   This is essentially a wrapper for the 'split' function,
-- the important difference being that variables to order by
- can be given by a model formula. 
+  - the important difference being that variables to order by
+  can be given by a model formula. 
 }
 \usage{
 splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
+\method{print}{splitByData}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +20,8 @@ splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
     dropped }
   \item{return.matrix}{Should the returned list consist of dataframs or
     matrices, see 'details' below}
+  \item{x}{A splitByData object (basically a list).}
+  \item{...}{Additional arguments, currently not used.}
 }
 \details{
   The funcion transform the dataframe 'data' into a numerical matrix

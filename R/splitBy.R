@@ -75,7 +75,8 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
 }
 
 print.splitByData <- function(x,...){
-  print(attr(x,"groupid"))
+#  print(attr(x,"groupid"))
+  print(cbind(listentry=names(x), attr(x,"groupid")))
   return(invisible(x))
 }
 

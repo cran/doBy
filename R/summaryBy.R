@@ -419,8 +419,10 @@ summaryBy <-
 
     df <- NULL
 
-    for (vv in 1:length(lhsvar)){
-      for (ff in 1:length(FUN)){
+    for (ff in 1:length(FUN)) {
+      for (vv in 1:length(lhsvar)) {
+                                        #for (vv in 1:length(lhsvar)){
+                                        #for (ff in 1:length(FUN)){
         currFUN <- FUN[[ff]]
         zzz <- tapply(lhsdata[,lhsvar[vv]], rhsfact, function(x){
           currFUN(x,...)
@@ -452,15 +454,26 @@ summaryBy <-
     else {
       hasNames <- 1*(prod(nchar(oldnames))>0)
     }
-    #print(hasNames)
-    #    print(oldnames)
+                                        #cat("oldnames:", oldnames, "\n")
+                                        #cat("hasNames:", hasNames, "\n")
     
     if (!keep.names){
       if (hasNames>0){
-        aaa <- colnames(df)[1:dimr]         
-        newnames <- unlist(lapply(aaa, function(x) paste(lhsvar, x, sep='.')))
+        funNames <- colnames(df)[1:dimr]         
+        #print(funNames)
+        #funNames<<- funNames; lhsvar <<- lhsvar
+        newnames <- unlist(lapply(lhsvar, function(v){paste(v, funNames, sep='.')}))
+
       } else {
-        newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
+        #cat("no names...\n")
+        #print(fun.names)
+        #print(dimr)
+        if (length(fun.names) != dimr){
+          fun.names <- paste("FUN", 1:dimr,sep='')
+          newnames <- unlist(lapply(lhsvar, function(v){paste(v, fun.names, sep='.')}))
+        } else {
+          newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
+        }
         if (length(newnames)!=ncol(df)){
           fun.names <- paste(fun.names, 1:dimr, sep=".")
           newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
@@ -468,6 +481,8 @@ summaryBy <-
       }
     }
 
+                                        #cat("newnames:", newnames, "\n")
+    
     colnames(df) <- newnames
     df <- as.data.frame(df)
     
