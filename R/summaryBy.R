@@ -1,4 +1,214 @@
 
+summaryBy <- 
+  function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
+            ##postfix=NULL,
+            p2d=FALSE, order=TRUE, ...) {
+    
+    
+    parseIt <- function(x){
+      ##cat("parseIt:"); print(x); print(class(x))
+      if (class(x)=='name'){
+        value <- x
+      } else {
+        s <- paste(x[[1]])
+        value <- switch(s,
+                        '+'={  c(parseIt(x[[2]]),parseIt(x[[3]]))},
+                        'I'={  x[[2]]},
+                        {  deparse(x)})
+      }
+      return(value)
+    }
+    
+    lhsString <- function(formula) {
+      if (!is.null(formula))
+        if (length(formula)>=3){
+          .xxx. <- formula[[2]]
+          ##unlist(strsplit(deparse(.xxx.),".\\+."))
+          unlist(paste(strsplit(deparse(.xxx.),collapse=""),".\\+."))
+          
+        }
+    }
+    rhsString <- function(formula) {
+      if (!is.null(formula)){
+        .xxx. <- formula[[length(formula)]]
+        ##unlist(strsplit(deparse(.xxx.),".\\+."))
+        unlist(strsplit(paste(deparse(.xxx.),collapse=""),".\\+."))
+      }
+    }
+    ## #######################################
+    
+    trace <- 0
+    lhs      <- formula[[2]]
+    rhsvar   <- rhsString(formula)
+    idvar    <- rhsString(id)
+    datavar  <- names(data)
+    
+    cls <- lapply(data, class)
+    
+
+    numvar <- datavar[  cls %in% c("numeric","integer")]
+    facvar <- datavar[!(cls %in% c("numeric","integer"))]
+    if (trace>=1){
+      cat("datavar:"); print(datavar)
+      cat("numvar :"); print(numvar)
+      cat("facvar :"); print(facvar)
+      cat("idvar  :"); print(idvar)
+    }
+    
+    lhsvar <- parseIt(lhs)
+    
+    if (length(lhsvar)==1)
+      lhsvar <- list(lhsvar)
+    
+    if (paste(rhsvar)[1]=='.')
+      rhsvar <- NULL
+    
+    if ("." %in% lhsvar){
+      lhsvar <- setdiff(lhsvar, ".")
+      v  <- setdiff(numvar, c(lhsvar, intersect(rhsvar,numvar), intersect(idvar, numvar)))
+      isSpecial <- rep(NA,length(v))
+      for (j in 1:length(v)){
+        isSpecial[j]<- (class(data[,v[j]])[1] %in% c("POSIXt", "factor", "character"))
+      }      
+      extralhsvar<-v[!isSpecial]
+      lhsvar <- union(lhsvar, extralhsvar)
+      if (trace>=1)
+        cat("lhsvar (new) :", paste(lhsvar),"\n")
+    }
+    
+    lhsstr <- paste(lhsvar, collapse='+')
+    if (trace>=1)
+      cat("lhsstr:", lhsstr, "\n")
+    
+    if (is.null(rhsvar) | "." %in% rhsvar){
+      rhsvar <- setdiff(facvar, c(lhsvar, idvar))
+      
+      if (length(rhsvar)==0){
+        stop("No factors are identified for grouping...")
+      }
+          
+      if (trace>=1)
+        {cat(".rhsvar: "); print(rhsvar)}
+    }
+    
+    rhsstr  <- paste (rhsvar, collapse='+')
+    str     <- paste(paste(lhsstr, "~", rhsstr, collape=''))
+    formula <- as.formula(str)
+    
+    if (trace>=1){
+      cat("status:\n")
+      cat("rhsvar     :", paste(rhsvar),"\n")
+      cat("idvar      :", paste(idvar),"\n")
+      print(formula)
+    }
+    
+### Function names
+###
+    
+    if (!is.list(FUN)) 
+      fun.names <- paste(deparse(substitute(FUN)), collapse = " ")
+    else
+      fun.names <- unlist(lapply(substitute(FUN)[-1], function(a) paste(a)))
+    
+    if (!is.list(FUN)) 
+      FUN <- list(FUN)
+
+    rhsvar <- if (rhsvar[1]=="1") idvar else c(rhsvar,idvar)
+    lhsvar <- paste(unlist(lhsvar))
+    
+    rhsdata <-data[,rhsvar,drop=FALSE]
+    rhsfact <- apply(rhsdata, 1, paste, collapse="@")
+    names(rhsfact)<-NULL
+    rhsunique <- unique(rhsfact)
+
+    lhsdata <- do.call(cbind,lapply(paste(lhsvar), function(x)eval(parse(text=x), data)))
+    colnames(lhsdata)<-lhsvar
+    
+### Calculate groupwise statistics
+###
+
+    df <- NULL
+
+    for (ff in 1:length(FUN)) {  ## loop over functions
+      for (vv in 1:length(lhsvar)) {  ## loop over variables
+        currFUN <- FUN[[ff]]
+        zzz <- tapply(lhsdata[,lhsvar[vv]], rhsfact, function(x){
+          currFUN(x,...)
+        }, simplify=FALSE)
+        zzz <- do.call(rbind, zzz)
+        df  <- cbind(df, zzz)
+      }
+    }
+
+### Names for new variables
+###  
+
+    if (keep.names){
+      if (ncol(df)==length(lhsvar)){
+        newnames <- lhsvar
+      } else {
+        keep.names <- FALSE
+      }
+    }
+
+    dimr <- (ncol(df))/length(lhsvar) ## Dim of response (per variable on LHS)
+    oldnames <- colnames(df)
+
+    if (is.null(oldnames))
+      hasNames <- 0
+    else {
+      hasNames <- 1*(prod(nchar(oldnames))>0)
+    }
+    
+    if (!keep.names){
+      if (hasNames>0){
+        funNames <- colnames(df)[1:dimr]         
+        newnames <- unlist(lapply(lhsvar, function(v){paste(v, funNames, sep='.')}))
+
+      } else {
+        if (length(fun.names) != dimr){
+          fun.names <- paste("FUN", 1:dimr,sep='')
+          newnames <- unlist(lapply(lhsvar, function(v){paste(v, fun.names, sep='.')}))
+        } else {
+          newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
+        }
+        if (length(newnames)!=ncol(df)){
+          fun.names <- paste(fun.names, 1:dimr, sep=".")
+          newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
+        }
+      }
+    }
+
+    colnames(df) <- newnames
+    df <- as.data.frame(df)
+    
+    rowid <- tapply(1:length(rhsfact), rhsfact, function(x){x[1]})
+    df <- cbind(rhsdata[rowid,,drop=FALSE], df)
+    
+    if (length(unique(names(df))) != length(names(df)))
+      warning("dataframe contains replicate names \n", call.=FALSE)
+
+    if (order==TRUE){
+      if (rhsstr!="1")
+        df <- orderBy(as.formula(paste("~", rhsstr)), data=df)
+    }
+    if (p2d)
+      names(df) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(df)))
+
+    rownames(df) <- 1:nrow(df)
+    return(df)
+
+  }
+
+
+
+
+
+
+
+
+
+
 ## .summaryByOLD <- 
 ##   function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
 ##             postfix=NULL,  p2d=FALSE, order=TRUE, ...) {
@@ -284,230 +494,6 @@
 ##   return(vv2)
 ## }
   
-
-
-
-summaryBy <- 
-  function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
-            ##postfix=NULL,
-            p2d=FALSE, order=TRUE, ...) {
-    
-    
-    parseIt <- function(x){
-      ##cat("parseIt:"); print(x); print(class(x))
-      if (class(x)=='name'){
-        value <- x
-      } else {
-        s <- paste(x[[1]])
-        value <- switch(s,
-                        '+'={  c(parseIt(x[[2]]),parseIt(x[[3]]))},
-                        'I'={  x[[2]]},
-                        {  deparse(x)})
-      }
-      return(value)
-    }
-    
-    lhsString <- function(formula) {
-      if (!is.null(formula))
-        if (length(formula)>=3)
-          unlist(strsplit(deparse(formula[[2]]),".\\+."))
-    }
-    rhsString <- function(formula) {
-      if (!is.null(formula))
-        unlist(strsplit(deparse(formula[[length(formula)]]),".\\+."))
-    }
-    
-    ## #######################################
-    
-    trace <- 0
-    lhs      <- formula[[2]]
-    rhsvar   <- rhsString(formula)
-    idvar    <- rhsString(id)
-    datavar  <- names(data)
-    
-    cls <- lapply(data, class)
-    
-    numvar <- datavar[  cls %in% c("numeric","integer")]
-    facvar <- datavar[!(cls %in% c("numeric","integer"))]
-    if (trace>=1){
-      cat("datavar:"); print(datavar)
-      cat("numvar :"); print(numvar)
-      cat("facvar :"); print(facvar)
-      cat("idvar  :"); print(idvar)
-    }
-    
-    lhsAtoms <- parseIt(lhs)
-    lhsvar   <- lhsAtoms
-    
-    if (length(lhsvar)==1)
-      lhsvar <- list(lhsvar)
-    
-    if (paste(rhsvar)[1]=='.')
-      rhsvar <- NULL
-    
-    if ("." %in% lhsvar){
-      lhsvar <- setdiff(lhsvar, ".")
-      v  <- setdiff(numvar, c(lhsvar, intersect(rhsvar,numvar), intersect(idvar, numvar)))
-      isSpecial <- rep(NA,length(v))
-      for (j in 1:length(v)){
-        isSpecial[j]<- (class(data[,v[j]])[1] %in% c("POSIXt", "factor", "character"))
-      }      
-      extralhsvar<-v[!isSpecial]
-      lhsvar <- union(lhsvar, extralhsvar)
-      if (trace>=1)
-        cat("lhsvar (new) :", paste(lhsvar),"\n")
-    }
-    
-    lhsstr <- paste(lhsvar, collapse='+')
-    if (trace>=1)
-      cat("lhsstr:", lhsstr, "\n")
-    
-    if (is.null(rhsvar) | "." %in% rhsvar){
-      rhsvar <- setdiff(facvar, c(lhsvar, idvar))
-      
-      if (length(rhsvar)==0){
-        stop("No factors are identified for grouping...")
-      }
-          
-      if (trace>=1)
-        {cat(".rhsvar: "); print(rhsvar)}
-    }
-    
-    rhsstr  <- paste (rhsvar, collapse='+')
-    str     <- paste(paste(lhsstr, "~", rhsstr, collape=''))
-    formula <- as.formula(str)
-    
-    ##cat("Updated formula: ");  print(formula)
-    
-    if (trace>=1){
-      cat("status:\n")
-      cat("rhsvar     :", paste(rhsvar),"\n")
-      cat("idvar      :", paste(idvar),"\n")
-      print(formula)
-    }
-
-
-
-    
-### Function names
-###
-    if (!is.list(FUN)) 
-      fun.names <- paste(deparse(substitute(FUN)), collapse = " ")
-    else
-      fun.names <- unlist(lapply(substitute(FUN)[-1], function(a) paste(a)))
-    
-    if (!is.list(FUN)) 
-      FUN <- list(FUN)
- 
-    rhsvar <- if (rhsvar[1]=="1") idvar else c(rhsvar,idvar)
-    
-    lhsvar <- paste(unlist(lhsvar))
-    ##print(rhsvar); print(lhsvar)
-    
-    rhsdata <-data[,rhsvar,drop=FALSE]
-    rhsfact <- apply(rhsdata, 1, paste, collapse="@")
-    names(rhsfact)<-NULL
-    rhsunique <- unique(rhsfact)
-
-    lhsdata <- do.call(cbind,lapply(paste(lhsvar), function(x)eval(parse(text=x), data)))
-    colnames(lhsdata)<-lhsvar
-    ##print(class(lhsdata))
-    
-### Calculate groupwise statistics
-###
-
-
-    df <- NULL
-
-    for (ff in 1:length(FUN)) {
-      for (vv in 1:length(lhsvar)) {
-                                        #for (vv in 1:length(lhsvar)){
-                                        #for (ff in 1:length(FUN)){
-        currFUN <- FUN[[ff]]
-        zzz <- tapply(lhsdata[,lhsvar[vv]], rhsfact, function(x){
-          currFUN(x,...)
-        }, simplify=FALSE)
-        zzz <- do.call(rbind, zzz)
-        df <- cbind(df, zzz)
-      }
-    }
-
-    ##dff <<- df
-    ##print(head(df))
-
-### Names for new variables
-###  
-
-    if (keep.names){
-      if (ncol(df)==length(lhsvar)){
-        newnames <- lhsvar
-      } else {
-        keep.names <- FALSE
-      }
-    }
-
-    dimr <- (ncol(df))/length(lhsvar) ## Dim of response
-    oldnames <- colnames(df)
-
-    if (is.null(oldnames))
-      hasNames <- 0
-    else {
-      hasNames <- 1*(prod(nchar(oldnames))>0)
-    }
-                                        #cat("oldnames:", oldnames, "\n")
-                                        #cat("hasNames:", hasNames, "\n")
-    
-    if (!keep.names){
-      if (hasNames>0){
-        funNames <- colnames(df)[1:dimr]         
-        #print(funNames)
-        #funNames<<- funNames; lhsvar <<- lhsvar
-        newnames <- unlist(lapply(lhsvar, function(v){paste(v, funNames, sep='.')}))
-
-      } else {
-        #cat("no names...\n")
-        #print(fun.names)
-        #print(dimr)
-        if (length(fun.names) != dimr){
-          fun.names <- paste("FUN", 1:dimr,sep='')
-          newnames <- unlist(lapply(lhsvar, function(v){paste(v, fun.names, sep='.')}))
-        } else {
-          newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
-        }
-        if (length(newnames)!=ncol(df)){
-          fun.names <- paste(fun.names, 1:dimr, sep=".")
-          newnames <- unlist(lapply(fun.names, function(x) paste(lhsvar, x, sep='.')))
-        }
-      }
-    }
-
-                                        #cat("newnames:", newnames, "\n")
-    
-    colnames(df) <- newnames
-    df <- as.data.frame(df)
-    
-    rowid <- tapply(1:length(rhsfact), rhsfact, function(x){x[1]})
-    df <- cbind(rhsdata[rowid,,drop=FALSE], df)
-    
-    #if (!is.null(idvar)){
-    #  df <- cbind(df, data[rowid, idvar])
-    #}
-
-    if (length(unique(names(df))) != length(names(df)))
-      warning("dataframe contains replicate names \n", call.=FALSE)
-
-    if (order==TRUE){
-      if (rhsstr!="1")
-        df <- orderBy(as.formula(paste("~", rhsstr)), data=df)
-    }
-    if (p2d)
-      names(df) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(df)))
-
-    rownames(df) <- 1:nrow(df)
-    return(df)
-
-  }
-
 
 
     
