@@ -1,6 +1,12 @@
+2008-09-26 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Small bug in summaryBy fixed
+
+	* Version 3.2 uploaded
+
 2008-09-18 Søren Højsgaard <sorenh@agrsci.dk>
 
-	* Longer formulas now accepted
+	* Longer formulas now accepted (bug caused by a naive use of deparse())
 
 	* Version 3.2 uploaded
 
