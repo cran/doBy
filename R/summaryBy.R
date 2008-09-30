@@ -24,15 +24,18 @@ summaryBy <-
         if (length(formula)>=3){
           .xxx. <- formula[[2]]
           ##unlist(strsplit(deparse(.xxx.),".\\+."))
-          unlist(paste(strsplit(deparse(.xxx.),collapse=""),".\\+."))
-          
+          ##unlist(paste(strsplit(deparse(.xxx.), collapse=""),".\\+."))
+          unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+
         }
     }
     rhsString <- function(formula) {
       if (!is.null(formula)){
         .xxx. <- formula[[length(formula)]]
         ##unlist(strsplit(deparse(.xxx.),".\\+."))
-        unlist(strsplit(paste(deparse(.xxx.),collapse=""),".\\+."))
+        ##unlist(strsplit(paste(deparse(.xxx.),collapse=""),".\\+."))
+        unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+
       }
     }
     ## #######################################
