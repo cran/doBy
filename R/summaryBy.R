@@ -18,6 +18,7 @@ summaryBy <-
       }
       return(value)
     }
+
     
     lhsString <- function(formula) {
       if (!is.null(formula))
@@ -25,7 +26,8 @@ summaryBy <-
           .xxx. <- formula[[2]]
           ##unlist(strsplit(deparse(.xxx.),".\\+."))
           ##unlist(paste(strsplit(deparse(.xxx.), collapse=""),".\\+."))
-          unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+          ##unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+          unlist(strsplit(paste(deparse(.xxx.), collapse="")," *\\+ *"))
 
         }
     }
@@ -34,7 +36,8 @@ summaryBy <-
         .xxx. <- formula[[length(formula)]]
         ##unlist(strsplit(deparse(.xxx.),".\\+."))
         ##unlist(strsplit(paste(deparse(.xxx.),collapse=""),".\\+."))
-        unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+        ##unlist(strsplit(paste(deparse(.xxx.), collapse=""),".\\+."))
+        unlist(strsplit(paste(deparse(.xxx.), collapse="")," *\\+ *"))
 
       }
     }
