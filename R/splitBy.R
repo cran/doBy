@@ -29,12 +29,21 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       ## grps: Recode groups into one vector
       grps <- data[, workinggroup,drop=FALSE]
       grpsvec<-paste(grps[,1])
+
+      ## if (ncol(grps)>1){
+##         for (j in 2:ncol(grps)){
+##           grpsvec <- paste(grpsvec,paste(grps[,j]),sep='|')
+##         }
+##       }
+
       if (ncol(grps)>1){
         for (j in 2:ncol(grps)){
-          grpsvec <- paste(grpsvec,paste(grps[,j]),sep='|')
-        }}
+          grpsvec <- paste(paste(grps[,j]),grpsvec,sep='|')
+        }
+      }
+      
       grps <- grpsvec ## aa|b|xx etc...
-
+      
       dataMatrix <- .asNumericMatrix2(data)
       at <- .subsAttr2(data)
       
