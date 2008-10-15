@@ -1,5 +1,12 @@
 2008-10-14 Søren Højsgaard <sorenh@agrsci.dk>
 
+	* splitBy now follows convention that first variable varies
+	fastest.
+	
+	* Version 3.6 uploaded	
+	
+2008-10-14 Søren Højsgaard <sorenh@agrsci.dk>
+
 	* Updated description of dietox data
 
 	* Version 3.5 uploaded	
