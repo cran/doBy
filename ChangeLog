@@ -1,3 +1,9 @@
+2008-12-21 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* splitBy failed if by-variables were constant. Fixed now.
+
+	* Version 3.7 uploaded.
+
 2008-10-14 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* splitBy now follows convention that first variable varies
