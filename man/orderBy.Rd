@@ -28,16 +28,23 @@ orderBy(formula, data)
   The ordered data frame
 }
 %\references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, sorenh@agrsci.dk}
+\author{Søren Højsgaard, sorenh@agrsci.dk and Kevin Wright}
 % \note{ ~~further notes~~ 
 
 %  ~Make other sections like Warning with \section{Warning }{....} ~
 % }
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\seealso{
+  %\code{\link{orderBy}},
+  \code{\link{summaryBy}},
+  \code{\link{transformBy}},
+  \code{\link{splitBy}},
+  \code{\link{lapplyBy}},
+}
+
 \examples{
 data(dietox)
 orderBy(~Time+Evit, data=dietox)
-# Sort decreasingly by Time
+## Sort decreasingly by Time
 orderBy(~-Time+Evit, data=dietox)
 }
 \keyword{utilities}% at least one, from doc/KEYWORDS

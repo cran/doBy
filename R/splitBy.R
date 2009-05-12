@@ -9,7 +9,12 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
 
     if (ff[[2]]==1){
       groupData <- list(data)
-      attr(groupData,"groupid") <- 1
+      names(groupData) <- "1"
+      groupid <- as.data.frame(1)
+      idxvec  <- list(1:nrow(data))
+      grps    <- "1"
+
+      ## attr(groupData,"groupid") <- 1
     } else { 
       ff    <- terms(ff, data = data)
       m     <- match.call(expand.dots = TRUE)
@@ -21,16 +26,18 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
       names(nonconstgroup) <- group
       for (i in 1:length(group)){
         nunique <- length(unique(data[,group[i]]))
-        ##cat("Variable:", group[i], "unique values:", nunique, "\n")
         if (nunique==1)
           nonconstgroup[i] <- FALSE
       }
       workinggroup <- group[nonconstgroup]            
-
+      
       if (length(workinggroup)==0){
         groupData <- list(data)
         names(groupData) <- "1"
-        attr(groupData,"groupid") <- data[1,group]
+        groupid <- data[1,group,drop=FALSE]
+        idxvec  <- list(1:nrow(data))
+        grps    <- "1"
+                                        #attr(groupData,"groupid") <- data[1,group]
       } else {
         ## grps: Recode groups into one vector; aa|b|xx etc...
         ## 
@@ -58,28 +65,30 @@ splitBy<-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALSE
         names(groupid) <- NULL
         groupid        <- as.data.frame(do.call('rbind',groupid))
         names(groupid) <- group
-        rownames(groupid) <- 1:nrow(groupid)
+        rownames(groupid) <- 1:nrow(groupid)     
+        uniq.grps <- unique(grps)
+        idxvec <- as.list(rep(NA, length(uniq.grps)))
+        names(idxvec) <- uniq.grps
+        for (ii in 1:length(uniq.grps)){
+          idxvec[[ii]] <- which(grps==uniq.grps[ii])
+         }      
         
-        attr(groupData,"groupid") <- groupid
-        
-        uniqval <- sapply(1:nrow(groupid),
-                          function(k){
-                            x <- groupid[k,,drop=TRUE]
-                            paste(x,collapse='|')
-                          })
-        
-        idxvec <- as.list(rep(NA, length(uniqval)))
-        names(idxvec) <- uniqval
-        for (i in 1:length(uniqval)){
-          idxvec[[i]] <- which(grps==uniqval[i])
-        }      
-        attr(groupData,"idxvec") <- idxvec
-        attr(groupData,"grps") <- grps
       }
     }
+    
+    attr(groupData,"groupid") <- groupid
+    attr(groupData,"idxvec")  <- idxvec
+    attr(groupData,"grps")    <- grps
+    
     class(groupData) <- c("splitByData", "list")
     return(groupData)
 }
+
+##         idxvec <- as.list(rep(NA, length(uniqval)))
+##         names(idxvec) <- uniqval
+##         for (i in 1:length(uniqval)){
+##           idxvec[[i]] <- which(grps==uniqval[i])
+##         }      
 
 
 print.splitByData <- function(x,...){
