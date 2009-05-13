@@ -13,13 +13,16 @@
   }
 
 \details{
-  \item Functions summaryBy, splitBy, orderBy, sampleBy, transformBy are the core doBy
+  Functions summaryBy, splitBy, orderBy, sampleBy, transformBy are the core doBy
   functions
-  \item There is no need for a  plotBy function -- the 
+
+  There is no need for a  plotBy function -- the 
   xyplot function in the lattice package already fulfills these needs
-  \item The esticon function calculates linear functions of parameter
+
+  The esticon function calculates linear functions of parameter
   estimates under various types of models.
-  \item There are various other utility functions in the package.
+
+  There are various other utility functions in the package.
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{Søren Højsgaard, sorenh@agrsci.dk}

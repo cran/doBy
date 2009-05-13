@@ -1,3 +1,9 @@
+2009-01-12 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* splitBy had inconsistent output across cases. Fixed now
+
+	* Version 3.8 uploaded
+	
 2008-12-21 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* splitBy failed if by-variables were constant. Fixed now.
