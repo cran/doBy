@@ -1,3 +1,90 @@
+
+.matrix2dataFrame2 <- function (x, at, restoreAll = TRUE){
+
+    d <- dimnames(x)
+    k <- length(d[[2]])
+    w <- vector("list", k)
+    names(w) <- d[[2]]
+    
+    for (i in 1:k) {
+      a   <- at[[i]]
+      xi  <- x[,i]
+      if (a$sm=='character'){
+        storage.mode(xi) <- 'integer'
+        attributes(xi) <- a$atr
+        xi  <- as.character(xi)
+      } else {
+        storage.mode(xi) <- a$sm
+        attributes(xi)   <- a$atr
+      }
+      w[[i]] <- xi
+    }
+    
+    val <-structure(w, class = 'data.frame', row.names = d[[1]])
+    return(val)
+
+}
+
+
+.subsAttr2<-function (x){
+
+  at<-lapply(x, function(y){
+    ## print("--------------")
+    sm  <- storage.mode(y)
+    if (sm=='character')
+      a   <- attributes(factor(y))
+    else
+      a   <- attributes(y)
+    v <- list(sm=sm,atr=a)
+    v
+  })
+  return(at)
+}
+
+
+
+.asNumericMatrix2 <- function (x){
+  a <- attributes(x)
+  k <- length(a$names)
+  
+  idx <- which(lapply(x,class)=="character")
+  if (length(idx)>0){
+    for (j in idx){
+      x[,j] <- as.factor(x[,j])
+    }
+  }
+  
+  y <- matrix(unlist(x), ncol = k, dimnames = list(a$row.names,  a$names))
+  y
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # .matrix2dataFrame2 <- function (x, at, restoreAll = TRUE)
 # {
 #   at <<- at
@@ -192,68 +279,3 @@
 
 
 ### SHD re-implementation
-
-
-.matrix2dataFrame2 <- function (x, at, restoreAll = TRUE){
-
-    d <- dimnames(x)
-    k <- length(d[[2]])
-    w <- vector("list", k)
-    names(w) <- d[[2]]
-    
-    for (i in 1:k) {
-      a   <- at[[i]]
-      xi  <- x[,i]
-      if (a$sm=='character'){
-        storage.mode(xi) <- 'integer'
-        attributes(xi) <- a$atr
-        xi  <- as.character(xi)
-      } else {
-        storage.mode(xi) <- a$sm
-        attributes(xi)   <- a$atr
-      }
-      w[[i]] <- xi
-    }
-    
-    val <-structure(w, class = 'data.frame', row.names = d[[1]])
-    return(val)
-
-}
-
-
-  
-
-
-
-.subsAttr2<-function (x){
-
-  at<-lapply(x, function(y){
-    ## print("--------------")
-    sm  <- storage.mode(y)
-    if (sm=='character')
-      a   <- attributes(factor(y))
-    else
-      a   <- attributes(y)
-    v <- list(sm=sm,atr=a)
-    v
-  })
-  return(at)
-}
-
-
-
-.asNumericMatrix2 <- function (x){
-  a <- attributes(x)
-  k <- length(a$names)
-  
-  idx <- which(lapply(x,class)=="character")
-  if (length(idx)>0){
-    for (j in idx){
-      x[,j] <- as.factor(x[,j])
-    }
-  }
-  
-  y <- matrix(unlist(x), ncol = k, dimnames = list(a$row.names,  a$names))
-  y
-}
-

@@ -19,3 +19,5 @@ subsetBy                Finds subsets of a dataframe which is split by
 summaryBy               Function to calculate groupwise summary
                         statistics
 transformBy             Function to make groupwise transformations
+which.maxn              Where are the n largest or n smallest elements
+                        in a numeric vector ?
