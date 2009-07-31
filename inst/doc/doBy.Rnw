@@ -492,6 +492,19 @@ firstobs(~Plant, data=CO2)
 lastobs(~Plant, data=CO2)
 @ %def 
 
+\subsection{The \code{which.maxn} and \code{which.minn} functions}
+\label{sec:whichmaxn}
+
+The location of the $n$ largest / smallest entries in a numeric vector
+can be obtained with
+@ 
+<<>>=
+x <- c(1:4,0:5,11,NA,NA)
+which.maxn(x,3)
+which.minn(x,5)
+@ %def 
+
+
 
 
 
@@ -499,8 +512,7 @@ lastobs(~Plant, data=CO2)
 \section{Final remarks} 
 \label{discussion}
 
-The \code{esticon} functions and other smaller functions are likely to
-be removed from the \doby{} package in the future. Credit is due to
+Credit is due to
 Dennis Chabot, Gabor Grothendieck, Paul Murrell, Jim Robison-Cox  and Erik Jørgensen for
 reporting various bugs and making various suggestions to the
 functionality in the \doby{} package. 

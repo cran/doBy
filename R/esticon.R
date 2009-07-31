@@ -134,8 +134,12 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
         vcv <- summary(obj)$cov.scaled
       }
     }
+    else if ("coxph" %in% class(obj)) {
+      cf <- obj$coef
+      vcv <- obj$var
+    }
     else
-      stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee' or 'geese'")
+      stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee', 'geese', 'coxph'")
     u      <- (cm %*% cf)-beta0
     vcv.u  <- cm %*% vcv %*% t(cm)
     W      <- t(u) %*% solve(vcv.u) %*% u
@@ -204,7 +208,8 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
     alpha <- 1 - level
     switch(stat.name,
            t.stat  = { quant <- qt(1 - alpha/2, df  )  },
-           X2.stat = { quant <- qt(1 - alpha/2, 1000) })
+           X2.stat = { quant <- qnorm(1 - alpha/2) })
+                                        #X2.stat = { quant <- qt(1 - alpha/2, 1000) })
   
     switch(tolower(conf.int),
            "wald"= {vvv <- cbind(ct.diff-vc*quant, ct.diff+vc*quant)},

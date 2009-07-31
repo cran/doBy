@@ -2,9 +2,11 @@
 \alias{esticon}
 \alias{esticon.geeglm}
 \alias{esticon.glm}
+\alias{esticon.gls}
 \alias{esticon.lm}
 \alias{esticon.lme}
 \alias{esticon.lmer}
+\alias{esticon.coxph}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Contrasts for lm, glm, lme, and geeglm objects}
@@ -102,6 +104,36 @@ esticon(lm1,rbind(lambda1,lambda2),beta0=c(0,1))
 ## and difference between versicolor and virginica slope is zero:
 lambda3 <- c(0,0,0,0,1,-1)
 esticon(lm1,rbind(lambda2,lambda3),joint.test=TRUE)
+
+# Example using esticon on coxph objects (thanks to Alessandro A. Leidi).
+# Using dataset 'veteran' in the survival package  
+# from the Veterans' Administration Lung Cancer study 
+
+library(survival);
+data(veteran)
+sapply(veteran,class)
+levels(veteran$celltype)
+attach(veteran)
+veteran.s<-Surv(time,status)
+coxmod<-coxph(veteran.s~age+celltype+trt,method='breslow')
+summary(coxmod)
+
+# compare a subject 50 years old with celltype 1 
+# to a subject 70 years old with celltype 2 
+# both subjects on the same treatment 
+AvB<-c(-20,-1,0,0,0)
+
+# compare a subject 40 years old with celltype 2 on treat=0
+# to a subject 35 years old with celltype 3 on treat=1
+CvB<-c(5,1,-1,0,-1)
+
+esti<-esticon(coxmod,rbind(AvB,CvB))
+esti
+exp(esti[,c(2,7,8)])
+
+
+
+
 }
 \keyword{utilities}% at least one, from doc/KEYWORDS
 

@@ -1,3 +1,19 @@
+2009-07-28 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* coxph method added for the esticon function. Thanks to
+	Alessandro A Leidi. 
+	
+	* splitBy changed so that names of the entries in the list match
+	the levels of the factors (it used to be that the names matched
+	the levels of the factors in reverse order).
+
+	* The formula in splitBy can now also be a character vector.
+
+	* which.maxn and which.minn functions added
+
+	* Version 4.0.0 uploaded
+
+
 2009-01-12 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* splitBy had inconsistent output across cases. Fixed now

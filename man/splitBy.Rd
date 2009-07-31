@@ -4,9 +4,9 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Split a data frame}
 \description{
-  This is essentially a wrapper for the 'split' function,
-  - the important difference being that variables to order by
-  can be given by a model formula. 
+  Split a dataframe according to the levels of variables in the
+  dataframe. The variables to split by can be given as a formula or as a
+  character vector.
 }
 \usage{
 splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
@@ -14,7 +14,7 @@ splitBy(formula, data = parent.frame(), drop=TRUE, return.matrix=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{formula}{The right hand side of a formula}
+  \item{formula}{The right hand side of a formula (or a character vector)}
   \item{data}{A data frame}
   \item{drop}{Logical indicating if levels that do not occur should be
     dropped }
