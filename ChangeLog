@@ -1,3 +1,11 @@
+2009-09-07 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* Bug in summaryBy fixed: Strata did not match their values (as
+	defined by the rh.variables). Thanks to Pascal Hirsch for pointing
+	this out.
+
+	* Version 4.0.2 uploaded
+
 2009-08-17 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Bug in summaryBy fixed: id vars were included in the
