@@ -1,3 +1,11 @@
+2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* esticon method for 'mer' objects added. (Was previously for
+	'lmer' objects).
+
+	* Version 4.0.3 uploaded
+
+
 2009-09-07 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Bug in summaryBy fixed: Strata did not match their values (as
