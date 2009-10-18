@@ -5,7 +5,7 @@
 \alias{esticon.gls}
 \alias{esticon.lm}
 \alias{esticon.lme}
-\alias{esticon.lmer}
+\alias{esticon.mer}
 \alias{esticon.coxph}
 
 %- Also NEED an '\alias' for EACH other topic documented here.

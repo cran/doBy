@@ -15,7 +15,7 @@ esticon.gls <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
   }
 }
 
-esticon.lmer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
+esticon.mer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
   if (joint.test==TRUE){
     .wald(obj, cm, beta0)
   } else {
