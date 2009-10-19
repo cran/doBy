@@ -1,5 +1,11 @@
 2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
 
+	* Bug in NAMESPACE file fixed
+
+	* Version 4.0.4 uploaded
+
+2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+
 	* esticon method for 'mer' objects added. (Was previously for
 	'lmer' objects).
 

@@ -15,17 +15,6 @@ esticon.gls <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
   }
 }
 
-esticon.mer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
-  if (joint.test==TRUE){
-    .wald(obj, cm, beta0)
-  } else {
-    stat.name <- "X2.stat"
-    cf <- matrix(fixef(obj))
-    vcv <- vcov(obj)
-    df <- 1
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
-  }
-}
 
 esticon.geeglm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
   if (joint.test==TRUE){
@@ -223,4 +212,118 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
   retval[,6] <- round(retval[,6],7)
   return(as.data.frame(retval))
 }
+
+
+
+esticon.mer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE){
+  if (joint.test==TRUE){
+    .wald(obj, cm, beta0)
+  } else {
+    stat.name <- "X2.stat"
+    cf <- matrix(fixef(obj))
+    vcv <- vcov(obj)
+    df <- 1
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+  }
+}
+
+## esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.name ) {
+
+##   if (conf.int != FALSE){
+##     conf.int <- "wald"
+##     cat("Confidence interval (", toupper(conf.int), ") level =",level,"\n")
+##   }
+##   else
+##     conf.int <- NULL
+  
+##   if (!is.matrix(cm) && !is.data.frame(cm)) 
+##     cm <- matrix(cm, nrow = 1)
+##    if (missing(beta0))
+##     beta0 <- rep(0,nrow(cm))   
+
+##   if (is.null(cm)) 
+##     cm <- diag(dim(cf)[1])
+
+## ##   print("JJJJJJJJJJ")
+##   if (!dim(cm)[2] == dim(cf)[1]) 
+##     stop(paste("\n Dimension of ",
+##                deparse(substitute(cm)), 
+##                ": ", paste(dim(cm), collapse = "x"),
+##                ", not compatible with no of parameters in ", 
+##                deparse(substitute(obj)), ": ", dim(cf)[1], sep = ""))
+
+## ##   print(cm)
+## ##   print(class(cm))
+## ##   print(cf)
+## ##   print(class(cf))
+## ##   print(vcv)
+## ##   print(class(vcv))
+## ##   print(beta0)
+
+## ##   vcv  <<-vcv
+## ##   ccmm <<- cm
+##   ct <- cm %*% cf[, 1] 
+
+##   ct.diff <- cm %*% cf[, 1] - beta0      
+## ##  print("iiiiiiiiiiiiiiiiiiiiiiiiii")
+
+##   print(cm %*% vcv %*% t(cm))
+##   print(as.matrix(cm %*% vcv %*% t(cm)))
+##   diag(cm %*% vcv %*% t(cm))
+  
+##   vc <- sqrt(diag(cm %*% as.matrix(vcv) %*% t(cm)))
+## ##  vc <- sqrt(diag(cm %*% vcv %*% t(cm)))
+
+## ##  print("jjjjjjjjjjjjjjjiii")
+  
+##   if (is.null(rownames(cm))) 
+##     rn <- paste("(", apply(cm, 1, paste, collapse = " "), ")", sep = "")
+##   else rn <- rownames(cm)
+
+
+  
+##   rn <- NULL
+##   switch(stat.name,
+##          t.stat = {
+##            prob <- 2 * (1 - pt(abs(ct.diff/vc), df))
+##          },
+##          X2.stat = {
+##            prob <- 1 - pchisq((ct.diff/vc)^2, df = 1)
+##          })
+  
+##   if (stat.name == "X2.stat") {
+##     retval <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = (ct.diff/vc)^2, 
+##                     df = df, prob = prob )
+##     dimnames(retval) <-
+##       list(rn, c("beta0","Estimate","Std.Error","X2.value","DF","Pr(>|X^2|)"))
+##   }
+##   else if (stat.name == "t.stat") {
+##     retval <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = ct.diff/vc, 
+##                     df = df, prob = prob)
+##     dimnames(retval) <-
+##       list(rn, c("beta0","Estimate","Std.Error","t.value","DF","Pr(>|t|)"))
+##   }
+  
+##   if (!is.null(conf.int)) {
+##     if (level <= 0 || level >= 1) 
+##       stop("level should be betweeon 0 and 1. Usual values are 0.95, 0.90")
+
+##     alpha <- 1 - level
+##     switch(stat.name,
+##            t.stat  = { quant <- qt(1 - alpha/2, df  )  },
+##            X2.stat = { quant <- qnorm(1 - alpha/2) })
+##                                         #X2.stat = { quant <- qt(1 - alpha/2, 1000) })
+  
+##     switch(tolower(conf.int),
+##            "wald"= {vvv <- cbind(ct.diff-vc*quant, ct.diff+vc*quant)},
+##            "lr"  = {vvv <- NULL
+##                     for(i in 1:nrow(cm))
+##                       vvv <- rbind(vvv, .cilambda(cm[i,],obj,level)-beta0[i] )
+##                   })
+##     colnames(vvv) <- c("Lower.CI", "Upper.CI")  
+##     retval <- cbind(retval, vvv)
+##   }
+##   retval[,6] <- round(retval[,6],7)
+##   return(as.data.frame(retval))
+## }
 
