@@ -84,7 +84,7 @@ orderBy <- function (formula, data){
 
   ##orderlist <<- orderlist
   #print(orderlist)
-  dat[do.call("order",orderlist),]
+  dat[do.call("order",orderlist),,drop=FALSE]
 
 
 }

@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.0.4
+Version: 4.0.5
 Title: Groupwise computations of summary statistics, general linear
         contrasts and other utilities
 Author: Søren Højsgaard <sorenh@agrsci.dk> with contributions from
@@ -12,6 +12,6 @@ ZipData: no
 License: GPL (>= 2)
 Imports: Hmisc,Matrix
 Depends: survival
-Packaged: 2009-10-19 19:31:16 UTC; shd
+Packaged: 2009-10-21 21:07:04 UTC; shd
 Repository: CRAN
-Date/Publication: 2009-10-19 19:56:41
+Date/Publication: 2009-10-22 06:17:35

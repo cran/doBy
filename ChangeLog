@@ -1,9 +1,16 @@
+2009-10-21 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* orderBy applied to a dataframe with one column only returned a
+	vector. Has been fixed so that a dataframe is returned.
+
+	* Version 4.0.5 uploaded
+
 2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Bug in NAMESPACE file fixed
 
 	* Version 4.0.4 uploaded
-
+	
 2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* esticon method for 'mer' objects added. (Was previously for
