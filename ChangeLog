@@ -1,3 +1,11 @@
+2010-05-05 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* The sugar beets dataset 'beets' has been added
+
+	* doBy no longer depends on Hmisc
+	
+	* Version 4.0.6 has been uploaded	
+
 2009-10-21 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* orderBy applied to a dataframe with one column only returned a

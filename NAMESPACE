@@ -1,4 +1,4 @@
 import(Matrix)
-importFrom(Hmisc,mApply)
+#importFrom(Hmisc,mApply)
 
 exportPattern("^[^\\.]")
