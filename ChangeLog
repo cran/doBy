@@ -1,3 +1,9 @@
+2010-11-09 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* lsmeans function has been added.
+
+	* Version 4.1.0 has been uploaded. 
+	
 2010-05-05 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* The sugar beets dataset 'beets' has been added
