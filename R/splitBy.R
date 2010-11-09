@@ -69,8 +69,7 @@ splitBy <-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALS
             ##grpsvec <- apply(grps,1, paste, collapse='|')
             
             grps <- grpsvec ## 
-
-#            print(grps)
+            #print(grps)
             
             dataMatrix <- .asNumericMatrix2(data)
 
@@ -78,9 +77,10 @@ splitBy <-function (formula, data = parent.frame(),drop=TRUE, return.matrix=FALS
 #            dataMatrix <<- dataMatrix
             
             at    <- .subsAttr2(data)
+#            at2<<-at
             #alist <- mApply(dataMatrix, grps, function(x){x}, simplify=FALSE)
             alist <- .splitMatrix(dataMatrix,grps)
-            
+#            aaa<<-alist
             if (drop==TRUE)
               alist <- alist[lapply(alist,nrow)>0]
             
