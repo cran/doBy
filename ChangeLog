@@ -1,3 +1,15 @@
+2010-11-11 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* recodevar deprecated.
+
+	* recodeVar introduced with extended functionality.
+
+	* subSeq function added.
+
+	* renameCol function added.
+
+	* Version 4.1.1 has been uploaded. 	
+
 2010-11-09 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* lsmeans function has been added.
