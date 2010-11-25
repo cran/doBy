@@ -1,3 +1,13 @@
+2010-11-24 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* timeSinceEvent function has been added
+
+	* summaryBy now takes the additional argument full.dimension which
+	when TRUE causes the result to have the same number of rows as the
+	input dataframe. 
+
+	* Version 4.1.2 has been uploaded. 	
+	
 2010-11-11 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* recodevar deprecated.

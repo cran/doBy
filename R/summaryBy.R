@@ -1,11 +1,9 @@
 
 summaryBy <- 
-  function (formula, data= parent.frame() , id=NULL, FUN = mean, keep.names=FALSE,
-            ##postfix=NULL,
-            p2d=FALSE, order=TRUE, ...)
+  function (formula, data=parent.frame(), id=NULL, FUN=mean, keep.names=FALSE,
+            p2d=FALSE, order=TRUE, full.dimension=FALSE, ...)
   {    
     debug.info <- 0
-
     data.var  <- names(data)
     
     lhs      <- formula[[2]]
@@ -51,9 +49,9 @@ summaryBy <-
     if (debug.info>=1)
       cat("lh.string:", lh.string, "\n")
 
-    ## If no rh.var, set rh.var to those factors in the dataframe which
-    ## do not appear as lh.var or id.var
-    ##
+### If no rh.var, set rh.var to those factors in the dataframe which
+### do not appear as lh.var or id.var
+###
     if (is.null(rh.var) | "." %in% rh.var){
       rh.var <- setdiff(fac.var, c(lh.var, id.var))
       
@@ -101,7 +99,7 @@ summaryBy <-
       rh.string <- apply(rh.data, 1, paste, collapse="@")
       names(rh.string) <- NULL
 
-      rh.string <<- rh.string
+      #rh.string <<- rh.string
       
       rh.unique <- unique(rh.string)
       rh.idx    <- match(rh.unique, rh.string)
@@ -135,6 +133,7 @@ summaryBy <-
 ###
     ans <- NULL
     rh.string.factor <- factor(rh.string, levels=unique(rh.string)) ## This is important
+    #print(rh.string.factor)
     for (ff in 1:length(FUN)) {  ## loop over functions
       for (vv in 1:length(lh.var)) {  ## loop over variables
         currFUN <- FUN[[ff]]
@@ -211,6 +210,10 @@ summaryBy <-
                                         #print("ans (pad):");print(ans)
     }
 
+    if (full.dimension){
+      rrr <-as.numeric(rh.string.factor)
+      ans <- ans[rrr,]
+    }
     
 ### Order the result by the rhs
 ###
@@ -225,12 +228,13 @@ summaryBy <-
     if (p2d)
       names(ans) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(ans)))
 
-
     rownames(ans) <- 1:nrow(ans)
 
     if (length(unique(names(ans))) != length(names(ans)))
       warning("dataframe contains replicate names \n", call.=FALSE)
 
+
+    
     return(ans)
   }
 
