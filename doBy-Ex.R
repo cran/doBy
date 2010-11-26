@@ -402,8 +402,8 @@ orderBy(~-Time+Evit, data=dietox)
 
 
 cleanEx()
-nameEx("recodevar")
-### * recodevar
+nameEx("recodeVar")
+### * recodeVar
 
 flush(stderr()); flush(stdout())
 
@@ -620,6 +620,48 @@ summaryBy(.~ wool+tension, warpbreaks)
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
   keep.names=TRUE)
 
+## Using full.dimension=TRUE
+
+## Consider:
+summaryBy(breaks~wool, data=warpbreaks)
+## Rows of result are replicated below
+summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE)
+## Notice: Previous result is effectively the same as
+with(warpbreaks, ave(breaks, wool))
+## A possible application of full.dimension=TRUE is if we want to 
+## standardize (center and scale) data within groups:
+ss <- summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE, FUN=c(mean,sd))
+(warpbreaks$breaks-ss$breaks.mean)/ss$breaks.sd
+
+
+
+
+cleanEx()
+nameEx("timeSinceEvent")
+### * timeSinceEvent
+
+flush(stderr()); flush(stdout())
+
+### Name: timeSinceEvent
+### Title: Calculate "time since event" in a vector.
+### Aliases: timeSinceEvent
+### Keywords: utilities
+
+### ** Examples
+
+## Events:
+yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0)
+
+## Plot results:
+tse<- timeSinceEvent(yvar)
+plot(sign.tse~tvar, data=tse, type="b")
+grid()
+rug(tse$tvar[tse$yvar==1], col=4,lwd=4)
+points(scale(tse$run), col=tse$run,lwd=2)
+lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
+
+## Find times for whic time since an event is at most 1:
+tse$tvar[tse$abs<=1]
 
 
 

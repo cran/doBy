@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
-\usepackage{inputenc,hyperref,a4,color,boxedminipage,Sweave}
+\usepackage{inputenc,hyperref,a4wide,color,boxedminipage,Sweave}
+
 %\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
 
@@ -9,6 +10,7 @@
 \maketitle
 \tableofcontents
 
+\SweaveOpts{keep.source=T}
 \renewenvironment{Schunk}{\begin{center}
     \scriptsize
     \begin{boxedminipage}{0.95\textwidth}}{
@@ -21,34 +23,45 @@
 \def\code#1{\texttt{#1}}
 \def\shd#1{\footnote{SHD: #1}}
 \def\summaryby{\code{summaryBy}}
+\def\R{\proglang{R}}
 
 @ 
 <<echo=FALSE>>=
 oopt <- options()
-options("digits"=4)
-options("width"=80)
+options("digits"=4, "width"=80, "prompt"=" ", "continue"="  ")
 @ %def 
 
-
+\parindent0pt\parskip5pt
 
 \section{Introduction} 
 \label{sec:introduction}
 
-The \doby{} package grew out of a need to calculate groupwise summary
-statistics in a simple way, much in the spirit of \code{PROC SUMMARY}
-of the \proglang{SAS} system. We have tried to keep the interface to
-the functions based on specifying formulas. 
+The \doby{} package contains a variety of utility functions. This
+working document describes some of these functions. 
 
+The
+package originally grew out of a need to calculate groupwise summary
+statistics (much in the spirit of \code{PROC SUMMARY} of the
+\proglang{SAS} system), but today the package contains many different
+utilities.
+
+The \doby\ package
+(and this document as a .pdf file) is available from
+
+\url{http://cran.r-project.org/web/packages/doBy/index.html}
+
+
+The package is loaded with:
 @ 
 <<>>=
 library(doBy)
 @ %def 
 
 
-\section{Data}
+\section{Data used for illustration}
 \label{sec:co2data}
 
-The usage of the \code{doBy} package is based on the following
+The description of the \code{doBy} package is based on the following
 datasets. 
 
 \paragraph{CO2 data} 
@@ -86,7 +99,9 @@ result from a study of the effect of adding vitamin E and/or copper to
 the feed of slaughter pigs. 
 
 
-\section{The \code{summaryBy} function}
+\section{Working with groupwise data}
+
+\subsection{The \code{summaryBy} function}
 \label{sec:summaryBy}
 
 The \summaryby{} function is used for calculating quantities like
@@ -95,7 +110,7 @@ each combination of two factors $A$ and $B$''. Examples are based on
 the \code{CO2} data. 
 
 
-\subsection{Basic usage}
+\subsubsection{Basic usage}
 \label{sec:xxx}
 
 
@@ -123,7 +138,7 @@ summaryBy(conc+uptake~Plant, data=CO2,FUN=myfun2)
 
 
 
-\subsection{Using predefined functions}
+\subsubsection{Using predefined functions}
 \label{sec:xxx}
 
 
@@ -148,7 +163,7 @@ by \summaryby{} because \code{myfun2} does not return named values.
 
 
 
-% \subsection{Naming output variables with the \code{postfix} argument}
+% \subsubsection{Naming output variables with the \code{postfix} argument}
 % \label{sec:postfix}
 
 % The \code{postfix} argument gives an altertive way of naming the
@@ -174,7 +189,7 @@ by \summaryby{} because \code{myfun2} does not return named values.
 
 
 
-\subsection{Copying variables out with the \code{id} argument}
+\subsubsection{Copying variables out with the \code{id} argument}
 \label{sec:xxx}
 
 To get the value of the \code{Type} and \code{Treat} in the first row of the
@@ -189,7 +204,7 @@ id=~Type+Treat)
 @ %def 
 
 
-\subsection{Statistics on functions of data}
+\subsubsection{Statistics on functions of data}
 \label{sec:xxx}
 We may want to calculate the mean and variance for the logarithm of
 \code{uptake}, for \code{uptake}+\code{conc} (not likely to be a
@@ -216,7 +231,7 @@ FUN=myfun1)
 
 
 
-\subsection{Using "." on the left hand side of a formula}
+\subsubsection{Using "." on the left hand side of a formula}
 \label{sec:xxx}
 
 It is possible  to use the dot (".") on the left hand side of
@@ -230,7 +245,7 @@ FUN=myfun1)
 @ %def 
 
 
-\subsection{Using "." on the right hand side of a formula}
+\subsubsection{Using "." on the right hand side of a formula}
 \label{sec:xxx}
 
 The dot (".") can also be used on the right hand side of the formula
@@ -242,7 +257,7 @@ summaryBy(log(uptake) ~Plant+., data=CO2,
 FUN=myfun1)
 @ %def 
 
-\subsection{Using ``1'' on the right hand side of the formula}
+\subsubsection{Using ``1'' on the right hand side of the formula}
 \label{sec:xxx}
 
 Using 1 on the
@@ -255,7 +270,7 @@ FUN=myfun1)
 
 
 
-\subsection{Preserving names of variables using \code{keep.names}}
+\subsubsection{Preserving names of variables using \code{keep.names}}
 \label{sec:xxx}
 If the function applied to data only returns one value, it is possible
 to force that the summary variables retain the original names by
@@ -269,7 +284,7 @@ data=CO2, FUN=mean, id=~Type+Treat, keep.names=TRUE)
 
 
 
-\section{The \code{orderBy} function} 
+\subsection{The \code{orderBy} function} 
 \label{orderBy}
 
 Ordering (or sorting) a data frame is possible with the \code{orderBy}
@@ -296,7 +311,7 @@ head(x)
 
 
 
-\section{The \code{splitBy} function} 
+\subsection{The \code{splitBy} function} 
 \label{splitBy}
 
 Suppose we want to split the \code{airquality} data into a list of dataframes, e.g.\ one
@@ -321,7 +336,7 @@ attr(x,"groupid")
 @ %def 
 
 
-\section{The \code{sampleBy} function} 
+\subsection{The \code{sampleBy} function} 
 \label{sampleBy}
 
 Suppose we want a random sample of 50 \% of the observations from a
@@ -339,7 +354,7 @@ sampleBy(~Month, frac=0.2, data=airquality,systematic=T)
 @ %def 
 
 
-\section{The \code{subsetBy} function} 
+\subsection{The \code{subsetBy} function} 
 \label{subsetBy}
 
 Suppose we want to take out those rows within each month for which the the
@@ -354,7 +369,7 @@ each month.
 
 
 
-\section{The \code{transformBy} function} 
+\subsection{The \code{transformBy} function} 
 \label{sec:transformby}
 
 The \code{transformBy} function is analogous to the \code{transform}
@@ -366,7 +381,7 @@ transformBy(~Month, data=airquality, minW=min(Wind), maxW=max(Wind),
 @ %def 
 
 
-\section{The \code{lapplyBy} function} 
+\subsection{The \code{lapplyBy} function} 
 \label{sec:transformby}
 
 This \code{lapplyBy} function is a wrapper for first splitting data
@@ -393,8 +408,7 @@ dietox$FE <- unlist(v)
 @ %def 
 
 
-
-\section{Miscellaneous}
+\section{Contrasts, estimable functions, LSMEANS}
 \label{sec:xxx}
 
 
@@ -473,6 +487,27 @@ Observe that another function for calculating contrasts as above is the
 \code{contrast} function in the \pkg{Design} package but it applies to
 a narrower range of models than \code{esticon} does.
 
+
+\subsection{LSMEANS}
+\label{sec:xxx}
+
+
+Marginal means (also called population means or LSMEANS) can be
+calulated with \verbålsmeans()å. See the documentation of  \verbålsmeans()å for
+examples. 
+
+
+
+
+
+
+
+
+
+\section{Miscellaneous}
+\label{sec:xxx}
+
+
 \subsection{The \code{firstobs} / \code{lastobs} function} 
 \label{firstlast}
 
@@ -504,12 +539,27 @@ which.maxn(x,3)
 which.minn(x,5)
 @ %def 
 
+\subsection{Subsequences - \code{subSeq()}}
+\label{sec:xxx}
+To be described. 
+
+\subsection{Recoding values of a vector - \code{recodeVar()}}
+\label{sec:xxx}
+To be described. 
+
+\subsection{Renaming columns of a dataframe or matrix --  \code{renameCol()}}
+\label{sec:xxx}
+To be described. 
+
+\subsection{Time since an event - \code{timeSinceEvent()}}
+\label{sec:xxx}
+To be described. 
 
 
 
 
 
-\section{Final remarks} 
+\section{Acknowledgements} 
 \label{discussion}
 
 Credit is due to

@@ -8,8 +8,7 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-keep.names=FALSE, p2d=FALSE, order=TRUE, ...)
-
+          keep.names=FALSE, p2d=FALSE, order=TRUE, full.dimension=FALSE, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -27,6 +26,9 @@ the input, see 'examples'.}
 \item{p2d}{Should parentheses in output variable names be replaced by dots?}
 \item{order}{Should the resulting dataframe be ordered according to the
   variables on the right hand side of the formula? (using \link{orderBy}}
+\item{full.dimension}{If TRUE then rows of summary statistics are
+  repeated such that the result will have the same number
+  of rows as the input dataset.}
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
@@ -46,7 +48,7 @@ A data frame
 
 \seealso{
   \code{\link{orderBy}},
-  %\code{\link{summaryBy}},
+  \code{\link{ave}},
   \code{\link{transformBy}},
   \code{\link{splitBy}},
   \code{\link{lapplyBy}},
@@ -98,6 +100,18 @@ summaryBy(.~ wool+tension, warpbreaks)
 summaryBy(Ozone+Wind~Month, data=airquality,FUN=c(mean),na.rm=TRUE,
   keep.names=TRUE)
 
+## Using full.dimension=TRUE
+
+## Consider:
+summaryBy(breaks~wool, data=warpbreaks)
+## Rows of result are replicated below
+summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE)
+## Notice: Previous result is effectively the same as
+with(warpbreaks, ave(breaks, wool))
+## A possible application of full.dimension=TRUE is if we want to 
+## standardize (center and scale) data within groups:
+ss <- summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE, FUN=c(mean,sd))
+(warpbreaks$breaks-ss$breaks.mean)/ss$breaks.sd
 
 }
 \keyword{univar}% at least one, from doc/KEYWORDS
