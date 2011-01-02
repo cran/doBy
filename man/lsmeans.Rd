@@ -68,7 +68,7 @@ lsmeans(mod1, c("BB","CC"))
 ## Average over (AA,BB) for each value of CC; evaluate at x=mean(x)
 lsmeans(mod1, c("CC"))
 
-## 2) The call to lsmeans() below is eqivalent to the following SAS code
+## 2) The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;
@@ -86,7 +86,7 @@ lsmeans(mod3, "CC")
 ## in the latter case x is evaluated at mean(x)^2
 
 ## 3) Plug in particular values of covariates
-## The call to lsmeans() below is eqivalent to the following SAS code
+## The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x2;
@@ -95,7 +95,7 @@ lsmeans(mod3, "CC")
 lsmeans(mod2, c("CC"), at=list(x=2))
 ## Above, x=2 is used while x2 is set to mean(x2)
 
-## The call to lsmeans() below is eqivalent to the following SAS code
+## The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;

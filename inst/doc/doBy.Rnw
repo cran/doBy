@@ -4,6 +4,10 @@
 %\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
 
+\special{html: 
+  <link title="main" media="all" rel="stylesheet" href="../../../shdcss.css"
+ type="text/css" />
+}
 \title{The \texttt{doBy} package}
 \author{Søren Højsgaard}
 \begin{document}
@@ -13,7 +17,7 @@
 \SweaveOpts{keep.source=T}
 \renewenvironment{Schunk}{\begin{center}
     \scriptsize
-    \begin{boxedminipage}{0.95\textwidth}}{
+    \begin{boxedminipage}{1.0\textwidth}}{
     \end{boxedminipage}\end{center}}
 
 
@@ -37,19 +41,16 @@ options("digits"=4, "width"=80, "prompt"=" ", "continue"="  ")
 \label{sec:introduction}
 
 The \doby{} package contains a variety of utility functions. This
-working document describes some of these functions. 
-
-The
+working document describes some of these functions. The
 package originally grew out of a need to calculate groupwise summary
 statistics (much in the spirit of \code{PROC SUMMARY} of the
 \proglang{SAS} system), but today the package contains many different
 utilities.
 
-The \doby\ package
-(and this document as a .pdf file) is available from
+The \doby\ package (and this document as a .pdf file) is available
+from
 
 \url{http://cran.r-project.org/web/packages/doBy/index.html}
-
 
 The package is loaded with:
 @ 
@@ -153,8 +154,7 @@ Slightly more elaborate is
 @ 
 <<>>=
 mymed <- function(x)c(med=median(x))
-summaryBy(uptake~Plant, data=CO2, 
-FUN=c(mean,var,mymed))
+summaryBy(uptake~Plant, data=CO2, FUN=c(mean,var,mymed))
 @ %def 
 
 The naming of the output variables determined from what the functions
@@ -198,9 +198,7 @@ dataframe we use the \code{id} argument:
 as:
 @ 
 <<>>=
-summaryBy(conc+uptake~Plant, data=CO2,
-FUN=myfun1,
-id=~Type+Treat)
+summaryBy(conc+uptake~Plant, data=CO2, FUN=myfun1, id=~Type+Treat)
 @ %def 
 
 
@@ -357,7 +355,7 @@ sampleBy(~Month, frac=0.2, data=airquality,systematic=T)
 \subsection{The \code{subsetBy} function} 
 \label{subsetBy}
 
-Suppose we want to take out those rows within each month for which the the
+Suppose we want to select those rows within each month for which the the
 wind speed is larger than the mean wind speed (within the month). This
 is achieved by:
 @ 
@@ -439,7 +437,7 @@ The \code{esticon} function provides a way of doing so.
  We can specify several $\lambda$ vectors at the same time. For example
 
 @ 
-<<echo=FALSE>>=
+<<echo=T>>=
 Lambda <- rbind(
   c(0,-1,0,0,0,0,-10,0,0,0),
   c(0,1,-1,0,0,0,10,-10,0,0),
@@ -450,9 +448,7 @@ Lambda <- rbind(
 
 @ 
 <<>>=
-Lambda
-esticon(m, Lambda
-)
+esticon(m, Lambda)
 @ %def 
 
 
@@ -462,7 +458,7 @@ a test of no interaction between \code{Month} and \code{Wind} can be
 made by testing jointly that the last four parameters in \code{m} are
 zero (observe that the test is a Wald test): 
 @ 
-<<echo=FALSE>>=
+<<echo=T>>=
 Lambda <- rbind(
   c(0,0,0,0,0,0,1,0,0,0),
   c(0,0,0,0,0,0,0,1,0,0),
@@ -473,7 +469,6 @@ Lambda <- rbind(
 
 @ 
 <<>>=
-Lambda
 esticon(m, Lambda, joint.test=T)
 @ %def 
 
@@ -541,22 +536,74 @@ which.minn(x,5)
 
 \subsection{Subsequences - \code{subSeq()}}
 \label{sec:xxx}
-To be described. 
+
+Find (sub) sequences in a vector:
+
+@ 
+<<>>=
+x <- c(1,1,2,2,2,1,1,3,3,3,3,1,1,1)
+subSeq(x)
+subSeq(x, item=1)
+subSeq(letters[x])
+subSeq(letters[x],item="a")
+@ %def 
+
 
 \subsection{Recoding values of a vector - \code{recodeVar()}}
 \label{sec:xxx}
-To be described. 
+
+@ 
+<<>>=
+x <- c("dec","jan","feb","mar","apr","may")
+src1 <- list(c("dec","jan","feb"), c("mar","apr","may"))
+tgt1 <- list("winter","spring")
+recodeVar(x,src=src1,tgt=tgt1)
+@ %def 
 
 \subsection{Renaming columns of a dataframe or matrix --  \code{renameCol()}}
 \label{sec:xxx}
-To be described. 
+
+@ 
+<<>>=
+head(renameCol(CO2, 1:2, c("kk","ll")))
+head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
+@ %def 
 
 \subsection{Time since an event - \code{timeSinceEvent()}}
 \label{sec:xxx}
-To be described. 
+
+Consider the vector
+@ 
+<<>>=
+yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0)
+@ %def 
+
+Imagine that ``1'' indicates an event of some kind which takes place
+at a certain time point. By default time points are assumed
+equidistant but for illustration we define time time variable
+@ 
+<<>>=
+tvar <- seq_along(yvar)
+@ %def 
+
+Now we find time since event as
+@ 
+<<fig=T>>=
+tse<- timeSinceEvent(yvar,tvar)
+head(tse)
+plot(sign.tse~tvar, data=tse, type="b")
+grid()
+rug(tse$tvar[tse$yvar==1], col=4,lwd=4)
+points(scale(tse$run), col=tse$run,lwd=2)
+lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
+@ %def 
 
 
-
+We may now find times for which time since an event is at most 1 as
+@ 
+<<>>=
+tse$tvar[tse$abs<=1]
+@ %def 
 
 
 \section{Acknowledgements} 
