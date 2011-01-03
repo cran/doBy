@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.1.2
+Version: 4.2.2
 Title: Groupwise summary statistics, general linear contrasts, LSMEANS
         (least-squares-means), and other utilities
 Author: Søren Højsgaard <sorenh@agrsci.dk> with contributions from
@@ -9,11 +9,11 @@ Maintainer: Søren Højsgaard <sorenh@agrsci.dk>
 Description: Facilities for groupwise computations of summary
         statistics and other facilities for working with grouped data.
 Encoding: latin1
-URL: http://genetics.agrsci.dk/~sorenh/public/R/doBy/doBy.html
+URL: http://genetics.agrsci.dk/~sorenh/public/R/doBy/
 ZipData: no
 License: GPL (>= 2)
 Imports: Matrix
-Depends: survival,contrast
-Packaged: 2010-11-25 23:57:03 UTC; shd
+Depends: survival,contrast,R2HTML
+Packaged: 2011-01-02 23:18:45 UTC; shd
 Repository: CRAN
-Date/Publication: 2010-11-26 07:23:49
+Date/Publication: 2011-01-03 12:34:55

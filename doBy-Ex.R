@@ -6,6 +6,31 @@ library('doBy')
 
 assign(".oldSearch", search(), pos = 'CheckExEnv')
 cleanEx()
+nameEx("HTMLreport")
+### * HTMLreport
+
+flush(stderr()); flush(stdout())
+
+### Name: HTMLreport
+### Title: Automatic Generation of Reports (as HTML documents)
+### Aliases: HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
+###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
+### Keywords: utilities
+
+### ** Examples
+
+tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
+   package = "doBy")
+
+## Create report in working directory
+HTMLreport(tf)
+## Creates report in specified directory (which must exist).
+##HTMLreport(tf, path=".REPORT/") 
+
+
+
+
+cleanEx()
 nameEx("beets")
 ### * beets
 
@@ -139,7 +164,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: doBy
 ### Title: Various utilities which includes functions for creating
-###   groupwise
+###   groupwise calculations etc.
 ### Aliases: doBy
 ### Keywords: utilities
 
