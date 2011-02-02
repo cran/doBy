@@ -19,7 +19,7 @@
 }
 \usage{
 HTMLreport(srcfile, driver = RweaveHTMLreport(), destdir=".",
-postfix="REPORT", ...)
+postfix="REPORT", cssfile=NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,7 +43,13 @@ postfix="REPORT", ...)
     A string to append to the filename for the HTML file.
     %%     ~~Describe \code{driver} here~~
   }
-
+  
+  \item{cssfile}{
+    An optional cssfile; must be located in destdir to take effect.
+    %%     ~~Describe \code{driver} here~~
+  }
+  
+  
   
   \item{\dots}{
     Further arguments, currently not used.

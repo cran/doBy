@@ -359,7 +359,7 @@ lsmeans(mod1, c("BB","CC"))
 ## Average over (AA,BB) for each value of CC; evaluate at x=mean(x)
 lsmeans(mod1, c("CC"))
 
-## 2) The call to lsmeans() below is eqivalent to the following SAS code
+## 2) The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;
@@ -377,7 +377,7 @@ lsmeans(mod3, "CC")
 ## in the latter case x is evaluated at mean(x)^2
 
 ## 3) Plug in particular values of covariates
-## The call to lsmeans() below is eqivalent to the following SAS code
+## The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x2;
@@ -386,7 +386,7 @@ lsmeans(mod3, "CC")
 lsmeans(mod2, c("CC"), at=list(x=2))
 ## Above, x=2 is used while x2 is set to mean(x2)
 
-## The call to lsmeans() below is eqivalent to the following SAS code
+## The call to lsmeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;
@@ -685,8 +685,19 @@ rug(tse$tvar[tse$yvar==1], col=4,lwd=4)
 points(scale(tse$run), col=tse$run,lwd=2)
 lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
 
-## Find times for whic time since an event is at most 1:
+## Find times for which time since an event is at most 1:
 tse$tvar[tse$abs<=1]
+
+yvar <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+)
+tvar <- c(207, 208, 208, 208, 209, 209, 209, 209, 210, 210, 211, 211, 
+211, 212, 213, 213, 214, 214, 215, 216, 216, 216, 216, 217, 217, 
+217, 218, 218, 219, 219, 219, 219, 220, 220, 221, 221, 221, 221, 
+222, 222, 222)
+
+timeSinceEvent(yvar, tvar)
+
 
 
 
