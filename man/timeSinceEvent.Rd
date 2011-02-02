@@ -36,9 +36,9 @@ timeSinceEvent(yvar, tvar = seq_along(yvar))
 \author{
   Søren Højsgaard <sorenh at agrsci dot dk>
 }
-%\note{
-%%  ~~further notes~~
-%}
+\note{
+ NA's in yvar are converted to zeros.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -59,6 +59,17 @@ lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
 
 ## Find times for which time since an event is at most 1:
 tse$tvar[tse$abs<=1]
+
+yvar <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+)
+tvar <- c(207, 208, 208, 208, 209, 209, 209, 209, 210, 210, 211, 211, 
+211, 212, 213, 213, 214, 214, 215, 216, 216, 216, 216, 217, 217, 
+217, 218, 218, 219, 219, 219, 219, 220, 220, 221, 221, 221, 221, 
+222, 222, 222)
+
+timeSinceEvent(yvar, tvar)
+
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

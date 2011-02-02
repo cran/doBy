@@ -2,12 +2,18 @@ RweaveHTMLreportSetup <- function(srclines){
   anslines <- srclines
   for (ii in 1:length(srclines)){
     lll <- srclines[ii]
-    ## blank lines -> <br/>
-    lll <- gsub("^*$", "<br><br>", lll)
+    ## blank lines -> <br>
+    lll <- gsub("^*$", "<br>", lll)
+
+    lll <- gsub("^##?$", "<br>", lll)
+    
     ## Headers
-    lll <- gsub("##+[[:blank:]]*===[[:blank:]]*(.*)[[:blank:]]*===[[:blank:]]*", "<h3>\\1</h3>", lll)
-    lll <- gsub("##+[[:blank:]]*==[[:blank:]]*(.*)[[:blank:]]*==[[:blank:]]*", "<h2>\\1</h2>", lll)
-    lll <- gsub("##+[[:blank:]]*=[[:blank:]]*(.*)[[:blank:]]*=[[:blank:]]*", "<h1>\\1</h1>", lll)
+    lll <- gsub("##+[[:blank:]]*======[[:blank:]]*(.*)[[:blank:]]*======[[:blank:]]*", "<h6>\\1</h6>", lll)    
+    lll <- gsub("##+[[:blank:]]*=====[[:blank:]]*(.*)[[:blank:]]*=====[[:blank:]]*",   "<h5>\\1</h5>", lll)    
+    lll <- gsub("##+[[:blank:]]*====[[:blank:]]*(.*)[[:blank:]]*====[[:blank:]]*",     "<h4>\\1</h4>", lll)
+    lll <- gsub("##+[[:blank:]]*===[[:blank:]]*(.*)[[:blank:]]*===[[:blank:]]*",       "<h3>\\1</h3>", lll)
+    lll <- gsub("##+[[:blank:]]*==[[:blank:]]*(.*)[[:blank:]]*==[[:blank:]]*",         "<h2>\\1</h2>", lll)
+    lll <- gsub("##+[[:blank:]]*=[[:blank:]]*(.*)[[:blank:]]*=[[:blank:]]*",           "<h1>\\1</h1>", lll)
     ## Italics
     lll <- gsub("//([^/]*)//",
                 '<span style="font-style: italic;">\\1</span>', lll)
@@ -20,7 +26,13 @@ RweaveHTMLreportSetup <- function(srclines){
     ## True type (Courier New)
     lll <- gsub("&&([^&]*)&&",
                 '<span style="font-family: Courier New;">\\1</span>', lll)
-   
+
+    ## Vanilla code chunk (<<>>=)
+    lll <- gsub("^[[:blank:]]*##?@@$", "<<>>=", lll)
+
+    ## Vanilla code chunk with figure (<<fig=T>>=)
+    lll <- gsub("^[[:blank:]]*##?@@fig$", "<<fig=T>>=", lll)
+      
     ## Date
     lll <- gsub("##+[[:blank:]]*%%date",
                 '\\<\\<echo=FALSE\\>\\>=\nSys.time()\n@', lll)
@@ -35,7 +47,7 @@ RweaveHTMLreportSetup <- function(srclines){
   anslines
 }
 
-RweaveHTMLreportWritedoc <- function(srclines, filename, tmpfile.name){
+RweaveHTMLreportWritedoc <- function(srclines, filename.postfix, tmpfile.name){
   anslines <- srclines
   for (ii in 1:length(srclines)){
     lll <- srclines[ii]
@@ -43,14 +55,22 @@ RweaveHTMLreportWritedoc <- function(srclines, filename, tmpfile.name){
     lll <- gsub("<p align= center >",            "<p align= left >", lll)
     lll <- gsub("<p align='center'>",            "<p align= left >", lll) 
     lll <- gsub("(<!--\\\\end\\{Schunk\\}!-->)", "</p> \\1",lll)
-    lll <- gsub(tmpfile.name, filename, lll)    
+
+    lll <- gsub(tmpfile.name, filename.postfix, lll)    
     anslines[ii] <- lll
   }
   anslines
 }
 
-RweaveHTMLreportFinish <- function(tmpfile.name, destdir.filename){
 
+##<p><xmp class=command>> plot(rate ~ conc, data = Puromycin, col = as.numeric(state))</xmp></p>
+
+RweaveHTMLreportFinish <- function(tmpfile.name, filename, destdir.filename){
+
+  ##   cat("... RweaveHTMLreportFinish\n")
+  ##   cat(sprintf("... tmpfile.name=%s \n... filename=%s \n... destdir.filename=%s\n",
+  ##   tmpfile.name, filename, destdir.filename))
+  
   ## Rename image files
   figfiles    <- glob2rx(paste(tmpfile.name, "-*.png", sep=""))
   currfiglist <- list.files(pattern=figfiles)
@@ -74,7 +94,7 @@ RweaveHTMLreport <- function(){
        finish   = RweaveHTMLreportFinish)
 }
 
-HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="REPORT", ...){
+HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="REPORT", cssfile=NULL, ...){
   
   if(!file.exists(srcfile)){
     stop(sprintf("file %s does not exist\n", srcfile))
@@ -85,19 +105,22 @@ HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix=
     destdir <- gsub("\\\\", "/", destdir)
   }
   ## File has format: path/filename.extension
+  ##
   path.filename  <- gsub("(.*)\\..*" ,"\\1", srcfile)            ## path/filename
   filename       <- gsub(".*/(.*)$","\\1",   path.filename)      ## filename
   destdir.outfile    <- paste(destdir, "/", filename, "-",postfix, ".html",sep="") ## The final report file
   destdir.filename   <- paste(destdir, "/", filename, "-",postfix, sep="")
+  filename.postfix   <- paste(filename,"-",postfix, sep="")
   
   ## We need two temporary files
-  tmpfile.name <- tempfile(tmpdir="")
+  ##
+  tmpfile.name <- paste(filename,tempfile(tmpdir=""),sep="-")
   if (.Platform$OS.type == "windows") 
     tmpfile.name <- gsub("\\\\", "/", tmpfile.name)
   tmpfile.name <- gsub("/","", tmpfile.name)  
   tmpfile1  <- tmpfile.name
   tmpfile2  <- paste(tmpfile.name,".html",sep="")
-  #cat(sprintf("tmpfile.name: %s \nfilename %s\ndestdir.filename: %s\n", tmpfile.name, filename, destdir.filename))
+  cat(sprintf("tmpfile.name: %s \nfilename %s\ndestdir.filename: %s\n", tmpfile.name, filename, destdir.filename))
   
   cat("Preprocessing... \n")
   ff <- file.copy(srcfile, tmpfile1, overwrite=TRUE)   ## Create copy of the source file
@@ -116,14 +139,21 @@ HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix=
   
   cat("Postprocessing... \n")
   inlines    <- readLines(tmpfile2)
-  outlines   <- driver$writedoc(inlines, destdir.filename, tmpfile.name) ## Postprocess html file
+  outlines   <- driver$writedoc(inlines, filename.postfix, tmpfile.name) ## Postprocess html file
+
+  if (!is.null(cssfile)){
+    #cssline <- "<link rel=stylesheet href=\"R2HTML.css\" type=text/css>"
+    cssline <- paste("<link rel=stylesheet href=\"",cssfile,"\" type=text/css>",sep="")
+    outlines <- c(cssline, outlines)
+  }
+  
   write(outlines, file=destdir.outfile)
   cat(sprintf(" target file    : %s\n", destdir.outfile))
 
-  driver$finish(tmpfile.name, destdir.filename)
+  driver$finish(tmpfile.name, filename.postfix, destdir.filename)
   
-  file.remove(tmpfile1)
-  file.remove(tmpfile2)
+##   file.remove(tmpfile1)
+##   file.remove(tmpfile2)
 
   return(invisible(NULL))
 }
