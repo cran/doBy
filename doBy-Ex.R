@@ -338,9 +338,9 @@ nameEx("lsmeans")
 
 flush(stderr()); flush(stdout())
 
-### Name: lsmeans
-### Title: Calculates LSMEANS (population means)
-### Aliases: lsmeans lsmeans.lm print.lsmeansTable
+### Name: popMeans
+### Title: Calculate population means (LSMEANS in SAS jargon)
+### Aliases: popMeans popMeans.lm lsMeans lsMeans.lm summary.conMeans
 ### Keywords: models utilites
 
 ### ** Examples
@@ -355,11 +355,11 @@ dat$x2 <- dat$x^2
 ## 1) LSMEANS with factors only.
 mod1 <- lm(y ~ AA + BB*CC + x, data=dat)
 ## Average over AA for each combination of (BB,CC); evaluate at x=mean(x)
-lsmeans(mod1, c("BB","CC"))
+popMeans(mod1, c("BB","CC"))
 ## Average over (AA,BB) for each value of CC; evaluate at x=mean(x)
-lsmeans(mod1, c("CC"))
+popMeans(mod1, c("CC"))
 
-## 2) The call to lsmeans() below is equivalent to the following SAS code
+## 2) The call to popMeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;
@@ -367,40 +367,40 @@ lsmeans(mod1, c("CC"))
 ## run;
 ##
 mod2 <- lm(y ~ AA + BB*CC + x + x2, data=dat)
-lsmeans(mod2, "CC")
+popMeans(mod2, "CC")
 
 ## Notice the difference to:
 mod3 <- lm(y ~ AA + BB*CC + x + I(x^2), data=dat)
-lsmeans(mod3, "CC")
+popMeans(mod3, "CC")
 
 ## The difference arises because in the former case, x2 is evaluated at mean(x2) whereas
 ## in the latter case x is evaluated at mean(x)^2
 
 ## 3) Plug in particular values of covariates
-## The call to lsmeans() below is equivalent to the following SAS code
+## The call to popMeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x2;
 ##  lsmeans CC BB*CC / at x=2 stderr;
 ## run;
-lsmeans(mod2, c("CC"), at=list(x=2))
+popMeans(mod2, c("CC"), at=list(x=2))
 ## Above, x=2 is used while x2 is set to mean(x2)
 
-## The call to lsmeans() below is equivalent to the following SAS code
+## The call to popMeans() below is equivalent to the following SAS code
 ## proc glm data=dat;
 ##	class AA BB CC;
 ##	model y = AA BB|CC x x*x;
 ##    lsmeans CC BB*CC / at x=2 stderr;
 ## run;
 ##
-lsmeans(mod3, c("CC"), at=list(x=2))
+popMeans(mod3, c("CC"), at=list(x=2))
 ## Above, x=2 is used while I(x^2) is set to mean(x^2)=4. Notice that setting
-## lsmeans(mod3, c("CC"), at=list(x=2,"I(x^2)"=123))
+## popMeans(mod3, c("CC"), at=list(x=2,"I(x^2)"=123))
 ## has no effect: I(x^2) is still 4 because x=2. Hence the following two results
 ## are identical
 
-lsmeans(mod2, c("CC"), at=list(x=2, x2=4))
-lsmeans(mod3, c("CC"), at=list(x=2))
+popMeans(mod2, c("CC"), at=list(x=2, x2=4))
+popMeans(mod3, c("CC"), at=list(x=2))
 
 ## END 
 

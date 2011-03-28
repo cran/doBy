@@ -1,3 +1,13 @@
+2011-03-28 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* popMeans (lsMeans) and linMeans functions added.
+
+	* A vignette describing the use of popMeans added. 
+
+	* Functions popMatrix and linMatrix added
+	
+	* Version 4.3.0 uploaded	
+	
 2011-02-02 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Bug fixed in timeSinceEvent

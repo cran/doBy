@@ -18,8 +18,7 @@
   specific value.
 }
 \usage{
-esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE)
-%esticon2(obj, cm, beta0, conf.int = "wald", level=0.95, joint.test = FALSE)
+esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,6 +35,7 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE)
     tests are made, i.e. (L beta)i=beta0i.
     If joint.test is TRUE, then no confidence inteval etc. is calculated.
   }
+  \item{...}{Additional arguments; currently not used.}
 }
 \details{
   
