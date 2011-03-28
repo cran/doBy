@@ -94,7 +94,7 @@ RweaveHTMLreport <- function(){
        finish   = RweaveHTMLreportFinish)
 }
 
-HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="REPORT", cssfile=NULL, ...){
+HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...){
   
   if(!file.exists(srcfile)){
     stop(sprintf("file %s does not exist\n", srcfile))
@@ -151,9 +151,10 @@ HTMLreport <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix=
   cat(sprintf(" target file    : %s\n", destdir.outfile))
 
   driver$finish(tmpfile.name, filename.postfix, destdir.filename)
-  
-##   file.remove(tmpfile1)
-##   file.remove(tmpfile2)
 
+  if (cleanup){
+    file.remove(tmpfile1)
+    file.remove(tmpfile2)
+  }
   return(invisible(NULL))
 }

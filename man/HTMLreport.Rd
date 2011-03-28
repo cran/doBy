@@ -19,7 +19,7 @@
 }
 \usage{
 HTMLreport(srcfile, driver = RweaveHTMLreport(), destdir=".",
-postfix="REPORT", cssfile=NULL, ...)
+postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,30 +27,22 @@ postfix="REPORT", cssfile=NULL, ...)
     A text file with R code and descriptive text. The file name
     extension can be anything except .html as this is the name of the
     output file
-%%     ~~Describe \code{srcfile} here~~
-}
+  }
   \item{driver}{
     The actual workhorse
-    %%     ~~Describe \code{driver} here~~
-  }
-  
+  }  
   \item{destdir}{
     Specification of where to put the report.
-    %%     ~~Describe \code{driver} here~~
-  }
-  
+  }  
   \item{postfix}{
     A string to append to the filename for the HTML file.
-    %%     ~~Describe \code{driver} here~~
-  }
-  
+  }  
   \item{cssfile}{
     An optional cssfile; must be located in destdir to take effect.
-    %%     ~~Describe \code{driver} here~~
+  }  
+  \item{cleanup}{
+    If set to \code{FALSE} then the temporary files are not removed.
   }
-  
-  
-  
   \item{\dots}{
     Further arguments, currently not used.
 }

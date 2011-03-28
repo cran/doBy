@@ -1,5 +1,5 @@
 esticon.coxph <-
-  function (obj, cm, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE) 
+  function (obj, cm, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...) 
 {
   if (joint.test == TRUE) {
     .wald(obj, cm, beta0)

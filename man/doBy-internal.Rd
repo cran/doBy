@@ -1,27 +1,19 @@
 \name{internal}
 \alias{internal}
-\alias{changeNames}
 
 \alias{asNumericMatrix2}
 \alias{matrix2dataFrame2}
 \alias{subsAttr2}
 \alias{doby.xtabs}
 
+\alias{popMatrix}
+\alias{linMatrix}
 
-%\alias{returnByValues}
+\alias{print.conMatrix}
+\alias{summary.conMatrix}
 
-
-% \alias{print.geeglm}
-% \alias{plot.geeglm}
-% \alias{summary.geeglm}
-% \alias{print.summary.geeglm}
-% \alias{print.anova.geeglm}
-% \alias{residuals.geeglm}
-% \alias{model.matrix.geeglm}
-
-% \alias{anovageePrim}
-% \alias{anovaPgee}
-\alias{esticonCore}
+\alias{linMeans}
+\alias{linMeans.lm}
 
 
 \title{Internal functions for the doBy package}
