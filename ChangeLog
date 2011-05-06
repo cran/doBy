@@ -1,3 +1,11 @@
+2011-05-05 Søren Højsgaard <sorenh@agrsci.dk>
+
+	* HTMLreport changed to Rscript2HTML
+
+	* timeSinceEvent function enhanced
+
+	* Version 4.3.1 uploaded.
+
 2011-03-28 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* popMeans (lsMeans) and linMeans functions added.

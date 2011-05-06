@@ -32,22 +32,61 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
   }
   
   sign.tse <- abs.tse * sgn
-  
-  run <- rep(NA, length(abs.tse))
+  eventWindow <- rep(NA, length(abs.tse))
   
   curr.state <- 1
-  run[1] <- curr.state
-  for (jj in 2:(length(run)-1)){
+  eventWindow[1] <- curr.state
+  for (jj in 2:(length(eventWindow)-1)){
     if (sign.tse[jj] <= 0 & sign.tse[jj-1] >0 ){
       curr.state <- curr.state + 1
     } 
-    run[jj] <- curr.state
+    eventWindow[jj] <- curr.state
   }
-  run[length(run)] <- curr.state
+  eventWindow[length(eventWindow)] <- curr.state
   
-  ans <- cbind(data.frame(yvar=yvar, tvar=tvar), abs.tse, sign.tse, run)
+
+  run <- cumsum(yvar)
+  un <- unique(run)
+  tlist <- list()
+  for (ii in 1:length(un)){
+    vv <- un[ii]
+    yy <- yvar[run==vv]
+    tt <- tvar[run==vv]
+    tt <- tt - tt[1]
+    tlist[[ii]] <- tt
+  }
+  timeAfterEvent <- unlist(tlist)
+  timeAfterEvent[run==0] <- NA
+  
+  
+  yvar2 <- rev(yvar)
+  tvar2 <- rev(tvar)
+  
+  run2 <- cumsum(yvar2)
+  un2 <- unique(run2)
+  tlist2 <- list()
+  for (ii in 1:length(un2)){
+    vv <- un2[ii]
+    yy <- yvar2[run2==vv]
+    tt <- tvar2[run2==vv]
+    tt <- tt - tt[1]
+    tlist2[[ii]] <- tt
+  }
+  timeBeforeEvent <- unlist(tlist2)
+  timeBeforeEvent[run2==0] <- NA
+  
+  timeBeforeEvent <- rev(timeBeforeEvent)
+  run[run==0]<-NA
+  
+  #aux <- cbind(yvar,tvar, run, timeAfterEvent, timeBeforeEvent)
+  aux <- cbind(run, tae=timeAfterEvent, tbe=timeBeforeEvent)
+  ans <- cbind(data.frame(yvar=yvar, tvar=tvar), abs.tse, sign.tse, ewin=eventWindow, aux)
   return(ans)
 }
+
+
+
+
 
 
 .find.inc.dec <- function(ttt){

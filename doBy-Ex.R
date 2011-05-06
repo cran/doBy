@@ -13,7 +13,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: HTMLreport
 ### Title: Automatic Generation of Reports (as HTML documents)
-### Aliases: HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
+### Aliases: Rscript2HTML HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
 ###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
 ### Keywords: utilities
 
@@ -23,9 +23,9 @@ tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
    package = "doBy")
 
 ## Create report in working directory
-HTMLreport(tf)
+Rscript2HTML(tf)
 ## Creates report in specified directory (which must exist).
-##HTMLreport(tf, path=".REPORT/") 
+##Rscript2HTML(tf, path=".REPORT/")
 
 
 
