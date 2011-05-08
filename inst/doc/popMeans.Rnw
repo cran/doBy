@@ -19,9 +19,9 @@
 \def\R{\texttt{R}}
 \def\code#1{\texttt{#1}}
 
-\title{Population means (LSMEANS), contrasts and estimable functions 
+\title{Population means (LSMEANS), contrasts and estimable functions
   in the \texttt{doBy} package}
-\author{Søren Højsgaard and Ulrich Halekoh\\ Department og Genetics
+\author{S{\o}ren H{\o}jsgaard and Ulrich Halekoh\\ Department og Genetics
   and Biotechnology\\ Aarhus University}
 
 \begin{document}
@@ -42,15 +42,15 @@
 \section{Introduction}
 \label{sec:xxx}
 
-This is a working document; please feel free to suggest improvements. 
+This is a working document; please feel free to suggest improvements.
 
 \section{Population means (LSMEANS)}
 \label{sec:xxx}
 
 Population means (also known as LSMEANS in SAS jargon) are much used in
-some sciences. 
+some sciences.
 Consider these data:
-@ 
+@
 <<>>=
 library(doBy)
 dd <- expand.grid(A=factor(1:3),B=factor(1:3),C=factor(1:2))
@@ -58,66 +58,66 @@ dd$y <- rnorm(nrow(dd))
 dd$x <- rnorm(nrow(dd))^2
 dd$z <- rnorm(nrow(dd))
 head(dd,10)
-@ %def 
+@ %def
 
 Consider the additive model:
-@ 
+@
 <<>>=
 mm <- lm(y~A+B+C, data=dd)
 coef(mm)
-@ %def 
+@ %def
 
 This is a model for the conditional mean $\EE(y|A,B,C)$. Sometimes one
 is interested in quantities like $\EE(y|A)$. This quantity can not
 formally be found unless $B$ and $C$ are random variables such that we
-may find $\EE(y|A)$ by integration. 
+may find $\EE(y|A)$ by integration.
 
 However, suppose that $A$ is a treatment of main interest, $B$ is a
 blocking factor and $C$ is a day. Then it is tempting to average
-$\EE(y|A,B,C)$ over $B$ and $C$ (average over block and day) 
-and think of this average as $\EE(y|A)$. 
+$\EE(y|A,B,C)$ over $B$ and $C$ (average over block and day)
+and think of this average as $\EE(y|A)$.
 
 \subsection{A brute--force calculation}
 \label{sec:xxx}
 
 The population mean for $A=1$ can be found as:
 
-@ 
+@
 <<>>=
 w <- c(1, 0, 0, 1/3, 1/3, 1/2)
 coef(mm)*w
 sum(coef(mm)*w)
-@ %def 
+@ %def
 
 Notice that although $B$ has 3 levels we only get two terms of $1/3$
 because the parameter for $B=1$ is set to zero to obtain
 identifiability. Similarly for $C$ which has 2 levels and therefore we
-only get one term of $1/2$. 
+only get one term of $1/2$.
 
 We may find the population mean for all three levels of $A$ as
-@ 
+@
 <<>>=
 W <- matrix(c(1, 0, 0, 1/3, 1/3, 1/2,
               1, 1, 0, 1/3, 1/3, 1/2,
               1, 0, 1, 1/3, 1/3, 1/2),nr=3, byrow=TRUE)
 W
 W %*% coef(mm)
-@ %def 
+@ %def
 
 Notice that the matrix W is based on that the first level of $A$ is
 set as the reference level. If the reference level is changed then so
-must $W$ be. 
+must $W$ be.
 
 \subsection{Using \code{esticon()}}
 \label{sec:xxx}
 
 The \code{esticon()} function in the \code{doBy} package be used for
 calculating such quantities along with standard errors, confidence
-limits etc. 
-@ 
+limits etc.
+@
 <<>>=
 esticon(mm, W)
-@ %def 
+@ %def
 
 \section{Using \code{popMatrix()} and \code{popMeans()}}
 \label{sec:xxx}
@@ -128,85 +128,85 @@ level has been changed.
 
 The
 \code{popMatrix()} function provides some help. The above \verb+W+ matrix is  constructed by
-@ 
+@
 <<>>=
 pma <- popMatrix(mm,effect='A')
-@ %def 
+@ %def
 
 More details about how the matrix was constructed is provided by the
 \code{summary()} function:
-@ 
+@
 <<>>=
 summary(pma)
-@ %def 
+@ %def
 
 
 
 The \code{popMeans()} function is simply a wrapper around first a call
 to \code{popMatrix()} followed by a call to (by default) \code{esticon()}:
-@ 
+@
 <<>>=
 pme <- popMeans(mm, effect='A')
-@ %def 
+@ %def
 
 More details about how the matrix was constructed is provided by the
 \code{summary()} function:
-@ 
+@
 <<>>=
 summary(pme)
-@ %def 
+@ %def
 
 
 
 
 The \verb+effect+ argument requires  to calculate the LSMEANS at \emph{all} levels of
 $A$ aggregating across the levels of the other variables in the data.
- 
+
 Likewise we may do:
-@ 
+@
 <<>>=
 popMatrix(mm,effect=c('A','C'))
-@ %def 
+@ %def
 
 Consequently
-@ 
+@
 <<>>=
 popMeans(mm)
-@ %def 
+@ %def
 gives the ``total average''.
 
 
 \subsection{Using the \code{at} argument}
 
-We may be interested in finding the population means 
+We may be interested in finding the population means
 at all levels of  $A$
 but only at $C=1$. This is obtained by using the \code{at} argument:
-@ 
+@
 <<>>=
 popMatrix(mm,effect='A', at=list(C='1'))
-@ %def 
+@ %def
 Notice here that average is only taken over $B$. Another way of
-creating the population means 
+creating the population means
 at  all levels of $(A,C)$ is therefore
 <<>>=
 popMatrix(mm,effect='A', at=list(C=c('1','2')))
-@ %def 
+@ %def
 
 
 We may have several variables in the \code{at} argument:
-@ 
+@
 <<>>=
 popMatrix(mm,effect='A', at=list(C=c('1','2'), B='1'))
-@ %def 
+@ %def
 
 \subsection{Ambiguous specification}
 
 There is room for an ambiguous specification if a variable appears in
 both the \code{effect} and the \code{at} argument, such as
-@ 
+@
 <<>>=
 popMatrix(mm,effect=c('A','C'), at=list(C='1'))
-@ %def 
+@ %def
 
 This ambiguity is due to the fact that the \verb+effect+ argument asks
 for the  LSMEANS at all levels of the variables but  the \verb+at+  chooses only specific levels.
@@ -214,42 +214,42 @@ for the  LSMEANS at all levels of the variables but  the \verb+at+  chooses only
 
 In this case of ambiguity  any variable in the \code{at} argument is removed from
 the \code{effect} argument such as the statement above is equivalent
-to 
-@ 
+to
+@
 <<eval=F>>=
 popMatrix(mm,effect='A', at=list(C='1'))
-@ %def 
+@ %def
 
 \subsection{Using covariates}
 
 Next consider the model where a covariate is included:
-@ 
+@
 <<>>=
 mm2 <- lm(y~A+B+C+C:x, data=dd)
 coef(mm2)
-@ %def 
+@ %def
 
-In this case we get 
+In this case we get
 <<>>=
 popMatrix(mm2,effect='A', at=list(C='1'))
-@ %def 
+@ %def
 
 Above, $x$ has been replaced by its average and that is the general
 rule for models including covariates. However we may use the \code{at}
 argument to ask for calculation of the LSMEANS at some user-specified value of $x$, say 12:
 <<>>=
 popMatrix(mm2,effect='A', at=list(C='1',x=12))
-@ %def 
+@ %def
 
 
 \subsection{Using transformed covariates}
 
 Next consider the model where a  transformation of a covariate is included:
-@ 
+@
 <<>>=
 mm3 <- lm(y~A+B+C+C:log(x), data=dd)
 coef(mm3)
-@ %def 
+@ %def
 
 In this case we can not use \code{popMatrix}. Instead we have first to
 generate a new variable, say \verb+log.x+, with \verb+log.x+$=\log(x)$, in the data and then proceed as
@@ -258,7 +258,7 @@ generate a new variable, say \verb+log.x+, with \verb+log.x+$=\log(x)$, in the d
 dd <- transform(dd, log.x = log(x))
 mm3 <- lm(y~A+B+C+C:log.x, data=dd)
 popMatrix(mm3,effect='A', at=list(C='1'))
-@ %def 
+@ %def
 
 
 
@@ -271,15 +271,15 @@ linear transformation matrix for calculating parameter estimates and
 confidecne intervals.
 A similar function to \verb+esticon+ is the \verb+glht+ function of the \verb+multcomp+
  package.
- 
- The \code{glht()} function 
+
+ The \code{glht()} function
  can be chosen via the \verb+engine+ argument of \verb+popMeans+.
 <<>>=
  library(multcomp)
 g<-popMeans(mm,effect='A', at=list(C='1'),engine="glht")
 g
-@ %def 
- 
+@ %def
+
 This allows to apply the methods available on the \verb+glht+ object like
 <<>>=
 summary(g,test=univariate())
@@ -292,7 +292,7 @@ By default the functions will adjust the tests  and confidence intervals for mul
 summary(g)
 confint(g)
 @
- 
+
 
 
 
