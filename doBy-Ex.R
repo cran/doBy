@@ -6,12 +6,144 @@ library('doBy')
 
 assign(".oldSearch", search(), pos = 'CheckExEnv')
 cleanEx()
-nameEx("HTMLreport")
-### * HTMLreport
+nameEx("KenRog-Primitive")
+### * KenRog-Primitive
 
 flush(stderr()); flush(stdout())
 
-### Name: HTMLreport
+### Name: KenwardRoger primitive function
+### Title: Ftest and degrees of freedom based on Kenward-Roger
+###   approximation
+### Aliases: .KRmodcompPrimitive
+### Keywords: function
+
+### ** Examples
+
+     ## save all data
+	 x<-3
+	 
+
+
+cleanEx()
+nameEx("KenRog-linearAlgebra")
+### * KenRog-linearAlgebra
+
+flush(stderr()); flush(stdout())
+
+### Name: linearAlgebra
+### Title: Linear Algebra
+### Aliases: spur spurAB fatAB fatBL orthComplement
+### Keywords: file
+
+### ** Examples
+
+     ## save all data
+	 x<-3
+	 
+
+
+cleanEx()
+nameEx("KenRog")
+### * KenRog
+
+flush(stderr()); flush(stdout())
+
+### Name: KenwardRoger
+### Title: Ftest and degrees of freedom based on Kenward-Roger
+###   approximation
+### Aliases: KRmodcomp KRmodcomp.mer print.KRmodcomp
+### Keywords: function
+
+### ** Examples
+
+(fmLarge <- lmer(Reaction ~ Days + (Days|Subject), sleepstudy))
+#removing Day
+(fmSmall <- lmer(Reaction ~ 1 + (Days|Subject), sleepstudy))
+(KRmodcomp(fmLarge,fmSmall))
+# the same test using a restriction matrix
+L<-cbind(0,1)
+(KRmodcomp(fmLarge,L))
+
+
+
+cleanEx()
+nameEx("PB_PBmodcomp")
+### * PB_PBmodcomp
+
+flush(stderr()); flush(stdout())
+
+### Name: PBmodcomp
+### Title: Model comparison of mixed models using parametric bootstrap
+###   methods.
+### Aliases: PBmodcomp PBmodcomp.mer BCmodcomp BCmodcomp.mer
+###   as.data.frame.XXmodcomp print.XXmodcomp
+### Keywords: utilities models inference
+
+### ** Examples
+
+library(doBy)
+data(beets)
+head(beets)
+beet0<-lmer(sugpct~block+sow+harvest+(1|block:harvest), data=beets, REML=FALSE)
+beet_no.harv <- update(beet0, .~.-harvest)
+BCmodcomp(beet0, beet_no.harv, nsim=20)
+
+## Not run: 
+##D ## Vanilla
+##D PBmodcomp(beet0, beet_no.harv)
+##D BCmodcomp(beet0, beet_no.harv)
+##D ## Simulate reference distribution separately:
+##D rr <- PBrefdist(beet0, beet_no.harv, nsim=20)
+##D PBmodcomp(beet0, beet_no.harv, ref=rr)
+##D BCmodcomp(beet0, beet_no.harv, ref=rr)
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("PB_PBrefdist")
+### * PB_PBrefdist
+
+flush(stderr()); flush(stdout())
+
+### Name: PBrefdist
+### Title: Calculate reference distribution using parametric bootstrap
+### Aliases: PBrefdist PBrefdist.mer
+### Keywords: utilities models
+
+### ** Examples
+
+library(doBy)
+data(beets)
+head(beets)
+beet0<-lmer(sugpct~block+sow+harvest+(1|block:harvest), data=beets, REML=FALSE)
+beet_no.harv <- update(beet0, .~.-harvest)
+rr <- PBrefdist(beet0, beet_no.harv, nsim=20)
+rr
+
+## Note clearly many more than 10 simulations must be made in practice.
+
+## Computations can be made in parallel using several processors:
+## Not run: 
+##D library(snow)
+##D cl <- makeSOCKcluster(rep("localhost", 4))
+##D clusterEvalQ(cl, library(lme4))
+##D clusterSetupSPRNG(cl)
+##D rr <- PBrefdist(beet0, beet_no.harv, nsim=20)
+##D stopCluster(cl)
+## End(Not run)
+## Above, 4 cpu's are used and 5 simulations are made on each cpu.
+
+
+
+cleanEx()
+nameEx("Rscript2HTML")
+### * Rscript2HTML
+
+flush(stderr()); flush(stdout())
+
+### Name: Rscript2HTML
 ### Title: Automatic Generation of Reports (as HTML documents)
 ### Aliases: Rscript2HTML HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
 ###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
@@ -559,13 +691,6 @@ ans$value
 # Notice: Same results below
 subSeq(x,item="1")
 subSeq(x,item=1)
-
-x <- factor(c(1,1,1,0,0,1,1,1,2,2,2,1,2,2,2,3))
-(ans<-subSeq(x))
-ans$value
-# Notice: Same results below
-subSeq(x,item=1)
-subSeq(x,item="1")
 
 
 

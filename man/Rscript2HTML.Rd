@@ -1,4 +1,4 @@
-\name{HTMLreport}
+\name{Rscript2HTML}
 \alias{Rscript2HTML}
 \alias{HTMLreport}
 \alias{RweaveHTMLreport}
