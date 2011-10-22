@@ -44,14 +44,16 @@ the input, see 'examples'.}
 \value{
 A data frame
 }
-\author{Søren Højsgaard, sorenh@agrsci.dk}
+\author{Søren Højsgaard, sorenh at agrsci dot dk}
 
 \seealso{
-  \code{\link{orderBy}},
   \code{\link{ave}},
-  \code{\link{transformBy}},
-  \code{\link{splitBy}},
   \code{\link{lapplyBy}},
+  \code{\link{orderBy}},
+  \code{\link{scaleBy}},
+  \code{\link{splitBy}},
+  %\code{\link{summaryBy}},
+  \code{\link{transformBy}},
 }
 
 

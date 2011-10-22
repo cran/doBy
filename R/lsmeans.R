@@ -16,8 +16,23 @@ popMeans.lm <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esti
   ans
 }
 
-lsMeans    <- popMeans
-lsMeans.lm <- popMeans.lm
+popMeans.mer <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", ...){
+  cl  <- match.call()
+  mm  <- popMatrix(object, effect=effect, at=at, only.at=only.at)
+  ans <- do.call(engine, list(object, mm,...))
+
+  if (engine=="esticon"){
+    attributes(ans)[c("grid","at")] <- attributes(mm)[c("grid","at")]
+    attr(ans,"X") <- mm
+    attr(ans,"call") <- cl
+    class(ans)    <- c("popMeans", "conMeans", "data.frame")
+  }
+  ans
+}
+
+lsMeans     <- popMeans
+lsMeans.lm  <- popMeans.lm
+lsMeans.mer <- popMeans.mer
 
 linMeans <- function(object, at=NULL, engine="esticon", ...){
   UseMethod("linMeans")

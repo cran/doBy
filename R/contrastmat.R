@@ -69,8 +69,8 @@
 linMatrix <- function(object, at){
   tt 	   <- terms(object)
   Terms    <- delete.response(tt)
-  xlev  <- .get_xlevels(object)
-  ccc   <- .covariateAve(object, at)
+  xlev     <- .get_xlevels(object)
+  ccc      <- .covariateAve(object, at)
   
   ## popMatrix and linMatrix only differ here
   at.grid  <- expand.grid(at)

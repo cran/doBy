@@ -15,6 +15,7 @@
 \alias{linMeans}
 \alias{linMeans.lm}
 
+\alias{funBy}
 
 \title{Internal functions for the doBy package}
 \description{Internal functions for the doBy package}
