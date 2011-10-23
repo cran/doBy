@@ -1,8 +1,10 @@
 \name{popMeans}
 \alias{popMeans}
 \alias{popMeans.lm}
+\alias{popMeans.mer}
 \alias{lsMeans}
 \alias{lsMeans.lm}
+\alias{lsMeans.mer}
 \alias{summary.conMeans}
 
 %\alias{print.lsmeansTable}

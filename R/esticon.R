@@ -61,10 +61,10 @@ esticon.mer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
     .wald(obj, cm, beta0)
   } else {
     stat.name <- "X2.stat"
-    cf <- matrix(fixef(obj))
-    vcv <- vcov(obj)
-    df <- 1
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    cf  <- matrix(fixef(obj))
+    vcv <- as.matrix(vcov(obj))
+    df  <- 1
+    .esticonCore(obj, cm, beta0, conf.int=conf.int, level, cf, vcv, df, stat.name)
   }
 }
 
@@ -113,20 +113,20 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
 
     df <- nrow(cm)
     if ("geese" %in% class(obj)) {
-      cf <- obj$beta
+      cf  <- obj$beta
       vcv <- obj$vbeta
     } else if ("geeglm" %in% class(obj)) {
-      cf <- obj$coef
+      cf  <- obj$coef
       vcv <- summary(obj)$cov.scaled
     } else if ("gls" %in% class(obj)) {
       vcv <- vcov(obj)
       cf  <- matrix(coef(obj))
     } else if ("gee" %in% class(obj)) {
-      cf <- obj$coef
+      cf  <- obj$coef
       vcv <- obj$robust.variance
     }
     else if ("lm" %in% class(obj)) {
-      cf <- summary.lm(obj)$coefficients[, 1]
+      cf  <- summary.lm(obj)$coefficients[, 1]
       vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
       if ("glm" %in% class(obj)) {
         vcv <- summary(obj)$cov.scaled
@@ -170,13 +170,14 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
                ": ", paste(dim(cm), collapse = "x"),
                ", not compatible with no of parameters in ", 
                deparse(substitute(obj)), ": ", dim(cf)[1], sep = ""))
-  ct <- cm %*% cf[, 1] 
+  ct      <- cm %*% cf[, 1] 
   ct.diff <- cm %*% cf[, 1] - beta0      
-  vc <- sqrt(diag(cm %*% vcv %*% t(cm)))
+  vc      <- sqrt(diag(cm %*% vcv %*% t(cm)))
 
   if (is.null(rownames(cm))) 
     rn <- paste("(", apply(cm, 1, paste, collapse = " "), ")", sep = "")
-  else rn <- rownames(cm)
+  else
+    rn <- rownames(cm)
 
   rn <- NULL
   switch(stat.name,
@@ -209,7 +210,6 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
     switch(stat.name,
            t.stat  = { quant <- qt(1 - alpha/2, df  )  },
            X2.stat = { quant <- qnorm(1 - alpha/2) })
-                                        #X2.stat = { quant <- qt(1 - alpha/2, 1000) })
 
     vvv <- cbind(ct.diff-vc*quant, ct.diff+vc*quant)
     colnames(vvv) <- c("Lower", "Upper")  
