@@ -6,33 +6,8 @@ library('doBy')
 
 assign(".oldSearch", search(), pos = 'CheckExEnv')
 cleanEx()
-nameEx("Rscript2HTML")
-### * Rscript2HTML
-
-flush(stderr()); flush(stdout())
-
-### Name: Rscript2HTML
-### Title: Automatic Generation of Reports (as HTML documents)
-### Aliases: Rscript2HTML HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
-###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
-### Keywords: utilities
-
-### ** Examples
-
-tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
-   package = "doBy")
-
-## Create report in working directory
-Rscript2HTML(tf)
-## Creates report in specified directory (which must exist).
-##Rscript2HTML(tf, path=".REPORT/")
-
-
-
-
-cleanEx()
-nameEx("beets")
-### * beets
+nameEx("DATA-beets")
+### * DATA-beets
 
 flush(stderr()); flush(stdout())
 
@@ -54,8 +29,8 @@ summary(aov(sugpct~block+sow+harvest+Error(bh), beets))
 
 
 cleanEx()
-nameEx("budworm")
-### * budworm
+nameEx("DATA-budworm")
+### * DATA-budworm
 
 flush(stderr()); flush(stdout())
 
@@ -89,8 +64,8 @@ legend(0.5,2,legend=c('male','female'),lty=c(1,2),col=c(1,2))
 
 
 cleanEx()
-nameEx("codstom")
-### * codstom
+nameEx("DATA-codstom")
+### * DATA-codstom
 
 flush(stderr()); flush(stdout())
 
@@ -137,8 +112,8 @@ codstom3 <- summaryBy(prey.mass ~ region+ship.type+ship.id+trip,
 
 
 cleanEx()
-nameEx("dietox")
-### * dietox
+nameEx("DATA-dietox")
+### * DATA-dietox
 
 flush(stderr()); flush(stdout())
 
@@ -152,6 +127,49 @@ flush(stderr()); flush(stdout())
 data(dietox)
 str(dietox) ;
 plot(dietox)
+
+
+
+
+cleanEx()
+nameEx("DATA-milkman")
+### * DATA-milkman
+
+flush(stderr()); flush(stdout())
+
+### Name: milkman
+### Title: Milk yield data for manually milked cows.
+### Aliases: milkman
+### Keywords: datasets
+
+### ** Examples
+
+data(milkman)
+## maybe str(milkman) ; plot(milkman) ...
+
+
+
+cleanEx()
+nameEx("Rscript2HTML")
+### * Rscript2HTML
+
+flush(stderr()); flush(stdout())
+
+### Name: Rscript2HTML
+### Title: Automatic Generation of Reports (as HTML documents)
+### Aliases: Rscript2HTML HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
+###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
+### Keywords: utilities
+
+### ** Examples
+
+tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
+   package = "doBy")
+
+## Create report in working directory
+Rscript2HTML(tf)
+## Creates report in specified directory (which must exist).
+##Rscript2HTML(tf, path=".REPORT/")
 
 
 
