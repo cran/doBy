@@ -351,6 +351,23 @@ dietox$FE <- unlist(v)
 
 
 cleanEx()
+nameEx("lmBy")
+### * lmBy
+
+flush(stderr()); flush(stdout())
+
+### Name: lmBy
+### Title: List of lm objects with a common model
+### Aliases: lmBy coef.lmBy fitted.lmBy residuals.lmBy print.lmBy getBy
+### Keywords: models
+
+### ** Examples
+
+## To be written...
+
+
+
+cleanEx()
 nameEx("lsmeans")
 ### * lsmeans
 
