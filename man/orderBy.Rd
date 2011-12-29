@@ -28,7 +28,7 @@ orderBy(formula, data)
   The ordered data frame
 }
 %\references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, sorenh@agrsci.dk and Kevin Wright}
+\author{Søren Højsgaard, sorenh at mail dot dk and Kevin Wright}
 % \note{ ~~further notes~~ 
 
 %  ~Make other sections like Warning with \section{Warning }{....} ~

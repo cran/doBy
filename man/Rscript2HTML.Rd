@@ -63,7 +63,7 @@ postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
 %% ~put references to the literature/web site here ~
 %}
 \author{
-Søren Højsgaard <sorenh at agrsci dot dk>
+Søren Højsgaard <sorenh at mail dot dk>
 }
 \note{
   HTMLreport is a recent addition to the doBy package and it has not
