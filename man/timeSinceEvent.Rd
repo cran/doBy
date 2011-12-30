@@ -34,7 +34,7 @@ timeSinceEvent(yvar, tvar = seq_along(yvar))
 %% ~put references to the literature/web site here ~
 %}
 \author{
-  Søren Højsgaard <sorenh at agrsci dot dk>
+  Søren Højsgaard <sorenh at mail dot dk>
 }
 \note{
  NA's in yvar are converted to zeros.
