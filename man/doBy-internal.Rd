@@ -9,6 +9,8 @@
 \alias{popMatrix}
 \alias{linMatrix}
 
+\alias{recodevar}
+
 \alias{print.conMatrix}
 \alias{summary.conMatrix}
 
@@ -16,6 +18,15 @@
 \alias{linMeans.lm}
 
 \alias{funBy}
+
+\alias{HTMLreport}
+\alias{Rscript2HTML}
+\alias{RweaveHTMLreport}
+\alias{RweaveHTMLreportSetup}
+\alias{RweaveHTMLreportWritedoc}
+\alias{RweaveHTMLreportFinish}
+
+
 
 \title{Internal functions for the doBy package}
 \description{Internal functions for the doBy package}

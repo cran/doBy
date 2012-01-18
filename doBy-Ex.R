@@ -155,10 +155,9 @@ nameEx("Rscript2HTML")
 
 flush(stderr()); flush(stdout())
 
-### Name: Rscript2HTML
+### Name: Rmarkup
 ### Title: Automatic Generation of Reports (as HTML documents)
-### Aliases: Rscript2HTML HTMLreport RweaveHTMLreport RweaveHTMLreportSetup
-###   RweaveHTMLreportWritedoc RweaveHTMLreportFinish
+### Aliases: Rmarkup
 ### Keywords: utilities
 
 ### ** Examples
@@ -167,9 +166,9 @@ tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
    package = "doBy")
 
 ## Create report in working directory
-Rscript2HTML(tf)
+Rmarkup(tf)
 ## Creates report in specified directory (which must exist).
-##Rscript2HTML(tf, path=".REPORT/")
+## Rmarkup(tf, path=".REPORT/")
 
 
 
@@ -470,7 +469,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: recodeVar
 ### Title: Recode values of a vector
-### Aliases: recodeVar recodevar
+### Aliases: recodeVar
 ### Keywords: utilities
 
 ### ** Examples

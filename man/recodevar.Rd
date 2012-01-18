@@ -1,6 +1,5 @@
 \name{recodeVar}
 \alias{recodeVar}
-\alias{recodevar}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Recode values of a vector}
 \description{
