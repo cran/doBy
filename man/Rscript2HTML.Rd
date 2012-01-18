@@ -1,10 +1,8 @@
-\name{Rscript2HTML}
-\alias{Rscript2HTML}
-\alias{HTMLreport}
-\alias{RweaveHTMLreport}
-\alias{RweaveHTMLreportSetup}
-\alias{RweaveHTMLreportWritedoc}
-\alias{RweaveHTMLreportFinish}
+% \name{Rscript2HTML}
+% \alias{Rscript2HTML}
+
+\name{Rmarkup}
+\alias{Rmarkup}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -19,8 +17,10 @@
   statistical analysis.
 }
 \usage{
-Rscript2HTML(srcfile, driver = RweaveHTMLreport(), destdir=".",
-postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
+Rmarkup(srcfile, driver = RweaveHTMLreport(), destdir=".",
+postfix="REPORT", cssfile=NULL, cleanup=TRUE, details=0,...)
+% Rscript2HTML(srcfile, driver = RweaveHTMLreport(), destdir=".",
+% postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,6 +43,10 @@ postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
   }
   \item{cleanup}{
     If set to \code{FALSE} then the temporary files are not removed.
+  }
+  \item{details}{
+    Set to a positive value to see intermediate results; mainly for
+    debugging purposes. 
   }
   \item{\dots}{
     Further arguments, currently not used.
@@ -80,9 +84,9 @@ tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
    package = "doBy")
 
 ## Create report in working directory
-Rscript2HTML(tf)
+Rmarkup(tf)
 ## Creates report in specified directory (which must exist).
-##Rscript2HTML(tf, path=".REPORT/")
+## Rmarkup(tf, path=".REPORT/")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
