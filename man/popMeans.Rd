@@ -1,10 +1,7 @@
 \name{popMeans}
 \alias{popMeans}
-\alias{popMeans.lm}
-\alias{popMeans.mer}
-\alias{lsMeans}
-\alias{lsMeans.lm}
-\alias{lsMeans.mer}
+\alias{popMeans.default}
+\alias{popMeans.lme}
 \alias{summary.conMeans}
 
 %\alias{print.lsmeansTable}
@@ -18,7 +15,8 @@
 }
 \usage{
 popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
-\method{popMeans}{lm}(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
+\method{popMeans}{default}(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
+\method{popMeans}{lme}(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

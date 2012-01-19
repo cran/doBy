@@ -150,8 +150,8 @@ data(milkman)
 
 
 cleanEx()
-nameEx("Rscript2HTML")
-### * Rscript2HTML
+nameEx("Rmarkup")
+### * Rmarkup
 
 flush(stderr()); flush(stdout())
 
@@ -367,15 +367,34 @@ flush(stderr()); flush(stdout())
 
 
 cleanEx()
-nameEx("lsmeans")
-### * lsmeans
+nameEx("orderBy")
+### * orderBy
+
+flush(stderr()); flush(stdout())
+
+### Name: orderBy
+### Title: Ordering (sorting) rows of a data frame
+### Aliases: orderBy
+### Keywords: utilities
+
+### ** Examples
+
+data(dietox)
+orderBy(~Time+Evit, data=dietox)
+## Sort decreasingly by Time
+orderBy(~-Time+Evit, data=dietox)
+
+
+
+cleanEx()
+nameEx("popMeans")
+### * popMeans
 
 flush(stderr()); flush(stdout())
 
 ### Name: popMeans
 ### Title: Calculate population means (LSMEANS in SAS jargon)
-### Aliases: popMeans popMeans.lm popMeans.mer lsMeans lsMeans.lm
-###   lsMeans.mer summary.conMeans
+### Aliases: popMeans popMeans.default popMeans.lme summary.conMeans
 ### Keywords: models utilites
 
 ### ** Examples
@@ -438,26 +457,6 @@ popMeans(mod2, c("CC"), at=list(x=2, x2=4))
 popMeans(mod3, c("CC"), at=list(x=2))
 
 ## END 
-
-
-
-cleanEx()
-nameEx("orderBy")
-### * orderBy
-
-flush(stderr()); flush(stdout())
-
-### Name: orderBy
-### Title: Ordering (sorting) rows of a data frame
-### Aliases: orderBy
-### Keywords: utilities
-
-### ** Examples
-
-data(dietox)
-orderBy(~Time+Evit, data=dietox)
-## Sort decreasingly by Time
-orderBy(~-Time+Evit, data=dietox)
 
 
 
