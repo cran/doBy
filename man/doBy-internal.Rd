@@ -9,22 +9,24 @@
 \alias{popMatrix}
 \alias{linMatrix}
 
-\alias{recodevar}
-
 \alias{print.conMatrix}
 \alias{summary.conMatrix}
 
 \alias{linMeans}
-\alias{linMeans.lm}
+\alias{linMeans.default}
+\alias{linMeans.lme}
 
 \alias{funBy}
 
-\alias{HTMLreport}
-\alias{Rscript2HTML}
 \alias{RweaveHTMLreport}
 \alias{RweaveHTMLreportSetup}
 \alias{RweaveHTMLreportWritedoc}
 \alias{RweaveHTMLreportFinish}
+
+% deprecated functions
+\alias{recodevar}
+\alias{HTMLreport}
+\alias{Rscript2HTML}
 
 
 
