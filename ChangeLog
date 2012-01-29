@@ -1,10 +1,16 @@
+2012-01-29 Søren Højsgaard <sorenh@mail.dk>
+
+	* Minor enhancement to Rmarkup()
+
+	* Version 4.5.1 uploaded		
+	
 2012-01-18 Søren Højsgaard <sorenh@mail.dk>
 
 	* popMeans method for lme objects added
 
 	* lsmeans aliases for popMeans removed
 
-	* ##Version 4.5.0 uploaded	
+	* Version 4.5.0 uploaded	
 
 
 2012-01-18 Søren Højsgaard <sorenh@mail.dk>

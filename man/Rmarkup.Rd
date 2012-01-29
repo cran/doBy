@@ -18,7 +18,8 @@
 }
 \usage{
 Rmarkup(srcfile, driver = RweaveHTMLreport(), destdir=".",
-postfix="REPORT", cssfile=NULL, cleanup=TRUE, details=0,...)
+postfix="REPORT", cssfile=NULL, cleanup=TRUE,
+parms=list(height=400,width=600), details=0,...)
 % Rscript2HTML(srcfile, driver = RweaveHTMLreport(), destdir=".",
 % postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
 }
@@ -44,6 +45,9 @@ postfix="REPORT", cssfile=NULL, cleanup=TRUE, details=0,...)
   \item{cleanup}{
     If set to \code{FALSE} then the temporary files are not removed.
   }
+  \item{parms}{
+    Control height and width of graphics.
+    }
   \item{details}{
     Set to a positive value to see intermediate results; mainly for
     debugging purposes. 
