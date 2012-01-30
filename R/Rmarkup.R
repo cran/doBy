@@ -7,7 +7,7 @@
 # scriptReport
 
 Rmarkup <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="REPORT", cssfile=NULL,
-                    cleanup=TRUE, details=0, ...){
+                    cleanup=TRUE, parms=list(height=400,width=600), details=0, ...){
   
   cat("Preprocessing... \n")
   
@@ -68,7 +68,8 @@ Rmarkup <- function(srcfile, driver=RweaveHTMLreport(), destdir=".", postfix="RE
   
   cat("Postprocessing... \n")
   inlines    <- readLines(tmpfile.name.html)
-  outlines   <- driver$writedoc(inlines, filename.postfix, tmpfile.name) ## Postprocess html file
+  outlines   <- driver$writedoc(inlines, filename.postfix, tmpfile.name, parms)
+  ## Postprocess html file
   
   if (!is.null(cssfile)){
     ##cssline <- "<link rel=stylesheet href=\"R2HTML.css\" type=text/css>"
@@ -153,11 +154,15 @@ RweaveHTMLreportSetup <- function(srclines, details=0){
   anslines
 }
 
-RweaveHTMLreportWritedoc <- function(srclines, filename.postfix, tmpfile.name){
+RweaveHTMLreportWritedoc <- function(srclines, filename.postfix, tmpfile.name, parms){
   anslines <- srclines
   for (ii in 1:length(srclines)){
     lll <- srclines[ii]
-    lll <- gsub("<img height= width= ",          "<img ", lll)
+
+    sss <- sprintf("<img height=%i width=%i ", parms$height, parms$width)
+    lll <- gsub("<img height= width= ",          sss, lll)
+    ##lll <- gsub("<img height= width= ",          "<img ", lll)
+
     lll <- gsub("<p align= center >",            "<p align= left >", lll)
     lll <- gsub("<p align='center'>",            "<p align= left >", lll)
     lll <- gsub("(<!--\\\\end\\{Schunk\\}!-->)", "</p> \\1",lll)
