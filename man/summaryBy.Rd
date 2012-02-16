@@ -48,11 +48,11 @@ A data frame
 
 \seealso{
   \code{\link{ave}},
+  \code{\link{descStat}},  
   \code{\link{lapplyBy}},
   \code{\link{orderBy}},
   \code{\link{scaleBy}},
   \code{\link{splitBy}},
-  %\code{\link{summaryBy}},
   \code{\link{transformBy}},
 }
 

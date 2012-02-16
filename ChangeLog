@@ -1,3 +1,12 @@
+2012-02-17 Søren Højsgaard <sorenh@mail.dk>
+
+	* descStat function added. Thanks to Gregor Gorjanc.
+	
+	* popMeans extended so that the grid values appear in the output
+	by default
+
+	* Version 4.5.2 uploaded		
+
 2012-01-29 Søren Højsgaard <sorenh@mail.dk>
 
 	* Minor enhancement to Rmarkup()
