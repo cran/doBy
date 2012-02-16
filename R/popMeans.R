@@ -1,22 +1,26 @@
-popMeans <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", ...){
+popMeans <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", grid=TRUE, ...){
   UseMethod("popMeans")
 }
 
-popMeans.default <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", ...){
+popMeans.default <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", grid=TRUE, ...){
   cl  <- match.call()
   mm  <- popMatrix(object, effect=effect, at=at, only.at=only.at)
   ans <- do.call(engine, list(object, mm,...))
 
+  xtra <- attributes(mm)[[c("grid")]]
+  
   if (engine=="esticon"){
-    attributes(ans)[c("grid","at")] <- attributes(mm)[c("grid","at")]
     attr(ans,"X")    <- mm
     attr(ans,"call") <- cl
+    if (grid && !is.null(xtra))
+      ans <- cbind(ans, xtra) 
     class(ans) <- c("popMeans", "conMeans", "data.frame")
   }
+  attributes(ans)[c("grid","at")] <- attributes(mm)[c("grid","at")]
   ans
 }
 
-popMeans.lme <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", ...){
+popMeans.lme <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", grid=TRUE, ...){
   cl <- match.call()
   lm.pseudo <- lm(object,data=object$data)
   cl[[2]]   <- lm.pseudo
@@ -24,32 +28,36 @@ popMeans.lme <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="est
   eval(cl)
 }
 
-linMeans <- function(object, at=NULL, engine="esticon", ...){
+linMeans <- function(object, at=NULL, engine="esticon", grid=TRUE, ...){
   UseMethod("linMeans")
 }
 
-linMeans.default <- function(object, at=NULL, engine="esticon", ...){
+linMeans.default <- function(object, at=NULL, engine="esticon", grid=TRUE, ...){
   cl  <- match.call()
   mm  <- linMatrix(object, at=at)
   ans <- do.call(engine, list(object, mm,...))
 
+  xtra <- attributes(mm)[[c("grid")]]
+  
   if (engine=="esticon"){
-    attributes(ans)[c("grid","at")] <- attributes(mm)[c("grid","at")]
     attr(ans,"X") <- mm
     attr(ans,"call") <- cl
+    if (grid && !is.null(xtra))
+      ans <- cbind(ans, xtra) 
+
     class(ans)    <- c("linMeans", "conMeans", "data.frame")
   }
+  attributes(ans)[c("grid","at")] <- attributes(mm)[c("grid","at")]
   ans
 }
 
-linMeans.lme <- function(object, at=NULL, engine="esticon", ...){
+linMeans.lme <- function(object, at=NULL, engine="esticon", grid=TRUE, ...){
   cl <- match.call()
   lm.pseudo <- lm(object,data=object$data)
   cl[[2]]   <- lm.pseudo
   cl[[1]]   <- as.name("linMeans.default")
   eval(cl)
 }
-
 
 summary.conMeans <- function(object,...){
   print(object)

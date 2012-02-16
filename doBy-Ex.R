@@ -174,6 +174,24 @@ Rmarkup(tf)
 
 
 cleanEx()
+nameEx("descStat")
+### * descStat
+
+flush(stderr()); flush(stdout())
+
+### Name: descStat
+### Title: Computing simple descriptive statistics of a numeric vector.
+### Aliases: descStat
+### Keywords: utilities
+
+### ** Examples
+
+x <- c(1,2,3,4,NA,NaN)
+descStat(x)
+
+
+
+cleanEx()
 nameEx("doBy")
 ### * doBy
 

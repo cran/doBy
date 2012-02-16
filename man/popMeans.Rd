@@ -14,9 +14,9 @@
   Calculate population means (LSMEANS in SAS jargon). 
 }
 \usage{
-popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
-\method{popMeans}{default}(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
-\method{popMeans}{lme}(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
+popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
+\method{popMeans}{default}(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
+\method{popMeans}{lme}(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,6 +41,12 @@ popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,...)
     parameters. 
     See 'details'.
   }
+  \item{grid}{
+    If \code{TRUE} and \code{engine='esticon'} then the values of the
+    covariates at which the population means are calculated are appended
+    to the result. 
+  }
+  
   \item{...}{Additional arguments; currently not used.}
 }
 \details{
