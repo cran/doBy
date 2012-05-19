@@ -162,8 +162,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
-   package = "doBy")
+tf <- system.file("Rmarkup", "Puromycin.R", package = "doBy")
 
 ## Create report in working directory
 Rmarkup(tf)

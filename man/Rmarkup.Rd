@@ -18,10 +18,8 @@
 }
 \usage{
 Rmarkup(srcfile, driver = RweaveHTMLreport(), destdir=".",
-postfix="REPORT", cssfile=NULL, cleanup=TRUE,
-parms=list(height=400,width=600), details=0,...)
-% Rscript2HTML(srcfile, driver = RweaveHTMLreport(), destdir=".",
-% postfix="REPORT", cssfile=NULL, cleanup=TRUE, ...)
+postfix=NULL, cssfile=NULL, cleanup=TRUE,
+parms=list(height=400,width=400), encoding="", details=0,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,6 +46,9 @@ parms=list(height=400,width=600), details=0,...)
   \item{parms}{
     Control height and width of graphics.
     }
+  \item{encoding}{
+    The default encoding to assume for \code{srcfile}
+  }    
   \item{details}{
     Set to a positive value to see intermediate results; mainly for
     debugging purposes. 
@@ -84,8 +85,7 @@ Søren Højsgaard <sorenh at mail dot dk>
   \code{\link{Sweave}}
 }
 \examples{
-tf <- system.file("HTMLreport", "PuromycinAnalysis-report.R",
-   package = "doBy")
+tf <- system.file("Rmarkup", "Puromycin.R", package = "doBy")
 
 ## Create report in working directory
 Rmarkup(tf)
