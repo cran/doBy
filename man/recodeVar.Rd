@@ -23,7 +23,8 @@ recodeVar(x, src, tgt, default=NULL, keep.na=TRUE)
   A vector
 }
 % \references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, <sorenh at mail dot dk>}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
+
 % \note{ ~~further notes~~ }
 
 \section{Warning }{Care should be taken if x is a factor. A safe

@@ -2,6 +2,11 @@
 \alias{popMeans}
 \alias{popMeans.default}
 \alias{popMeans.lme}
+
+\alias{LSMEANS}
+\alias{LSMEANS.default}
+\alias{LSMEANS.lme}
+
 \alias{summary.conMeans}
 
 %\alias{print.lsmeansTable}
@@ -11,7 +16,8 @@
   Calculate population means (LSMEANS in SAS jargon)
 }
 \description{
-  Calculate population means (LSMEANS in SAS jargon). 
+  Calculate population means (LSMEANS in SAS jargon). The functions
+  \code{popMeans} and \code{LSMEANS} are synonymous.
 }
 \usage{
 popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
@@ -21,7 +27,7 @@ popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-    A model object; currently only available for 'lm' objects
+    A model object.
   }
   \item{effect}{
     A vector of variables for which the population means should be calculated.
@@ -64,9 +70,7 @@ popMeans(object, effect, at = NULL, only.at=TRUE, engine=esticon,grid=TRUE,...)
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{
-  Søren Højsgaard, sorenh at mail dot dk
-}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 %\note{
 %%  ~~further notes~~
 %}

@@ -18,6 +18,12 @@
 
 \alias{funBy}
 
+
+\alias{HTMLCommand2}
+\alias{HTMLdefault2}
+\alias{RweaveHTML2}
+\alias{RweaveHTMLRuncode2}
+
 \alias{RweaveHTMLreport}
 \alias{RweaveHTMLreportSetup}
 \alias{RweaveHTMLreportWritedoc}

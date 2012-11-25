@@ -28,6 +28,13 @@ popMeans.lme <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="est
   eval(cl)
 }
 
+
+
+LSMEANS         <- popMeans
+LSMEANS.default <- popMeans.default
+LSMEANS.lme     <- popMeans.lme
+
+
 linMeans <- function(object, at=NULL, engine="esticon", grid=TRUE, ...){
   UseMethod("linMeans")
 }

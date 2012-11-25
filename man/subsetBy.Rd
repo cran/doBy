@@ -30,7 +30,8 @@ join=TRUE, ... )
   A data frame.
 }
 %\references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, sorenh at mail dot dk}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
+
 % \note{ ~~further notes~~ 
 
 %  ~Make other sections like Warning with \section{Warning }{....} ~
