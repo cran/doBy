@@ -44,7 +44,7 @@ the input, see 'examples'.}
 \value{
 A data frame
 }
-\author{Søren Højsgaard, sorenh at mail dot dk}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 
 \seealso{
   \code{\link{ave}},

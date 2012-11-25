@@ -53,7 +53,8 @@ scaleBy(formula, data, center = TRUE, scale. = TRUE)
 %%\references{
 %% ~put references to the literature/web site here ~
 %}
-  \author{Søren Højsgaard, sorenh at mail dot dk}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
+
 
 \note{
   The workhorse is the \code{funBy} function which, alas, is not yet

@@ -15,7 +15,7 @@
 \maketitle
 \tableofcontents
 
-\SweaveOpts{keep.source=T,prefix.string=figures/doBy}
+\SweaveOpts{keep.source=T,prefix.string=figure/doBy}
 \setkeys{Gin}{height=3in}
 \renewenvironment{Schunk}{\begin{center}
     \scriptsize

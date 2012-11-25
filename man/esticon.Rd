@@ -75,7 +75,9 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE,...)
      of the 1-alpha confidence intervals.
 }
 %\references{ ~put references to the literature/web site here ~ }
-\author{Søren Højsgaard, sorenh at mail dot dk}
+
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
+
 \note{'esticon' works on geese/geeglm objects from the
   geepack package (for Generalized Estimating Equations), on 'lm' and 'glm'
   objects, and on 'gls' objects.

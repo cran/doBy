@@ -27,9 +27,7 @@ subSeq(x, item = NULL)
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{
-  Søren Højsgaard <sorenh at mail dot dk>
-}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 %\note{
 %  Comparisons (used when specifying 'item') are based on character
 %  comparisons. 

@@ -35,9 +35,7 @@ which.minn(x, n = 1)
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{
-  Søren Højsgaard, sorenh mail dot dk
-}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 %\note{
 %%  ~~further notes~~
 %}

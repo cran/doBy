@@ -52,10 +52,8 @@ lmBy(formula, data, id = NULL, ...)
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{
-  Søren Højsgaard <sorenh at mail dot dk>
-  %%  ~~who you are~~
-}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
+
 \note{
   This is a recent addition to the package; please report bugs.
   %%  ~~further notes~~

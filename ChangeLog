@@ -1,11 +1,24 @@
-2012-05-19 Søren Højsgaard <sorenh@mail.dk>
+2012-11-16 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Rmarkup removed; the markdown package does a better job.
+
+	* Version 4.5-5 uploaded
+
+2012-05-28 Søren Højsgaard <sorenh@math.aau.dk>
+	
+	* Updates of Rmarkup
+
+	* Version 4.5-4 uploaded		
+
+	
+2012-05-19 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Updates of Rmarkup
 
 	* Version 4.5-3 uploaded		
 
 	
-2012-02-17 Søren Højsgaard <sorenh@mail.dk>
+2012-02-17 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* descStat function added. Thanks to Gregor Gorjanc.
 	
@@ -14,13 +27,13 @@
 
 	* Version 4.5.2 uploaded		
 
-2012-01-29 Søren Højsgaard <sorenh@mail.dk>
+2012-01-29 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Minor enhancement to Rmarkup()
 
 	* Version 4.5.1 uploaded		
 	
-2012-01-18 Søren Højsgaard <sorenh@mail.dk>
+2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* popMeans method for lme objects added
 
@@ -29,13 +42,13 @@
 	* Version 4.5.0 uploaded	
 
 
-2012-01-18 Søren Højsgaard <sorenh@mail.dk>
+2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Small changes to package structure
 
 	* Version 4.4.6 uploaded
 	
-2012-01-17 Søren Højsgaard <sorenh@mail.dk>
+2012-01-17 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* URL updated
 
@@ -43,7 +56,7 @@
 	
 	* Version 4.4.5 uploaded
 	
-2011-12-30 Søren Højsgaard <sorenh@mail.dk>
+2011-12-30 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Change of email address
 	

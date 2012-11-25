@@ -31,9 +31,7 @@ renameCol(indata, src, tgt)
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{
-  Søren Højsgaard, <sorenh at mail dot dk>
-}
+\author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 %\note{
 %%  ~~further notes~~
 %}

@@ -3,6 +3,8 @@
 %\VignettePackage{doBy}
 %\VignetteIndexEntry{population means}
 %\VignetteIndexEntry{LSMEANS}
+%\VignetteIndexEntry{contrasts}
+%\VignetteIndexEntry{estimable functions}
 
 
 \usepackage{a4wide,hyperref}
@@ -25,11 +27,10 @@
 \def\esticon{\code{esticon()}}
 
 
-\title{Population means (also called marginal means or lsmeans),
+\title{Population means (also called marginal means or LSMEANS),
   contrasts and estimable functions
   in the \texttt{doBy} package}
-\author{S{\o}ren H{\o}jsgaard and Ulrich Halekoh\\ Department og Genetics
-  and Biotechnology\\ Aarhus University}
+\author{S{\o}ren H{\o}jsgaard and Ulrich Halekoh}
 
 \begin{document}
 \renewenvironment{Schunk}{\begin{shaded}\small}{\end{shaded}}
@@ -361,16 +362,6 @@ By default the functions will adjust the tests  and confidence intervals for mul
 summary(g)
 confint(g)
 @
-
-
-
-
-
-
-
-
-
-
 
 
 \end{document}

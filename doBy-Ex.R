@@ -6,6 +6,23 @@ library('doBy')
 
 assign(".oldSearch", search(), pos = 'CheckExEnv')
 cleanEx()
+nameEx("DATA-NIRmilk")
+### * DATA-NIRmilk
+
+flush(stderr()); flush(stdout())
+
+### Name: NIRmilk
+### Title: NIRmilk
+### Aliases: NIRmilk
+### Keywords: datasets
+
+### ** Examples
+	
+data(NIRmilk)
+
+
+
+cleanEx()
 nameEx("DATA-beets")
 ### * DATA-beets
 
@@ -146,29 +163,6 @@ flush(stderr()); flush(stdout())
 
 data(milkman)
 ## maybe str(milkman) ; plot(milkman) ...
-
-
-
-cleanEx()
-nameEx("Rmarkup")
-### * Rmarkup
-
-flush(stderr()); flush(stdout())
-
-### Name: Rmarkup
-### Title: Automatic Generation of Reports (as HTML documents)
-### Aliases: Rmarkup
-### Keywords: utilities
-
-### ** Examples
-
-tf <- system.file("Rmarkup", "Puromycin.R", package = "doBy")
-
-## Create report in working directory
-Rmarkup(tf)
-## Creates report in specified directory (which must exist).
-## Rmarkup(tf, path=".REPORT/")
-
 
 
 
@@ -411,7 +405,8 @@ flush(stderr()); flush(stdout())
 
 ### Name: popMeans
 ### Title: Calculate population means (LSMEANS in SAS jargon)
-### Aliases: popMeans popMeans.default popMeans.lme summary.conMeans
+### Aliases: popMeans popMeans.default popMeans.lme LSMEANS LSMEANS.default
+###   LSMEANS.lme summary.conMeans
 ### Keywords: models utilites
 
 ### ** Examples

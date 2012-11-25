@@ -1,11 +1,3 @@
-# subsetBy <- function(formula, subset, data=parent.frame()){
-#   mysubset <- function(d,subset){
-#     d[eval(parse(text=subset),d),]
-#   }
-#   ddd<-splitBy(formula, data=data)
-#   ddd<-lapply(ddd, mysubset, subset)
-#   return(do.call("rbind",ddd))
-# }
 
 subsetBy <- function(formula, subset, data=parent.frame(), select, drop=FALSE, join=TRUE,...){
   ddd<-splitBy(formula, data=data)
@@ -37,3 +29,22 @@ subsetBy <- function(formula, subset, data=parent.frame(), select, drop=FALSE, j
   else
     return(ddd)
 }
+
+
+## subsetBy2 <- function(formula, x=parent.frame(), subset, select, drop=FALSE, join=TRUE, ...){
+
+##   cl <- match.call()
+##   cl[[2]] <- NULL
+##   cl[[1]] <- as.name("subset")
+##   cl[[2]] <- as.name("_x")
+##   cl[[match("join", names(cl))]] <- NULL
+  
+
+##   xlist <-splitBy(formula, data=x)
+##   ans <- lapply(xlist, function(xx){eval(cl, envir=list(`_x`=xx), parent.frame()) })
+##   if (join)
+##     return(do.call("rbind",ans))
+##   else
+##     return(ans)
+
+## }

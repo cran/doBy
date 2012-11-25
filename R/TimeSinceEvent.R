@@ -1,4 +1,4 @@
-timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
+.timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
 
   if (!(is.numeric(yvar) | is.logical(yvar))){
     stop("yvar must be either numeric or logical")
@@ -18,21 +18,27 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
   }
   
   res      <-do.call(rbind, res)
+  print(res)
   abs.tse  <-apply(abs(res),2,min)
+  print(abs.tse)
   
   sgn 	<- rep.int(0, length(yvar))
   sss 	<- subSeq(yvar,item=0)
-  
   for (ii in 1:nrow(sss)){
-    idx  <- sss[ii,2]:sss[ii,3]
+    idx  <- sss[ii,1]:sss[ii,2]
     idx1 <- seq_along(idx)
     uuu  <- abs.tse[idx] 
     fff <- .find.inc.dec(uuu)
     sgn[idx] <- fff
   }
+
+
   
+  print(sgn)
   sign.tse <- abs.tse * sgn
   eventWindow <- rep(NA, length(abs.tse))
+
+  print(sign.tse)
   
   curr.state <- 1
   eventWindow[1] <- curr.state
@@ -43,7 +49,7 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
     eventWindow[jj] <- curr.state
   }
   eventWindow[length(eventWindow)] <- curr.state
-  
+  print(eventWindow)  
 
   run <- cumsum(yvar)
   un <- unique(run)
@@ -57,8 +63,7 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
   }
   timeAfterEvent <- unlist(tlist)
   timeAfterEvent[run==0] <- NA
-  
-  
+    
   yvar2 <- rev(yvar)
   tvar2 <- rev(tvar)
   
@@ -112,65 +117,92 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
 # ttt <- c(1,1,1,2,2,3,4,4,4,5,5,4)
 # ttt <- rev(ttt)
 
+timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
+
+  if (!(is.numeric(yvar) | is.logical(yvar))){
+    stop("yvar must be either numeric or logical")
+  }
+  
+  yvar[is.na(yvar)] <- 0
+  
+  event.idx <- which(yvar==1)
+  if (length(event.idx)==0){
+    return(NULL)
+  }
+  n.event <- length(event.idx)
+  
+  ## find event times
+  event.time <- tvar[event.idx]
+
+  ## get time difference to each event 
+  rrr <-  do.call(rbind, lapply(event.idx, function(ii) tvar-tvar[ii]))
+  abs.tse <- apply(abs(rrr),2,min)
+
+  
+  ## get the event windows (~ symmetrical around event time)
+  ewin<-rep.int(NA, length(yvar))
+  if (n.event>1){
+    ff<-event.time[1:(n.event-1)]+diff(event.time)/2
+    ewin[tvar<=ff[1]] <- 1
+    for (ii in 2:(length(ff)-0)){
+      ewin[tvar>ff[ii-1] & tvar<=ff[ii] ] <- ii
+    }
+    ewin[tvar>ff[length(ff)]] <- n.event
+  } else {
+    ewin[] <- n.event
+  }
+  
+  ## get the signs
+  ggg <- list()
+  for (ii in 1:(length(event.idx))){
+    ggg[[ii]] <- rrr[ii,ewin==ii]
+  }
+  ggg <- unlist(ggg)
+  sign.tse <- sign(ggg)*abs.tse
+
+  run <- cumsum(yvar)
+
+  un <- unique(run)
+  tlist <- list()
+  for (ii in 1:length(un)){
+    vv <- un[ii]
+    yy <- yvar[run==vv]
+    tt <- tvar[run==vv]
+    tt <- tt - tt[1]
+    tlist[[ii]] <- tt
+  }
+  tae <- unlist(tlist)
+  tae[run==0] <- NA
+    
+  yvar2 <- rev(yvar)
+  tvar2 <- rev(tvar)
+  
+  run2 <- cumsum(yvar2)
+  un2 <- unique(run2)
+  tlist2 <- list()
+  for (ii in 1:length(un2)){
+    vv <- un2[ii]
+    yy <- yvar2[run2==vv]
+    tt <- tvar2[run2==vv]
+    tt <- tt - tt[1]
+    tlist2[[ii]] <- tt
+  }
+  tbe <- unlist(tlist2)
+  tbe[run2==0] <- NA
+  
+  tbe <- rev(tbe)
+  run[run==0]<-NA
+  
+  ans <- cbind(data.frame(yvar=yvar, tvar=tvar), abs.tse, sign.tse, ewin=ewin,
+               run, tae=tae, tbe=tbe)
+  return(ans)
+}
+
+
+  
 
 
 
-## timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
-  
-##   if (!(is.numeric(yvar) | is.logical(yvar))){
-##     stop("yvar must be either numeric or logical")
-##   }
-  
-##   event.idx <- which(yvar==1)
-##   if (length(event.idx)==0){
-##     return(NULL)
-##   }
-  
-##   res <- vector("list", length(event.idx))
-##   for (kk in seq_along(event.idx)){
-##     jj <- event.idx[kk]
-##     res[[kk]] <- tvar-tvar[jj]
-##   }
-  
-##   res<-do.call(rbind, res)
-##   abs.tse<-apply(abs(res),2,min)
-  
-##   dtse <- c(-1,diff(abs.tse))
-##   dtse[dtse==0 & yvar ==0] <- -1
-##   dtse[dtse<0] <- -1
-##   dtse[dtse>0] <- 1
-  
-##   sign.tse <- abs.tse * dtse
-  
-  
-  
-##   run <- rep(NA, length(abs.tse))
-  
-##   curr.state <- 1
-##   run[1] <- curr.state
-##   for (jj in 2:(length(run)-1)){
-##     if (sign.tse[jj] <= sign.tse[jj-1]){
-##       curr.state <- curr.state + 1
-##     } 
-##     run[jj] <- curr.state
-##   }
-##   run[length(run)] <- curr.state
-  
-  
-##   ans <- cbind(data.frame(yvar=yvar, tvar=tvar), abs.tse, sign.tse, run)
-##   return(ans)
-## }
-
-
-#yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0)
-#tse<- timeSinceEvent(yvar)
-#plot(sign.tse~tvar, data=tse, type="b")
-#grid()
-#rug(tse$tvar[tse$yvar==1], col=4,lwd=4)
-#points(scale(tse$run), col=tse$run,lwd=2)
-#lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
-#
-#
 
 
   
