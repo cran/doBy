@@ -1,31 +1,20 @@
-.modelFormula <- function(form)
-{
-    if (class(form) != "formula" || length(form) != 3)
-        stop("formula must be a two-sided formula object")
-    rhs <- form[[3]]
-    if (class(rhs) != "call" || rhs[[1]] != as.symbol('|'))
-        stop("rhs of formula must be a conditioning expression")
-    form[[3]] <- rhs[[2]]
-	groups <- rhs[[3]]
-	grpFormula <- as.formula(paste("~", deparse(groups)))
-    list(model = form, groups = groups, groupFormula=grpFormula)
-}
 
 lmBy <- function(formula, data, id=NULL, ...){
   cl   <- match.call()
-  mff  <- .modelFormula(formula)
+  mff  <- parseGroupFormula(formula)
   wdl  <- splitBy(mff$groupFormula, data=data)
   mm   <- lapply(wdl, function(wd) {lm(mff$model, data=wd, ...)})
-  mm$call <- cl
-  
+
   if (!is.null(id)){
     id.vars <- unique(c(all.vars(id), all.vars(mff$groupFormula)))
   } else {
     id.vars <- all.vars(mff$groupFormula)
   }
   id.data <- do.call(rbind, lapply(wdl, function(wd) {wd[1,id.vars,drop=FALSE]}))
+
+  attr(mm,  "call")     <- cl
   attr(mm,  "dataList") <- wdl
-  attr(mm,  "idData") <- id.data	
+  attr(mm,  "idData")   <- id.data	
   
   class(mm) <- "lmBy"
   mm
@@ -33,9 +22,44 @@ lmBy <- function(formula, data, id=NULL, ...){
 
 
 print.lmBy <- function(x, ...){
-  print(x$call)
+  ##lapply(c(x), print)
+  print(c(x))
   return(invisible(x))
 }
+
+
+summary.lmBy <- function(object, ...){
+  res <- lapply(object, summary)
+  class(res) <- "summary.lmBy"
+  res
+}
+
+print.summary.lmBy <- function(x, ...){
+  lapply(x, print)
+  return(invisible(x))
+}
+
+coef.summary.lmBy <- function(object, simplify=FALSE, ...){
+  ans <- lapply(object, coef)
+  if (simplify){
+    cc <- do.call(rbind, ans)
+    cn <- colnames(cc)
+    rn <- rownames(cc)
+
+    
+    nn <- names(ans)
+    rn <- rownames(ans[[1]])
+    ff <- factor(rep(nn, each=length(rn)))
+    
+    rownames(cc) <- NULL
+    ans <- data.frame(ff, rn, as.data.frame(cc))
+    colnames(ans) <- c("stratum", "parameter", cn)
+  }
+  ans
+}
+
+
+
 
 getBy <- function(object, name=c()){
   if (missing(name)) 

@@ -1,3 +1,17 @@
+2013-03-19 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* parseGroupFormula function added. The function will take a
+	"group formula" with a vertical bar apart into components.
+
+	* createFunBy function added. The function can create groupwise
+	functions.
+
+	* documentation of lmBy improved
+
+	* various utility functions related to lmBy added.
+
+	* Version 4.5-6 uploaded
+
 2012-11-16 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Rmarkup removed; the markdown package does a better job.
