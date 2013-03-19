@@ -1,9 +1,10 @@
 \name{lmBy}
 \alias{lmBy}
 \alias{coef.lmBy}
+\alias{coef.summary.lmBy}
+\alias{summary.lmBy}
 \alias{fitted.lmBy}
 \alias{residuals.lmBy}
-\alias{print.lmBy}
 \alias{getBy}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -65,7 +66,16 @@ lmBy(formula, data, id = NULL, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-## To be written...
+bb <- lmBy(1/uptake~log(conc)|Treatment, data=CO2)
+
+coef(bb)
+
+fitted(bb)
+residuals(bb)
+
+summary(bb)
+coef(summary(bb))
+coef(summary(bb), simplify=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -18,6 +18,8 @@
 
 \alias{funBy}
 
+\alias{print.lmBy}
+\alias{print.summary.lmBy}
 
 \alias{HTMLCommand2}
 \alias{HTMLdefault2}

@@ -167,6 +167,37 @@ data(milkman)
 
 
 cleanEx()
+nameEx("createFunBy")
+### * createFunBy
+
+flush(stderr()); flush(stdout())
+
+### Name: createFunBy
+### Title: A template function for creating groupwise functions
+### Aliases: createFunBy
+### Keywords: utilities
+
+### ** Examples
+
+
+## Example: Create a function for creating groupwise t-tests
+
+mydata <- data.frame(y=rnorm(32), x=rnorm(32),
+g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
+g3=factor(rep(c(1,2),each=4))) 
+
+
+t.testBy <- function(formula, data, ...){
+  createFunBy(formula, data, FUN=t.test, class="t.testBy", ...)
+}
+
+t.testBy(y~g1|g2+g3, data=mydata)
+
+
+
+
+
+cleanEx()
 nameEx("descStat")
 ### * descStat
 
@@ -368,7 +399,8 @@ flush(stderr()); flush(stdout())
 
 ### Name: lmBy
 ### Title: List of lm objects with a common model
-### Aliases: lmBy coef.lmBy fitted.lmBy residuals.lmBy print.lmBy getBy
+### Aliases: lmBy coef.lmBy coef.summary.lmBy summary.lmBy fitted.lmBy
+###   residuals.lmBy getBy
 ### Keywords: models
 
 ### ** Examples
@@ -394,6 +426,24 @@ data(dietox)
 orderBy(~Time+Evit, data=dietox)
 ## Sort decreasingly by Time
 orderBy(~-Time+Evit, data=dietox)
+
+
+
+cleanEx()
+nameEx("parseGroupFormula")
+### * parseGroupFormula
+
+flush(stderr()); flush(stdout())
+
+### Name: parseGroupFormula
+### Title: Extract components from a formula with "conditioning bar"
+### Aliases: parseGroupFormula
+### Keywords: utilities
+
+### ** Examples
+
+gf<-parseGroupFormula(y~x1+x2|g1+g2)
+
 
 
 
