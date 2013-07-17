@@ -5,32 +5,37 @@
   Groupwise scaling and centering of numeric columns in a dataframe
 }
 \description{
-  Groupwise scaling and centering of numeric columns in a dataframe
+  Groupwise scaling and centering of numeric columns in a
+  dataframe. Obtained by first splitting a dataframe and then calling
+  scale on each stratum. 
 }
 \usage{
-scaleBy(formula, data, center = TRUE, scale. = TRUE)
+scaleBy(formula, data, center = TRUE, scale = TRUE, details=0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{formula}{
-    A formula. A dot (.) is allowed on both left and right hand side of
+    Either a two-sided formula or a list. A dot (.) is allowed on both left and right hand side of
     formula. See 'details' for the meaning of this. 
-}
+  }
   \item{data}{
     A dataframe
-}
+  }
   \item{center}{
     If TRUE then data is centered to have mean zero
-}
-  \item{scale.}{
+  }
+  \item{scale}{
     If TRUE then data is scaled to have variance one
-}
+  }
+  \item{details}{
+    If larger than zero then information about grouping etc. is printed.
+  }
 }
 \details{
   A typical formula is \code{y1+y2~f1+f2} where y1 and y2 are numeric
   variables and f1 and f2 can be of any type. For each cross-combination
   of the values of f1 and f2, the variables (y1,y2) are centered/scaled.
-
+  
   It is valid to write \code{.~f1+f2}. In this case the variables to be
   centered/scaled are taken to be all numeric variables in the dataframe
   except those that a listed on the right hand side of the formula.
@@ -48,18 +53,18 @@ scaleBy(formula, data, center = TRUE, scale. = TRUE)
   
 }
 \value{
-  A dataframe  
+  A dataframe with the same columns as the input dataframe, but the
+  scaled / centered values are put into the relevant columns. 
 }
 %%\references{
 %% ~put references to the literature/web site here ~
 %}
 \author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 
-
-\note{
-  The workhorse is the \code{funBy} function which, alas, is not yet
-  documented. 
-}
+% \note{
+%   The workhorse is the \code{funBy} function which, alas, is not yet
+%   documented. 
+% }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -74,9 +79,21 @@ scaleBy(formula, data, center = TRUE, scale. = TRUE)
 }
 \examples{
 
+## The following forms are equivalent:
+scaleBy(conc+rate ~ state, data=Puromycin)
+scaleBy(list(c("conc","rate"), "state"), data=Puromycin)
+scaleBy(list(c("."), "."), data=Puromycin)
+scaleBy(.~., data=Puromycin)
+
+## The same results can be obtained from
+lapply(splitBy(~state, data=Puromycin),
+	function(.dd) scale(.dd[,sapply(Puromycin,class)=="numeric"]))
+
+
+## The pig growth data 'dietox'
 data(dietox)
 
-# "Remove" the effect of time by centering data within each time point.
+# "Remove the effect of time" by centering data within each time point.
 dietox2 <- scaleBy(Weight~Time, data=dietox, scale=FALSE)
 
 \dontrun{

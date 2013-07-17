@@ -33,9 +33,9 @@ parseGroupFormula(form)
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-\code{\link{createFunBy}}
-}
+% \seealso{
+% \code{\link{createFunBy}}
+% }
 \examples{
 gf<-parseGroupFormula(y~x1+x2|g1+g2)
 

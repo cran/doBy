@@ -1,5 +1,7 @@
 \name{createFunBy}
-\alias{createFunBy}
+%\alias{createFunBy}
+\alias{formulaFunBy}
+\alias{xyFunBy}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   A template function for creating groupwise functions 
@@ -8,26 +10,28 @@
   A template function for creating groupwise functions
 }
 \usage{
-createFunBy(formula, data, FUN, class = NULL, ...)
+%createFunBy(formula, data, FUN, class = NULL, ...)
+formulaFunBy(formula, group, data, FUN, class = NULL, ...)
+xyFunBy(xy, group, data, FUN, class = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{formula}{A formula containing a vertical bar (which is used for
-    defining groups)
-%%     ~~Describe \code{formula} here~~
-}
-  \item{data}{A data frame
-%%     ~~Describe \code{data} here~~
-}
+  \item{formula}{A formula of the form \code{y ~ x}  (which must be
+    variable names in \code{data}).
+  }
+  \item{xy}{A character vector with one or two elements (which must be
+    variable names in \code{data}).
+  }
+  \item{group}{A right hand sided formula or a character vector defining
+  the grouping of data}
+\item{data}{A data frame
+  }
   \item{FUN}{The function to be applied
-%%     ~~Describe \code{FUN} here~~
 }
   \item{class}{The class to give the result of the returned value of the
     created function.
-%%     ~~Describe \code{class} here~~
 }
   \item{\dots}{Further arguments passed on to \code{FUN}
-%%     ~~Describe \code{\dots} here~~
 }
 }
 %\details{
@@ -61,12 +65,17 @@ g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
 g3=factor(rep(c(1,2),each=4))) 
 
 
-t.testBy <- function(formula, data, ...){
-  createFunBy(formula, data, FUN=t.test, class="t.testBy", ...)
+t.testBy1 <- function(formula, group, data, ...){
+  formulaFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
 }
 
-t.testBy(y~g1|g2+g3, data=mydata)
+t.testBy2 <- function(formula, group, data, ...){
+  xyFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
+}
 
+
+t.testBy1(y~g1, ~g2+g3, data=mydata)
+t.testBy2(y~x, ~g2+g3, data=mydata)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
