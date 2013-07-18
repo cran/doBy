@@ -1,3 +1,14 @@
+2013-xx-xx Søren Højsgaard <sorenh@math.aau.dk>
+	
+	* splitBy and summaryBy have been reworked.
+
+	* summaryBy, splitBy now also accept a list / vector as "formula"
+	specification. 
+	
+	* recodeVar works properly on formulas
+
+	* Version 4.5-6 uploaded
+	
 2013-03-19 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* parseGroupFormula function added. The function will take a

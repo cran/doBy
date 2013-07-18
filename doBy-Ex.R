@@ -4,7 +4,7 @@ options(warn = 1)
 options(pager = "console")
 library('doBy')
 
-assign(".oldSearch", search(), pos = 'CheckExEnv')
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 cleanEx()
 nameEx("DATA-NIRmilk")
 ### * DATA-NIRmilk
@@ -174,7 +174,7 @@ flush(stderr()); flush(stdout())
 
 ### Name: createFunBy
 ### Title: A template function for creating groupwise functions
-### Aliases: createFunBy
+### Aliases: formulaFunBy xyFunBy
 ### Keywords: utilities
 
 ### ** Examples
@@ -187,12 +187,17 @@ g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
 g3=factor(rep(c(1,2),each=4))) 
 
 
-t.testBy <- function(formula, data, ...){
-  createFunBy(formula, data, FUN=t.test, class="t.testBy", ...)
+t.testBy1 <- function(formula, group, data, ...){
+  formulaFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
 }
 
-t.testBy(y~g1|g2+g3, data=mydata)
+t.testBy2 <- function(formula, group, data, ...){
+  xyFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
+}
 
+
+t.testBy1(y~g1, ~g2+g3, data=mydata)
+t.testBy2(y~x, ~g2+g3, data=mydata)
 
 
 
@@ -405,7 +410,16 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-## To be written...
+bb <- lmBy(1/uptake~log(conc)|Treatment, data=CO2)
+
+coef(bb)
+
+fitted(bb)
+residuals(bb)
+
+summary(bb)
+coef(summary(bb))
+coef(summary(bb), simplify=TRUE)
 
 
 
@@ -566,6 +580,8 @@ recodeVar(x, src=list(c(1,2)), tgt=list("A"), default="L")
 recodeVar(x, src=list(c(1,2)), tgt=list("A"), default="L", keep.na=FALSE)
 #[1] "L" "A" "A" "L" "A" "A" "L" "A" "A" "L" "L"
 
+x <- c("no", "yes", "not registered", "no", "yes", "no answer")
+recodeVar(x, src = c("no", "yes"), tgt = c("0", "1"), default = NA)
 
 
 
@@ -626,9 +642,21 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 
+## The following forms are equivalent:
+scaleBy(conc+rate ~ state, data=Puromycin)
+scaleBy(list(c("conc","rate"), "state"), data=Puromycin)
+scaleBy(list(c("."), "."), data=Puromycin)
+scaleBy(.~., data=Puromycin)
+
+## The same results can be obtained from
+lapply(splitBy(~state, data=Puromycin),
+	function(.dd) scale(.dd[,sapply(Puromycin,class)=="numeric"]))
+
+
+## The pig growth data 'dietox'
 data(dietox)
 
-# "Remove" the effect of time by centering data within each time point.
+# "Remove the effect of time" by centering data within each time point.
 dietox2 <- scaleBy(Weight~Time, data=dietox, scale=FALSE)
 
 ## Not run: 
@@ -648,13 +676,17 @@ flush(stderr()); flush(stdout())
 
 ### Name: splitBy
 ### Title: Split a data frame
-### Aliases: splitBy print.splitByData
+### Aliases: splitBy
 ### Keywords: utilities
 
 ### ** Examples
 
-data(dietox)
+data(dietox, package="doBy")
 splitBy(formula = ~Evit+Cu, data = dietox)
+splitBy(formula = c("Evit","Cu"), data = dietox)
+
+splitBy(~Month, data=airquality)
+splitBy("Month", data=airquality)
 
 
 
@@ -723,8 +755,12 @@ flush(stderr()); flush(stdout())
 data(dietox)
 dietox12    <- subset(dietox,Time==12)
 
-summaryBy(Weight+Feed~Evit+Cu,      data=dietox12,
-   FUN=c(mean,var,length))  
+summaryBy(Weight+Feed~Evit+Cu, data=dietox12,
+          FUN=c(mean,var,length))  
+
+summaryBy(list(c("Weight","Feed"), c("Evit","Cu")), data=dietox12,
+          FUN=c(mean,var,length))  
+
 
 summaryBy(Weight+Feed~Evit+Cu+Time, data=subset(dietox,Time>1),
    FUN=c(mean,var,length))  
@@ -866,7 +902,8 @@ ii <- which.minn(x,5)
 
 ### * <FOOTER>
 ###
-cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+options(digits = 7L)
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
 grDevices::dev.off()
 ###
 ### Local variables: ***

@@ -35,7 +35,7 @@ recodeVar(x, src, tgt, default=NULL, keep.na=TRUE)
 \seealso{
   \code{\link[base]{cut}},
   \code{\link[base]{factor}},
-  \code{\link[car]{recode}}
+  \code{\link[doBy]{recodeVar}}
 }
 \examples{
 x <- c("dec","jan","feb","mar","apr","may")
@@ -69,6 +69,8 @@ recodeVar(x, src=list(c(1,2)), tgt=list("A"), default="L")
 recodeVar(x, src=list(c(1,2)), tgt=list("A"), default="L", keep.na=FALSE)
 #[1] "L" "A" "A" "L" "A" "A" "L" "A" "A" "L" "L"
 
+x <- c("no", "yes", "not registered", "no", "yes", "no answer")
+recodeVar(x, src = c("no", "yes"), tgt = c("0", "1"), default = NA)
 
 }
 \keyword{utilities}% at least one, from doc/KEYWORDS

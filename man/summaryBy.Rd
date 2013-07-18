@@ -8,7 +8,8 @@ Function to calculate groupwise summary statistics, much like
 }
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-          keep.names=FALSE, p2d=FALSE, order=TRUE, full.dimension=FALSE, ...)
+          keep.names=FALSE, p2d=FALSE, order=TRUE, full.dimension=FALSE,
+          var.names=NULL, fun.names=NULL, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -19,8 +20,8 @@ summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
   but which should appear in the output. See examples below.}
 \item{FUN}{A list of functions to be applied, see examples below.}
 \item{keep.names}{If TRUE and if there is only ONE function in FUN, then
-the variables in the output will have the same name as the variables in
-the input, see 'examples'.}
+  the variables in the output will have the same name as the variables in
+  the input, see 'examples'.}
 %\item{postfix}{An optional vector of postfixes for the names of the output
 %  variables, see 'examples'.}
 \item{p2d}{Should parentheses in output variable names be replaced by dots?}
@@ -29,6 +30,11 @@ the input, see 'examples'.}
 \item{full.dimension}{If TRUE then rows of summary statistics are
   repeated such that the result will have the same number
   of rows as the input dataset.}
+\item{var.names}{Option for user to specify the names of the variables
+  on the left hand side.}
+\item{fun.names}{Option for user to specify function names to apply to
+  the variables on the left hand side.}
+
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \details{
@@ -62,8 +68,12 @@ A data frame
 data(dietox)
 dietox12    <- subset(dietox,Time==12)
 
-summaryBy(Weight+Feed~Evit+Cu,      data=dietox12,
-   FUN=c(mean,var,length))  
+summaryBy(Weight+Feed~Evit+Cu, data=dietox12,
+          FUN=c(mean,var,length))  
+
+summaryBy(list(c("Weight","Feed"), c("Evit","Cu")), data=dietox12,
+          FUN=c(mean,var,length))  
+
 
 summaryBy(Weight+Feed~Evit+Cu+Time, data=subset(dietox,Time>1),
    FUN=c(mean,var,length))  

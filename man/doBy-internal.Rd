@@ -21,20 +21,28 @@
 \alias{print.lmBy}
 \alias{print.summary.lmBy}
 
-\alias{HTMLCommand2}
-\alias{HTMLdefault2}
-\alias{RweaveHTML2}
-\alias{RweaveHTMLRuncode2}
+% \alias{HTMLCommand2}
+% \alias{HTMLdefault2}
+% \alias{RweaveHTML2}
+% \alias{RweaveHTMLRuncode2}
 
-\alias{RweaveHTMLreport}
-\alias{RweaveHTMLreportSetup}
-\alias{RweaveHTMLreportWritedoc}
-\alias{RweaveHTMLreportFinish}
+% \alias{RweaveHTMLreport}
+% \alias{RweaveHTMLreportSetup}
+% \alias{RweaveHTMLreportWritedoc}
+% \alias{RweaveHTMLreportFinish}
+
+
+\alias{specialize}
 
 % deprecated functions
-\alias{recodevar}
-\alias{HTMLreport}
-\alias{Rscript2HTML}
+% \alias{recodevar}
+% \alias{HTMLreport}
+% \alias{Rscript2HTML}
+
+%\alias{}
+\alias{print.splitByData}
+
+
 
 
 

@@ -2,18 +2,24 @@
 lmBy <- function(formula, data, id=NULL, ...){
   cl   <- match.call()
   mff  <- parseGroupFormula(formula)
-  wdl  <- splitBy(mff$groupFormula, data=data)
-  mm   <- lapply(wdl, function(wd) {lm(mff$model, data=wd, ...)})
+  groupData  <- splitBy(mff$groupFormula, data=data)
+
+  mmm <- mff$model
+  mm  <- lapply(groupData, function(wd) {
+    zzz<-lm(mmm, data=wd, ...)
+    zzz$call[[2]]<- mmm
+    zzz
+  })
 
   if (!is.null(id)){
     id.vars <- unique(c(all.vars(id), all.vars(mff$groupFormula)))
   } else {
     id.vars <- all.vars(mff$groupFormula)
   }
-  id.data <- do.call(rbind, lapply(wdl, function(wd) {wd[1,id.vars,drop=FALSE]}))
+  id.data <- do.call(rbind, lapply(groupData, function(wd) {wd[1,id.vars,drop=FALSE]}))
 
   attr(mm,  "call")     <- cl
-  attr(mm,  "dataList") <- wdl
+  attr(mm,  "dataList") <- groupData
   attr(mm,  "idData")   <- id.data	
   
   class(mm) <- "lmBy"
@@ -57,8 +63,6 @@ coef.summary.lmBy <- function(object, simplify=FALSE, ...){
   }
   ans
 }
-
-
 
 
 getBy <- function(object, name=c()){
