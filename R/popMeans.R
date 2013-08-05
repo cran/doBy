@@ -1,3 +1,8 @@
+
+
+
+
+
 popMeans <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", grid=TRUE, ...){
   UseMethod("popMeans")
 }
@@ -5,6 +10,8 @@ popMeans <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon
 popMeans.default <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="esticon", grid=TRUE, ...){
   cl  <- match.call()
   mm  <- popMatrix(object, effect=effect, at=at, only.at=only.at)
+
+
   ans <- do.call(engine, list(object, mm,...))
 
   xtra <- attributes(mm)[[c("grid")]]
@@ -33,6 +40,19 @@ popMeans.lme <- function(object, effect=NULL, at=NULL, only.at=TRUE, engine="est
 LSMEANS         <- popMeans
 LSMEANS.default <- popMeans.default
 LSMEANS.lme     <- popMeans.lme
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 linMeans <- function(object, at=NULL, engine="esticon", grid=TRUE, ...){

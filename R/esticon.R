@@ -9,9 +9,9 @@ esticon.gls <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
   } else {
     stat.name <- "X2.stat"
     vcv <- vcov(obj)
-    cf  <- matrix(coef(obj))
+    coef.mat  <- matrix(coef(obj))
     df  <- 1
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,coef.mat,vcv,df,stat.name)
   }
 }
 
@@ -20,10 +20,10 @@ esticon.geeglm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.t
     .wald(obj, cm, beta0)
   } else { 
     stat.name <- "X2.stat"
-    cf  <- summary(obj)$coef
+    coef.mat  <- summary(obj)$coef
     vcv <- summary(obj)$cov.scaled
     df  <- 1
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,coef.mat,vcv,df,stat.name)
   }
 }
 
@@ -32,10 +32,11 @@ esticon.lm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test=
     .wald(obj, cm, beta0)
   } else { 
     stat.name <- "t.stat"
-    cf  <- summary.lm(obj)$coefficients
+    coef.mat  <- summary.lm(obj)$coefficients
+    coef.vec  <- coef(obj)
     vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
     df  <- obj$df.residual
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int, level, coef.mat, vcv, df, stat.name, coef.vec=coef.vec)
   }
 }
 
@@ -43,7 +44,7 @@ esticon.glm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
   if (joint.test==TRUE){
     .wald(obj, cm, beta0)
   } else { 
-    cf <- summary.lm(obj)$coefficients
+    coef.mat <- summary.lm(obj)$coefficients
     vcv <- summary(obj)$cov.scaled
     if(family(obj)[1] %in% c("poisson","binomial")){
       stat.name <- "X2.stat"            
@@ -52,7 +53,7 @@ esticon.glm <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
       stat.name <- "t.stat"
       df <- obj$df.residual
     }
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level=level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level=level,coef.mat,vcv,df,stat.name)
   }
 }
 
@@ -61,10 +62,10 @@ esticon.mer <- function (obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test
     .wald(obj, cm, beta0)
   } else {
     stat.name <- "X2.stat"
-    cf  <- matrix(fixef(obj))
+    coef.mat  <- matrix(fixef(obj))
     vcv <- as.matrix(vcov(obj))
     df  <- 1
-    .esticonCore(obj, cm, beta0, conf.int=conf.int, level, cf, vcv, df, stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int, level, coef.mat, vcv, df, stat.name)
   }
 }
 
@@ -80,9 +81,9 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
     .wald(obj, cm, beta0)
   } else { 
     stat.name <- "t.stat"
-    cf <- summary(obj)$tTable
+    coef.mat <- summary(obj)$tTable
     rho <- summary(obj)$cor
-    vcv <- rho * outer(cf[, 2], cf[, 2])
+    vcv <- rho * outer(coef.mat[, 2], coef.mat[, 2])
     tmp <- cm
     tmp[tmp == 0] <- NA
     df.all <- t(abs(t(tmp) * obj$fixDF$X))
@@ -96,7 +97,7 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
                     ". Using the smallest df among the set of parameters.", 
                     sep = ""))
     df <- min(df)
-    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,cf,vcv,df,stat.name)
+    .esticonCore(obj, cm, beta0, conf.int=conf.int,level,coef.mat,vcv,df,stat.name)
   }    
 }
 
@@ -113,32 +114,32 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
 
     df <- nrow(cm)
     if ("geese" %in% class(obj)) {
-      cf  <- obj$beta
+      coef.mat  <- obj$beta
       vcv <- obj$vbeta
     } else if ("geeglm" %in% class(obj)) {
-      cf  <- obj$coef
+      coef.mat  <- obj$coef
       vcv <- summary(obj)$cov.scaled
     } else if ("gls" %in% class(obj)) {
       vcv <- vcov(obj)
-      cf  <- matrix(coef(obj))
+      coef.mat  <- matrix(coef(obj))
     } else if ("gee" %in% class(obj)) {
-      cf  <- obj$coef
+      coef.mat  <- obj$coef
       vcv <- obj$robust.variance
     }
     else if ("lm" %in% class(obj)) {
-      cf  <- summary.lm(obj)$coefficients[, 1]
+      coef.mat  <- summary.lm(obj)$coefficients[, 1]
       vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
       if ("glm" %in% class(obj)) {
         vcv <- summary(obj)$cov.scaled
       }
     }
     else if ("coxph" %in% class(obj)) {
-      cf <- obj$coef
+      coef.mat <- obj$coef
       vcv <- obj$var
     }
     else
       stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee', 'geese', 'coxph'")
-    u      <- (cm %*% cf)-beta0
+    u      <- (cm %*% coef.mat)-beta0
     vcv.u  <- cm %*% vcv %*% t(cm)
     W      <- t(u) %*% solve(vcv.u) %*% u
     prob   <- 1 - pchisq(W, df = df)
@@ -148,38 +149,32 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
 }
 
 
-.esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,cf,vcv,df,stat.name ) {
+.esticonCore <- function (obj, cm, beta0, conf.int = NULL, level,coef.mat ,vcv,df,stat.name, coef.vec=coef.mat[,1] ) {
 
-##   if (conf.int != FALSE){
-##     conf.int <- "wald"
-##     cat("Confidence interval (", toupper(conf.int), ") level =",level,"\n")
-##   } else
-##  conf.int <- NULL
+  ## Notice
+  ## coef.mat: summary(obj)$coefficients
+  ## coef.vec: coef(obj)
+  ## cl <- match.call(); print(cl);  print(coef.mat)
   
-  if (!is.matrix(cm) && !is.data.frame(cm)) 
+  if (missing(cm)) stop("Contrast matrix 'cm' is missing")
+  if (!is.matrix(cm) && !is.data.frame(cm))
     cm <- matrix(cm, nrow = 1)
-   if (missing(beta0))
+  if (missing(beta0))
     beta0 <- rep(0,nrow(cm))   
 
-  if (is.null(cm)) 
-    cm <- diag(dim(cf)[1])
+  idx <- !is.na(coef.vec) ## Only want columns of cm for identifiable parameters
+  cm <- cm[ , idx, drop=FALSE]
   
-  if (!dim(cm)[2] == dim(cf)[1]) 
+  if (!dim(cm)[2] == dim(coef.mat)[1]) 
     stop(paste("\n Dimension of ",
                deparse(substitute(cm)), 
                ": ", paste(dim(cm), collapse = "x"),
                ", not compatible with no of parameters in ", 
-               deparse(substitute(obj)), ": ", dim(cf)[1], sep = ""))
-  ct      <- cm %*% cf[, 1] 
-  ct.diff <- cm %*% cf[, 1] - beta0      
+               deparse(substitute(obj)), ": ", dim(coef.mat)[1], sep = ""))
+  ct      <- cm %*% coef.mat[, 1] 
+  ct.diff <- cm %*% coef.mat[, 1] - beta0      
   vc      <- sqrt(diag(cm %*% vcv %*% t(cm)))
 
-  if (is.null(rownames(cm))) 
-    rn <- paste("(", apply(cm, 1, paste, collapse = " "), ")", sep = "")
-  else
-    rn <- rownames(cm)
-
-  rn <- NULL
   switch(stat.name,
          t.stat = {
            prob <- 2 * (1 - pt(abs(ct.diff/vc), df))
@@ -192,13 +187,13 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
     retval <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = (ct.diff/vc)^2, 
                     df = df, prob = prob )
     dimnames(retval) <-
-      list(rn, c("beta0","Estimate","Std.Error","X2.value","DF","Pr(>|X^2|)"))
+      list(NULL, c("beta0","Estimate","Std.Error","X2.value","DF","Pr(>|X^2|)"))
   }
   else if (stat.name == "t.stat") {
     retval <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = ct.diff/vc, 
                     df = df, prob = prob)
     dimnames(retval) <-
-      list(rn, c("beta0","Estimate","Std.Error","t.value","DF","Pr(>|t|)"))
+      list(NULL, c("beta0","Estimate","Std.Error","t.value","DF","Pr(>|t|)"))
   }
   
   conf.int <- "wald"
@@ -219,6 +214,12 @@ esticon.lme <- function (obj, cm, beta0, conf.int = NULL, level=0.95, joint.test
   return(as.data.frame(retval))
 }
 
+
+##  rn <- NULL
+##   if (is.null(rownames(cm))) 
+##     rn <- paste("(", apply(cm, 1, paste, collapse = " "), ")", sep = "")
+##   else
+##     rn <- rownames(cm)
 
 
 
