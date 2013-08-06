@@ -1,13 +1,17 @@
-2013-xx-xx Søren Højsgaard <sorenh@math.aau.dk>
+2013-07-20 Søren Højsgaard <sorenh@math.aau.dk>
 	
 	* splitBy and summaryBy have been reworked.
 
+	* formulaFunBy and xyFunBy functions added.
+
+	* Vignettes expanded.
+	
 	* summaryBy, splitBy now also accept a list / vector as "formula"
 	specification. 
 	
 	* recodeVar works properly on formulas
 
-	* Version 4.5-6 uploaded
+	* Version 4.5-7 uploaded
 	
 2013-03-19 Søren Højsgaard <sorenh@math.aau.dk>
 
