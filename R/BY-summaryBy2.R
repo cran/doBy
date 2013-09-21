@@ -1,44 +1,48 @@
 
-summaryBy <- 
+summaryBy <-
   function (formula, data=parent.frame(), id=NULL, FUN=mean, keep.names=FALSE,
             p2d=FALSE, order=TRUE, full.dimension=FALSE,
             var.names=NULL, fun.names=NULL,
             ...)
-  {    
+  {
     debug.info <- 0
-    
+
+
     zzz <- .get_variables(formula, data, id, debug.info) ## ; str(zzz)
     lhs.num <- zzz$lhs.num
     rhs.grp <- zzz$rhs.grp
-    ids.var <- zzz$ids.var
-        
-    rh.trivial <- length( rhs.grp ) == 0 #; cat(sprintf("rh.trivial=%d\n", rh.trivial))
+    ids.var <- zzz$form.ids.var
 
+    rh.trivial <- length( rhs.grp ) == 0 #; cat(sprintf("rh.trivial=%d\n", rh.trivial))
 
     rh.string <- .get_rhs_string( data, rhs.grp )
     rh.unique <- unique(rh.string)
     rh.idx    <- match(rh.unique, rh.string)
     rh.string.factor <- factor(rh.string, levels=rh.unique) ## This is important
-    
+
 ### Get data for id.vars; use ids.var, data, rh.idx
+    ## print(ids.var)
+    ## .s <<- ids.var
+    ## print(rh.idx)
+    ## print(names(data))
     if (length(ids.var)>0){
       id.data <-  data[ rh.idx, ids.var, drop=FALSE ] ##; print(id.data)
     }
-    
+
 ### Get lhs data; use lhs.num, data
 
     lh.data <- do.call(cbind,lapply(paste(lhs.num), function(x)eval(parse(text=x), data)))
     #print(lh.data)
     colnames(lh.data) <- lhs.num
-    
+
 
 ### Function names; use FUN
     funNames <- .get_fun_names( FUN )
-        
-### Calculate groupwise statistics   
-    if (!is.list(FUN)) 
+
+### Calculate groupwise statistics
+    if (!is.list(FUN))
       FUN <- list(FUN)
-    ans <- NULL 
+    ans <- NULL
     for (ff in 1:length(FUN)) {  ## loop over functions
       currFUN <- FUN[[ff]]
       for (vv in 1:length(lhs.num)) {  ## loop over variables
@@ -56,7 +60,7 @@ summaryBy <-
       lhs.names <- var.names
     else
       lhs.names <- lhs.num
-    
+
 ### Set names for columns
 
     #print(funNames)
@@ -70,21 +74,22 @@ summaryBy <-
 
 
 ### Pad the rhs data to the result
-    if ( !rh.trivial ){ 
+    if ( !rh.trivial ){
       ans <- cbind(data[rh.idx, rhs.grp, drop=FALSE], ans)
     }
 
 ### Pad id.data to result
+    ##print(id.data)
     if (length(ids.var)>0){
       ans <- cbind(ans, id.data)
     }
-    
-### Must the result have full dimension?    
+
+### Must the result have full dimension?
     if (full.dimension){
       rrr <-as.numeric(rh.string.factor)
       ans <- ans[rrr,,drop=FALSE]
     }
-        
+
 ### Order the result by the rhs
     if (order==TRUE && !rh.trivial){
       rhs.string  <- paste (rhs.grp, collapse='+')
@@ -99,7 +104,7 @@ summaryBy <-
     rownames(ans) <- 1:nrow(ans)
     if (length(unique(names(ans))) != length(names(ans)))
       warning("dataframe contains replicate names \n", call.=FALSE)
-    
+
     ans
   }
 
@@ -125,11 +130,11 @@ summaryBy <-
 
 .get_fun_names <- function( FUN ){
 
-    if (!is.list(FUN)) 
+    if (!is.list(FUN))
       funNames <- paste(deparse(substitute(FUN, env=parent.frame())), collapse = " ")
     else
       funNames <- unlist(lapply(substitute(FUN, env=parent.frame())[-1], function(a) paste(a)))
-    
+
     ##cat(sprintf("funNames   = %s\n", toString(funNames)))
     funNames
 }
@@ -148,16 +153,16 @@ summaryBy <-
     hasNames <- 1*(prod(nchar(oldnames))>0)
   }
   ##cat(sprintf("hasNames=%i\n", hasNames))
-  
-  ## Dim of response (per variable on LHS)
-  dimr     <- (ncol.ans)/length(lhs.num) 
 
-  only.one.response <- (ncol.ans==length(lhs.num)) 
+  ## Dim of response (per variable on LHS)
+  dimr     <- (ncol.ans)/length(lhs.num)
+
+  only.one.response <- (ncol.ans==length(lhs.num))
   if ( keep.names && only.one.response ){
     newnames <- lhs.num
   } else {
     if (hasNames>0){ ## newnames = var.fun
-      funNames <- colNames[1:dimr]         
+      funNames <- colNames[1:dimr]
       newnames <- unlist(lapply(lhs.num, function(v){paste(v, funNames, sep='.')}))
     } else {
       if (length(funNames) != dimr){
@@ -190,18 +195,18 @@ summaryBy <-
     form.rhs.var   <- all.vars(rhs) ## May contain "." and "1"
 
     lhs       <- formula[[2]]
-    form.lhs.var   <- all.vars(lhs) ## May contain "." 
+    form.lhs.var   <- all.vars(lhs) ## May contain "."
     #print(form.lhs.var)
-    
+
     zz <- .lhsParse(lhs)
     form.lhs.var <-
       if (length(zz)==1)
         paste(zz)
       else
         paste(unlist(.lhsParse(lhs)))
-    
+
     ##print(form.lhs.var)
-    
+
   } else {
     if (length(formula)>=2){
       lhs <- formula[[1]]
@@ -225,7 +230,7 @@ summaryBy <-
       form.ids.var   <- id
     }
   }
-  
+
   data.cls  <- lapply(data, class)
   data.num.idx   <- data.cls %in% c("numeric","integer")
   data.num.var   <- data.var[ data.num.idx  ]
@@ -239,7 +244,7 @@ summaryBy <-
   lhs.fac   <- intersect( form.lhs.var, data.fac.var )
   rhs.fac   <- intersect( form.rhs.var, data.fac.var )
   ids.fac   <- intersect( form.ids.var, data.fac.var )
-  
+
   lll <- list(data.var=data.var,
               form.lhs.var=form.lhs.var, form.rhs.var=form.rhs.var, form.ids.var=form.ids.var,
               lhs.num=lhs.num, rhs.num=rhs.num, ids.num=ids.num,
@@ -247,7 +252,7 @@ summaryBy <-
 
   #if (debug.info>=1)
   ##{ cat("status:\n"); str(lll, vec.len=20) }
-   
+
   if ( "." %in% form.lhs.var ){ ## need all numeric variables not metioned elswhere on lhs
     form.lhs.var <- setdiff(form.lhs.var, ".")
     lhs.num <- union( form.lhs.var, setdiff(data.num.var, c(rhs.num, ids.num)))
@@ -255,13 +260,13 @@ summaryBy <-
       isSpecial <- rep(NA, length( lhs.fac ))
       for (j in 1:length(lhs.fac)){
         isSpecial[j]<- (class(data[,lhs.fac[j]])[1] %in% c("POSIXt", "Date"))
-      }  
+      }
       lhs.num <- union( lhs.num, lhs.fac[ isSpecial ] )
     }
   } else {
     lhs.num <- form.lhs.var
   }
-  
+
   ## The grouping variable
   if ("." %in% form.rhs.var){ ## need all factors not mentioned elsewhere as grouping factors
     free.fac <- setdiff(data.fac.var, c(lhs.fac, ids.fac))
@@ -270,7 +275,7 @@ summaryBy <-
     rhs.grp <- form.rhs.var
   }
   rhs.grp <- intersect( rhs.grp, data.var )
-  
+
   rrr <- list(lhs.num=lhs.num, rhs.fac=rhs.fac, form.ids.var=form.ids.var,
             form.rhs.var=form.rhs.var, rhs.grp=rhs.grp)
   ##str(rrr)

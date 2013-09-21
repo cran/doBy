@@ -6,6 +6,7 @@
 \alias{esticon.lm}
 \alias{esticon.lme}
 \alias{esticon.mer}
+\alias{esticon.merMod}
 \alias{esticon.coxph}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -38,7 +39,7 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE,...)
   \item{...}{Additional arguments; currently not used.}
 }
 \details{
-  
+
   Let the estimated parameters of the model be
   \deqn{latex}{\beta_1, \beta_2, \dots,\beta_p}
   A linear function of the estimates is of the form
@@ -47,14 +48,14 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE,...)
   by the user.
 
   The esticon function calculates c, its standard error and by default
-  also a 95 pct confidence interval. 
+  also a 95 pct confidence interval.
   It is sometimes of interest to test the hypothesis \eqn{latex}{H_0:
     c=\beta_0} for some value \eqn{latex}{\beta_0} given by the user. A
   test is provided for the hypothesis \eqn{latex}{H_0:
     c=0} but other values of \eqn{latex}{\beta_0} can be specified.
-  
+
   In general, one can specify r such linear functions at one time by
-  speficying cm to be an \eqn{latex}{r\times p} matrix where each row 
+  speficying cm to be an \eqn{latex}{r\times p} matrix where each row
   consists of p numbers \eqn{latex}{\lambda_1,\lambda_2,\dots,
     \lambda_p}. Default is then that \eqn{latex}{\beta_0} is a p vector
   of 0s but other values can be given.
@@ -62,11 +63,11 @@ esticon(obj, cm, beta0, conf.int = TRUE, level=0.95, joint.test = FALSE,...)
   It is possible to test simulatneously that all speficied linear
   functions are equal to the corresponding values in
   \eqn{latex}{\beta_0}.
-  
+
    For computing contrasts among levels of
    a single factor, 'contrast.lm' may be more convenient.
 
-     
+
 }
 \value{
   Returns a matrix with one row per linear function.  Columns
@@ -108,8 +109,8 @@ lambda3 <- c(0,0,0,0,1,-1)
 esticon(lm1,rbind(lambda2,lambda3),joint.test=TRUE)
 
 # Example using esticon on coxph objects (thanks to Alessandro A. Leidi).
-# Using dataset 'veteran' in the survival package  
-# from the Veterans' Administration Lung Cancer study 
+# Using dataset 'veteran' in the survival package
+# from the Veterans' Administration Lung Cancer study
 
 library(survival);
 data(veteran)
@@ -120,9 +121,9 @@ veteran.s<-Surv(time,status)
 coxmod<-coxph(veteran.s~age+celltype+trt,method='breslow')
 summary(coxmod)
 
-# compare a subject 50 years old with celltype 1 
-# to a subject 70 years old with celltype 2 
-# both subjects on the same treatment 
+# compare a subject 50 years old with celltype 1
+# to a subject 70 years old with celltype 2
+# both subjects on the same treatment
 AvB<-c(-20,-1,0,0,0)
 
 # compare a subject 40 years old with celltype 2 on treat=0

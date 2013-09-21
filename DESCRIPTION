@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.5-8
+Version: 4.5-9
 Title: doBy - Groupwise summary statistics, general linear contrasts,
         population means (least-squares-means), and other utilities
 Author: Søren Højsgaard <sorenh@math.aau.dk> and Ulrich Halekoh <Ulrich.Halekoh@agrsci.dk> with contributions from Jim Robison-Cox, Kevin Wright and Alessandro A. Leidi.
@@ -20,9 +20,9 @@ URL: http://people.math.aau.dk/~sorenh/software/doBy/
 ZipData: no
 License: GPL (>= 2)
 Depends: R (>= 2.10), multcomp, MASS
-Suggests: nlme,lme4,survival
+Suggests: nlme,lme4,survival,pbkrtest
 Imports: Matrix
-Packaged: 2013-08-05 21:49:31 UTC; sorenh
+Packaged: 2013-09-21 21:26:59 UTC; sorenh
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-08-06 00:02:02
+Date/Publication: 2013-09-22 07:47:14
