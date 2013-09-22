@@ -7,14 +7,20 @@
 \alias{doby.xtabs}
 
 \alias{popMatrix}
-\alias{linMatrix}
+\alias{popMatrix.default}
+
 
 \alias{print.conMatrix}
 \alias{summary.conMatrix}
 
-\alias{linMeans}
-\alias{linMeans.default}
-\alias{linMeans.lme}
+%% Old stuff and it should all go one day
+%% Code is commented out in .R
+%% \alias{linMatrix}
+%% \alias{linMeans}
+%% \alias{linMeans.default}
+%% \alias{linMeans.lme}
+
+
 
 \alias{funBy}
 

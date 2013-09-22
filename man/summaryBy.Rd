@@ -36,6 +36,9 @@ summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
   the variables on the left hand side.}
 
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
+
+
+
 }
 \details{
   Extra arguments ('...') are passed onto the functions in FUN. Hence
@@ -44,7 +47,7 @@ summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
   can particularly be an issue in connection with handling NAs. See
   examples below.
 
-  Some code for this function has been suggested by Jim Robison-Cox. 
+  Some code for this function has been suggested by Jim Robison-Cox.
 }
 
 \value{
@@ -53,8 +56,9 @@ A data frame
 \author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
 
 \seealso{
+
   \code{\link{ave}},
-  \code{\link{descStat}},  
+  \code{\link{descStat}},
   \code{\link{lapplyBy}},
   \code{\link{orderBy}},
   \code{\link{scaleBy}},
@@ -69,20 +73,20 @@ data(dietox)
 dietox12    <- subset(dietox,Time==12)
 
 summaryBy(Weight+Feed~Evit+Cu, data=dietox12,
-          FUN=c(mean,var,length))  
+          FUN=c(mean,var,length))
 
 summaryBy(list(c("Weight","Feed"), c("Evit","Cu")), data=dietox12,
-          FUN=c(mean,var,length))  
+          FUN=c(mean,var,length))
 
 
 summaryBy(Weight+Feed~Evit+Cu+Time, data=subset(dietox,Time>1),
-   FUN=c(mean,var,length))  
+   FUN=c(mean,var,length))
 
 ## Calculations on transformed data:
 
-summaryBy(log(Weight)+Feed~Evit+Cu, data=dietox12)  
+summaryBy(log(Weight)+Feed~Evit+Cu, data=dietox12)
 
-## Calculations on all numerical variables (not mentioned elsewhere): 
+## Calculations on all numerical variables (not mentioned elsewhere):
 
 summaryBy(.~Evit+Cu,                data=dietox12,
    id=~Litter, FUN=mean)
@@ -120,7 +124,7 @@ summaryBy(breaks~wool, data=warpbreaks)
 summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE)
 ## Notice: Previous result is effectively the same as
 with(warpbreaks, ave(breaks, wool))
-## A possible application of full.dimension=TRUE is if we want to 
+## A possible application of full.dimension=TRUE is if we want to
 ## standardize (center and scale) data within groups:
 ss <- summaryBy(breaks~wool, data=warpbreaks, full.dimension=TRUE, FUN=c(mean,sd))
 (warpbreaks$breaks-ss$breaks.mean)/ss$breaks.sd
