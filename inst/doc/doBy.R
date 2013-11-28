@@ -217,7 +217,7 @@ dietox$FE <- unlist(v)
 ###################################################
 ### code chunk number 32: doBy.Rnw:450-454
 ###################################################
-x<-scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"), 
+x<-scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
                  "Species"),     data=iris)
 head(x)
 head(iris)
@@ -228,7 +228,7 @@ head(iris)
 ###################################################
 mydata <- data.frame(y=rnorm(32), x=rnorm(32),
 g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
-g3=factor(rep(c(1,2),each=4))) 
+g3=factor(rep(c(1,2),each=4)))
 head(mydata)
 
 
@@ -321,27 +321,25 @@ head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
 
 
 ###################################################
-### code chunk number 44: doBy.Rnw:597-599
+### code chunk number 44: doBy.Rnw:597-598
 ###################################################
-#yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0)
 yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
 
 
 ###################################################
-### code chunk number 45: doBy.Rnw:606-608
+### code chunk number 45: doBy.Rnw:605-606
 ###################################################
-#tvar <- seq_along(yvar) + c(0.1,0.2,0.3)
 tvar <- seq_along(yvar) + c(0.1,0.2)
 
 
 ###################################################
-### code chunk number 46: doBy.Rnw:613-614
+### code chunk number 46: doBy.Rnw:611-612
 ###################################################
 tse<- timeSinceEvent(yvar,tvar)
 
 
 ###################################################
-### code chunk number 47: doBy.Rnw:629-634
+### code chunk number 47: doBy.Rnw:627-632
 ###################################################
 plot(sign.tse~tvar, data=tse, type="b")
 grid()
@@ -351,7 +349,7 @@ lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
 
 
 ###################################################
-### code chunk number 48: doBy.Rnw:638-643
+### code chunk number 48: doBy.Rnw:636-641
 ###################################################
 plot(tae~tvar, data=tse, ylim=c(-6,6),type="b")
 grid()
@@ -361,7 +359,7 @@ lines(run~tvar, data=tse, col='cyan',lwd=2)
 
 
 ###################################################
-### code chunk number 49: doBy.Rnw:647-651
+### code chunk number 49: doBy.Rnw:645-649
 ###################################################
 plot(ewin~tvar, data=tse,ylim=c(1,4))
 rug(tse$tvar[tse$yvar==1], col='blue',lwd=4)
@@ -370,13 +368,13 @@ lines(run~tvar, data=tse,col='red')
 
 
 ###################################################
-### code chunk number 50: doBy.Rnw:657-658
+### code chunk number 50: doBy.Rnw:655-656
 ###################################################
 tse$tvar[tse$abs<=1]
 
 
 ###################################################
-### code chunk number 51: doBy.Rnw:665-668
+### code chunk number 51: doBy.Rnw:663-666
 ###################################################
 lynx <- as.numeric(lynx)
 tvar <- 1821:1934
@@ -384,7 +382,7 @@ plot(tvar,lynx,type='l')
 
 
 ###################################################
-### code chunk number 52: doBy.Rnw:674-678
+### code chunk number 52: doBy.Rnw:672-676
 ###################################################
 yyy <- lynx>mean(lynx)
 head(yyy)
@@ -393,14 +391,14 @@ sss
 
 
 ###################################################
-### code chunk number 53: doBy.Rnw:682-684
+### code chunk number 53: doBy.Rnw:680-682
 ###################################################
 plot(tvar,lynx,type='l')
 rug(tvar[sss$midpoint],col='blue',lwd=4)
 
 
 ###################################################
-### code chunk number 54: doBy.Rnw:689-692
+### code chunk number 54: doBy.Rnw:687-690
 ###################################################
 yvar <- rep(0,length(lynx))
 yvar[sss$midpoint] <- 1
@@ -408,14 +406,14 @@ str(yvar)
 
 
 ###################################################
-### code chunk number 55: doBy.Rnw:696-698
+### code chunk number 55: doBy.Rnw:694-696
 ###################################################
 tse <- timeSinceEvent(yvar,tvar)
 head(tse,20)
 
 
 ###################################################
-### code chunk number 56: doBy.Rnw:704-707
+### code chunk number 56: doBy.Rnw:702-705
 ###################################################
 len1 <- tapply(tse$ewin, tse$ewin, length)
 len2 <- tapply(tse$run, tse$run, length)
@@ -423,7 +421,7 @@ c(median(len1),median(len2),mean(len1),mean(len2))
 
 
 ###################################################
-### code chunk number 57: doBy.Rnw:712-715
+### code chunk number 57: doBy.Rnw:710-713
 ###################################################
 tse$lynx <- lynx
 tse2 <- na.omit(tse)
@@ -431,7 +429,7 @@ plot(lynx~tae, data=tse2)
 
 
 ###################################################
-### code chunk number 58: doBy.Rnw:719-722
+### code chunk number 58: doBy.Rnw:717-720
 ###################################################
 plot(tvar,lynx,type='l',lty=2)
 mm <- lm(lynx~tae+I(tae^2)+I(tae^3), data=tse2)
@@ -439,62 +437,19 @@ lines(fitted(mm)~tvar, data=tse2, col='red')
 
 
 ###################################################
-### code chunk number 59: doBy.Rnw:736-740
-###################################################
-data(airquality)
-airquality <- transform(airquality, Month=factor(Month))
-m<-lm(Ozone~Month*Wind, data=airquality)
-coefficients(m)
-
-
-###################################################
-### code chunk number 60: doBy.Rnw:757-763
-###################################################
-Lambda <- rbind(
-  c(0,-1,0,0,0,0,-10,0,0,0),
-  c(0,1,-1,0,0,0,10,-10,0,0),
-  c(0,0,1,-1,0,0,0,10,-10,0),
-  c(0,0,0,1,-1,0,0,0,10,-10)
-  )
-
-
-###################################################
-### code chunk number 61: doBy.Rnw:767-768
-###################################################
-esticon(m, Lambda)
-
-
-###################################################
-### code chunk number 62: doBy.Rnw:778-784
-###################################################
-Lambda <- rbind(
-  c(0,0,0,0,0,0,1,0,0,0),
-  c(0,0,0,0,0,0,0,1,0,0),
-  c(0,0,0,0,0,0,0,0,1,0),
-  c(0,0,0,0,0,0,0,0,0,1)
-  )
-
-
-###################################################
-### code chunk number 63: doBy.Rnw:788-789
-###################################################
-esticon(m, Lambda, joint.test=T)
-
-
-###################################################
-### code chunk number 64: doBy.Rnw:822-823
+### code chunk number 59: doBy.Rnw:733-734
 ###################################################
 options(oopt)
 
 
 ###################################################
-### code chunk number 65: doBy.Rnw:838-839
+### code chunk number 60: doBy.Rnw:749-750
 ###################################################
 CO2
 
 
 ###################################################
-### code chunk number 66: doBy.Rnw:844-845
+### code chunk number 61: doBy.Rnw:755-756
 ###################################################
 head(airquality, n=20)
 

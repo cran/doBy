@@ -1,31 +1,40 @@
 \name{internal}
 \alias{internal}
 
+%\alias{}
+
 \alias{asNumericMatrix2}
 \alias{matrix2dataFrame2}
 \alias{subsAttr2}
 \alias{doby.xtabs}
 
-\alias{popMatrix}
-\alias{popMatrix.default}
+\alias{print.LSmeans}
 
-
-\alias{print.conMatrix}
-\alias{summary.conMatrix}
-
-%% Old stuff and it should all go one day
-%% Code is commented out in .R
-%% \alias{linMatrix}
-%% \alias{linMeans}
-%% \alias{linMeans.default}
-%% \alias{linMeans.lme}
-
-
+\alias{LSmatrix}
+\alias{LSmatrix.default}
+\alias{print.LSmatrix}
 
 \alias{funBy}
 
 \alias{print.lmBy}
 \alias{print.summary.lmBy}
+
+\alias{specialize}
+
+\alias{print.splitByData}
+
+%% \alias{linestMatrix}
+%% \alias{linestMatrix.default}
+
+%% \alias{print.linestMatrix}
+%% \alias{print.linest}
+
+\alias{pdiff}
+
+
+\title{Internal functions for the doBy package}
+\description{Internal functions for the doBy package}
+\keyword{internal}% at least one, from doc/KEYWORDS
 
 % \alias{HTMLCommand2}
 % \alias{HTMLdefault2}
@@ -37,21 +46,3 @@
 % \alias{RweaveHTMLreportWritedoc}
 % \alias{RweaveHTMLreportFinish}
 
-
-\alias{specialize}
-
-% deprecated functions
-% \alias{recodevar}
-% \alias{HTMLreport}
-% \alias{Rscript2HTML}
-
-%\alias{}
-\alias{print.splitByData}
-
-
-
-
-
-\title{Internal functions for the doBy package}
-\description{Internal functions for the doBy package}
-\keyword{internal}% at least one, from doc/KEYWORDS

@@ -6,19 +6,6 @@
 ##
 ## ######################################################################
 
-
-.is.estimable <- function(KK, null.basis){
-  res <- rep.int(NA, nrow(KK))
-  for (ii in 1:nrow(KK)){
-    kk <- KK[ii, ]
-    res[ii] <- all(abs(apply(null.basis, 2, function(x) sum(kk * x))) < 1e-04)
-  }
-  res
-}
-
-
-
-
 .get_xlevels <- function(obj){
   UseMethod(".get_xlevels")
 }
@@ -38,7 +25,7 @@
   ans
 }
 
-.get_xlevels.lmerMod <- function(obj){
+.get_xlevels.merMod <- function(obj){
   ##cat(".get_xlevels.lmerMod\n")
   ans <- lapply(obj@frame,levels)
   ans <- ans[unlist(lapply(ans, length))>0]
@@ -51,7 +38,6 @@
   ans
 }
 
-
 .get_contrasts <- function(obj){
   UseMethod(".get_contrasts")
 }
@@ -60,7 +46,7 @@
   obj$contrasts ## FIXME: check RL code
 }
 
-.get_contrasts.lmerMod <- function(obj){
+.get_contrasts.merMod <- function(obj){
   attr(model.matrix(obj), "contrasts")
 }
 
@@ -146,22 +132,65 @@
 }
 
 
-
-
-
-
-
-
-
-.get_null_basis <- function( object ){
-  tR = t(qr.R(object$qr))
-  rank = object$qr$rank
-  for (i in (rank + 1):nrow(tR)) tR[i, i] = 1
-  null.basis = qr.resid(qr(tR[, 1:rank]), tR[, -(1:rank)])
-  if (!is.matrix(null.basis))
-    null.basis = matrix(null.basis, ncol = 1)
-  null.basis[object$qr$pivot, ] = null.basis
-  null.basis
+.get_null_basis <- function(object){
+    S <- svd(model.matrix(object))
+    null.basis <- S$v[,S$d<1e-6, drop=FALSE]
+    null.basis
 }
+
+.is_estimable <- function(KK, null.basis){
+    is.est <-
+        unlist(lapply(1:nrow(KK),
+                      function(ii){
+                          kk <- KK[ii,]
+                          all(abs(apply(null.basis, 2, function(x) sum(kk * x))) < 1e-04)
+                      }))
+    is.est
+}
+
+.do_contrast <- function(KK, bhat, V0, ddf, is.est){
+    used       <- which(!is.na(bhat))
+    not.used   <- which(is.na(bhat))
+    bhat.used  <- bhat[used]
+    VV <- V0
+    ddfm <- function(kk, se) ddf
+    res <- matrix(NA, nrow=nrow(KK), ncol=3)
+    for (ii in 1:nrow(res)){
+        if (is.est[ii]){
+            kk   <- KK[ii,used]
+            est  <- sum(kk*bhat.used)
+            se   <- sqrt(sum(kk * (VV %*% kk)))
+            df2  <- ddfm(kk, se)
+            res[ii,] <- c(est, se, df2)
+        }
+    }
+    colnames(res) <- c("estimate","SE","df")
+    res
+}
+
+.do_pairs <- function(KK){ ## pairwise differences of lsmeans
+    NN <- nrow(KK)
+    MM <- ncol(KK)
+    SS <- as.matrix(attr(KK,"grid")) ## todo: check if null
+    EE <- vector("list", NN*(NN-1)/2)
+    DD <- matrix(0, nrow=NN*(NN-1)/2, ncol=NN)
+    kk <- 1
+    for (ii in 1:(NN-1)){
+        for (jj in (ii+1):NN){
+            DD[kk, ii] <- 1
+            DD[kk, jj] <- -1
+            EE[[kk]] <- list(ff=SS[ii,], .ff=SS[jj,])
+            kk <- kk + 1
+        }
+    }
+    ff <- do.call(rbind, lapply(EE, function(x) x$ff))
+    .ff <- do.call(rbind, lapply(EE, function(x) x$.ff))
+    colnames(.ff) <- paste(".", colnames(.ff),sep='')
+    pair <- as.data.frame(cbind(ff, .ff))
+    list(DD=DD, grid=pair)
+}
+
+
+
 
 

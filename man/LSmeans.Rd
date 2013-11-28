@@ -1,11 +1,11 @@
-\name{linest}
-\alias{linest}
-\alias{linest.lm}
-\alias{linest.glm}
-\alias{linest.geeglm}
-\alias{linest.lmerMod}
-\alias{linest.merMod}
-\alias{linest.default}
+\name{LSmeans}
+\alias{LSmeans}
+\alias{LSmeans.default}
+\alias{LSmeans.glm}
+\alias{LSmeans.lm}
+\alias{LSmeans.geeglm}
+\alias{LSmeans.lmerMod}
+\alias{LSmeans.merMod}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -16,27 +16,31 @@ Compute linear estimates for a range of models. One example of linear
 estimates is population means (also known as LSMEANS).
 }
 \usage{
-linest(object, K, level=0.95, ...) %df.adjust = FALSE,
+LSmeans(object, effect = NULL, at = NULL, level=0.95, 
+      %only.at = TRUE, grid = TRUE,
+      %df.adjust = FALSE,
+      ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
     Model object
   }
-  %% \item{effect}{
-  %%   A vector of variables. For each configuration of these the estimate
-  %%   will be calculated.
-  %% }
-  %% \item{at}{
-  %%   A list of values of covariates (including levels of some factors)
-  %%   to be used in the calculations
-  %% }
-  \item{K}{
-    A contrast matrix. If given then the specifications in \code{effect}
-    and \code{at} are ignored. Otherwise, the matrix is generated
-    according to the specifications in \code{effect}
-    and \code{at}.
+  \item{effect}{
+    A vector of variables. For each configuration of these the estimate
+    will be calculated.
   }
+  \item{at}{
+    A list of values of covariates (including levels of some factors)
+    to be used in the calculations
+  }
+  %% \item{K}{
+  %%   A contrast matrix. If given then the specifications in \code{effect}
+  %%   and \code{at} are ignored. Otherwise, the matrix is generated
+  %%   according to the specifications in \code{effect}
+  %%   and \code{at}.
+
+  %% }
 
   %% \item{only.at}{
   %%   If FALSE and \code{at} is not NULL then the contrast matrix is
@@ -74,20 +78,20 @@ linest(object, K, level=0.95, ...) %df.adjust = FALSE,
 %% ~put references to the literature/web site here ~
 %%}
 \author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
-%% \note{
-%%   The \code{linest} method is a recent addition to the package, and it
-%%   will eventually replace the \code{popMeans} method.
+\note{
+  The \code{LSmeans} method is a recent addition to the package, and it
+  will eventually replace the \code{popMeans} method.
 
-%%   Please report unexpected behaviour.
+  Please report unexpected behaviour.
 
-%%   Some of the code has been adapted from the \bold{lsmeans} package.
-%% }
+  Some of the code has been adapted from the \bold{lsmeans} package.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-   \code{\link{LSmeans}}
-   \code{\link{LSmatrix}}
+  \code{\link{LSmatrix}}
+  \code{\link{linest}}
 }
 \examples{
 
@@ -104,15 +108,30 @@ dat.nst$CC <-factor(c(1,1,2,2,2,2,1,1,3,3,3,3,1,1,4,4,4,4))
 mod.bal  <- lm(y ~ AA + BB*CC,    data=dat.bal)
 mod.nst  <- lm(y ~ AA + BB : CC, data=dat.nst)
 
-K <- LSmatrix(mod.nst, effect=c("BB","CC"))
-linest( mod.nst, K )
+LSmeans(mod.bal, effect=c("BB", "CC"))
+LSmeans(mod.nst, effect=c("BB", "CC"))
+
+LSmeans(mod.nst, at=list(BB=1, CC=1))
+
+LSmeans(mod.nst, at=list(BB=1, CC=2))
+## Above: NA's are correct; not an estimable function
+
+
+if( require( lme4 )){
+warp.mm <- lmer(breaks ~ -1 + tension + (1|wool), data=warpbreaks)
+class(warp.mm)
+fixef(warp.mm)
+coef(summary(warp.mm))
+vcov(warp.mm)
+if (require(pbkrtest ))
+vcovAdj(warp.mm)
 }
 
 
 
-%% linest(warp.mm, effect="tension")
+%% LSmeans(warp.mm, effect="tension")
 
-
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{utilities}

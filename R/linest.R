@@ -1,161 +1,189 @@
-## ####################################################################################################
-##
-## Banff, august 2013
-## This is an experimental function for creating 'linear estimates'
-##
-## ####################################################################################################
 
-linest<- function(object, effect=NULL, at=NULL, only.at=TRUE, grid=TRUE, df.adjust=FALSE, ...){
-  UseMethod("linest")
+linest <- function(object, K, level=0.95, ...){
+    UseMethod("linest")
 }
 
-linest.lmerMod <- function(object, effect=NULL, at=NULL, only.at=TRUE, grid=TRUE, df.adjust=FALSE, ...){
+linest.lm <- function(object, K, level=0.95, ...){
+    is.est <- .is_estimable(K, .get_null_basis( object ))
 
-  bhat <- fixef( object )
-  VV   <- vcov( object )
+    bhat <- coef(object)
+    VV0  <- vcov(object)
+    ddf  <- object$df.residual
+    ddf.vec <- rep(ddf, nrow( K ))
+    res    <- .getKb( K, bhat, VV0, ddf.vec, is.est)
 
-  if (df.adjust && require("pbkrtest")) {
-    VVadj<- vcovAdj( object, 0 )
-    ddfm <- function(kk, se) .get_ddf(VVadj, VV, kk, se * se)
-    VVuse <- VVadj
-  } else {
-    ddfm <- function(kk, se) 1
-    VVuse <- VV
-  }
+    p.value <- 2*pt(res[,"t.stat"], df=res[,"df"], lower.tail=FALSE)
 
-  KK  <- popMatrix(object, effect=effect, at=at, only.at=only.at)
+    qq<-qt(1-(1-level)/2, df=res[,"df"])
+    lwr <- res[,"estimate"] - qq * res[,"se"]
+    upr <- res[,"estimate"] + qq * res[,"se"]
+    res <- cbind(res, p.value, lwr, upr)
 
-  used      <- which(!is.na(bhat))
-  not.used  <- which(is.na(bhat))
-  bhat.used <- bhat[used]
+    .finalize(res, K)
 
-  if (length(not.used) > 0) {
-    ## cat("some are 'not.used'\n")
-    null.basis <- .get_null_basis ( object ) ## Do all objects have qr slot ??
-    estimable  <- .is.estimable(KK, null.basis)
-  } else {
-    null.basis <- NULL
-    estimable  <- rep(TRUE, length(bhat.used))
-  }
-
-  res <- .do.estimation_lmerMod( KK, bhat.used, VVuse, ddfm, used, estimable, null.basis )
-  cbind(res, attributes(KK)$grid)
 }
 
+linest.glm <- function(object, K, level=0.95, type=c("link","response"), ...){
+    type <- match.arg(type)
+    is.est <- .is_estimable(K, .get_null_basis( object ))
 
-.do.estimation_lmerMod <- function( KK, bhat, VV, ddfm, used, estimable, null.basis ){
-  res <- matrix(NA, nrow=nrow(KK), ncol=3)
-  for (ii in 1:nrow(res)){
-    kk <- KK[ii,]
-    if (estimable[ii]){
-      kk   <- kk[used]
-      est  <- sum(kk * bhat)
-      se   <- sqrt(sum(kk * (VV %*% kk)))
-##      print(kk); print(se)
-      df2  <- ddfm(kk, se)
-      res[ii,] <- c(est, se, df2)
+    bhat <- coef(object)
+    VV0  <- vcov(object)
+    ddf.vec <- rep(object$df.residual, nrow( K ))
+    res     <- .getKb( K, bhat, VV0, ddf.vec, is.est)
+
+    if(family(object)[1] %in% c("poisson","binomial","quasipoisson","quasibinomial")){
+        p.value <- 2*pnorm(abs(res[,"t.stat"]), lower.tail=FALSE)
+        qq <- qnorm(1-(1-level)/2)
+        colnames(res)[4] <- "z.stat"
+        res <- res[,-3] # NO df's
+    } else {
+        p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
+        qq <- qt(1-(1-level)/2, df=res[,"df"])
     }
-  }
-  colnames(res) <- c("estimate","SE","df")
-  res
-}
 
-linest.lm <- function(object, effect=NULL, at=NULL, only.at=TRUE, grid=TRUE, ...){
+    lwr <- res[,"estimate"] - qq * res[,"se"]
+    upr <- res[,"estimate"] + qq * res[,"se"]
 
-  bhat <- coef(object)
-  VV   <- vcov(object)
-  df   <- object$df.residual ## Need function for this...
-
-  cl  <- match.call()
-  KK  <- popMatrix(object, effect=effect, at=at, only.at=only.at)
-  used     <- which(!is.na(bhat))
-  not.used <- which(is.na(bhat))
-  bhat.used     <- bhat[used]
-
-  if (length(not.used) > 0) {
-    ##cat("some are 'not.used'\n")
-    null.basis <- .get_null_basis ( object ) ## Do all objects have qr slot ??
-    estimable  <- .is.estimable(KK, null.basis)
-  } else {
-    null.basis <- NULL
-    estimable  <- rep(TRUE, length(bhat.used))
-  }
-
-  res <- .do.estimation_default( KK, bhat.used, VV, df, used, estimable, null.basis )
-  cbind(res, attributes(KK)$grid)
-
-}
-
-
-
-.do.estimation_default <- function( KK, bhat, VV, df, used, estimable, null.basis ){
-  res <- matrix(NA, nrow=nrow(KK), ncol=3)
-  for (ii in 1:nrow(res)){
-    kk <- KK[ii,]
-    if (estimable[ii]){
-      kk  <- kk[used]
-      est <- sum(kk * bhat)
-      se  <- sqrt(sum(kk * (VV %*% kk)))
-      df2 <- df
-      res[ii,] <- c(est, se, df2)
+    if (type=="response"){
+        fit    <- family(object)$linkinv(res[,"estimate"])
+        se.fit <- res[,"se"] * abs(family(object)$mu.eta(res[,"estimate"]))
+        res[,"estimate"]  <- fit
+        res[,"se"] <- se.fit
+        lwr <- family(object)$linkinv(lwr)
+        upr <- family(object)$linkinv(upr)
     }
-  }
-  colnames(res) <- c("estimate","SE","df")
-  res
+
+    res <- cbind(res, p.value, lwr, upr)
+
+    .finalize(res, K)
+
 }
 
 
-## .get_ddf: Adapted from Russ Lenths 'lsmeans' package.
-## Returns denom d.f. for testing lcoefs'beta = 0 where lcoefs is a vector
-# VVA is result of call to VVA = vcovAdj(object, 0) in pbkrtest package
-# VV is vcov(object) ## May not now be needed
-# lcoefs is contrast of interest
-# varlb is my already-computed value of lcoef' VV lcoef = est variance of lcoef'betahat
+linest.geeglm <- function(object, K, level=0.95, type=c("link","response"), ...){
+    type <- match.arg(type)
+    is.est <- .is_estimable(K, .get_null_basis( object ))
 
-.get_ddf <- function(VVadj, VV, lcoefs, varlb) {
+    bhat <- coef(object)
+    VV0  <- summary(object)$cov.scaled
+    ddf.vec <- rep(1, nrow(K))
+    res     <- .getKb( K, bhat, VV0, ddf.vec, is.est)
 
-  .spur = function(U){
-    sum(diag(U))
-  }
-  .divZero = function(x,y,tol=1e-14){
-    ## ratio x/y is set to 1 if both |x| and |y| are below tol
-    x.y  =  if( abs(x)<tol & abs(y)<tol) {1} else x/y
-    x.y
-  }
+    p.value <- 2*pnorm(abs(res[,"t.stat"]), lower.tail=FALSE)
+    qq <- qnorm(1-(1-level)/2)
+    colnames(res)[4] <- "z.stat"
+    res <- res[,-3] # NO df's
 
-  vlb = sum(lcoefs * (VV %*% lcoefs))
-  Theta = Matrix(as.numeric(outer(lcoefs,lcoefs) / vlb), nrow=length(lcoefs))
-  P = attr(VVadj, "P")
-  W = attr(VVadj, "W")
+    lwr <- res[,"estimate"] - qq * res[,"se"]
+    upr <- res[,"estimate"] + qq * res[,"se"]
 
-  A1 = A2 = 0
-  ThetaVV = Theta%*%VV
-  n.ggamma = length(P)
-  for (ii in 1:n.ggamma) {
-    for (jj in c(ii:n.ggamma)) {
-      e = ifelse(ii==jj, 1, 2)
-      ui = ThetaVV %*% P[[ii]] %*% VV
-      uj = ThetaVV %*% P[[jj]] %*% VV
-      A1 =  A1 +  e* W[ii,jj] * (.spur(ui) * .spur(uj))
-      A2 =  A2 +  e* W[ii,jj] *  sum(ui * t(uj))
-    }}
+    if (type=="response"){
+        fit    <- family(object)$linkinv(res[,"estimate"])
+        se.fit <- res[,"se"] * abs(family(object)$mu.eta(res[,"estimate"]))
+        res[,"estimate"]  <- fit
+        res[,"se"] <- se.fit
+        lwr <- family(object)$linkinv(lwr)
+        upr <- family(object)$linkinv(upr)
+    }
 
-  ## substituted q = 1 in pbkrtest code and simplified
-  B  =  (A1 + 6 * A2) / 2
-  g  =  (2 * A1 - 5 * A2)  / (3 * A2)
-  c1 =  g/(3 + 2 * (1 - g))
-  c2 =  (1 - g) / (3 + 2 * (1 - g))
-  c3 =  (3 - g) / (3 + 2 * (1 - g))
-  EE =  1 + A2
-  VV =  2 * (1 + B)
-  EEstar  =  1/(1 - A2)
-  VVstar  =  2 * ((1 + c1 * B)/((1 - c2 * B)^2  *  (1 - c3 * B)))
-  V0 = 1 + c1 * B
-  V1 = 1 - c2 * B
-  V2 = 1 - c3 * B
-  V0 = ifelse(abs(V0) < 1e-10, 0, V0)
-  rho  = (.divZero(1 - A2, V1))^2 * V0/V2
-  df2  =  4 + 3 / (rho - 1)
-  df2
+    res <- cbind(res, p.value, lwr, upr)
+
+    .finalize(res, K)
+}
+
+linest.lmerMod <- function(object, K, level=0.95, adjust.df=TRUE, ...){
+    is.est <- .is_estimable(K, .get_null_basis( object ))
+
+    bhat <- fixef(object)
+
+    if (adjust.df){
+        if (require(pbkrtest)){
+            VV0  <- vcovAdj(object)
+            ddf.vec <- unlist(lapply(1:nrow(K),
+                                     function(ii) ddf_Lb(VV0, K[ii,])))
+                                     ##function(ii) ddf_Lb(VV0, VV0, K[ii,], 0)))
+        } else {
+            stop("adjustment of degrees of freedom requires that 'pbkrtest' is installed")
+        }
+    } else {
+        a <- logLik(object)
+        ddf<-attributes(a)$nall - attributes(a)$df
+        ddf.vec <- rep(ddf, length(bhat))
+        VV0 <- vcov(object)
+    }
+
+    res    <- .getKb( K, bhat, VV0, ddf.vec, is.est)
+    p.value <- 2*pt(res[,"t.stat"], df=res[,"df"], lower.tail=FALSE)
+    qq<-qt(1-(1-level)/2, df=res[,"df"])
+    lwr <- res[,"estimate"] - qq * res[,"se"]
+    upr <- res[,"estimate"] + qq * res[,"se"]
+    res <- cbind(res, p.value, lwr, upr)
+
+    .finalize(res, K)
+
+}
+
+linest.merMod <- function(object, K, level=0.95, ...){
+    cl <- match.call()
+    cl[[1]] <- as.name("linest.lmerMod")
+    cl$adjust.df <- FALSE
+    eval(cl)
+}
+
+
+
+
+
+### UTILITIES ###
+
+.getK <- function(object, effect=NULL, at=NULL){
+    ## cat(".getK()\n");
+    ## cat("effect:"); print(effect);
+    ## cat("at:"); print(at)
+
+    ## print(K)
+    ## if (is.null(K)){
+
+    ## } else {
+    ##     if (!inherits(K, "matrix")) stop("'K' must be a matrix\n")
+    ## }
+    ## K
+
+    K <- LSmatrix(object, effect=effect, at=at)
+    ## print(K)
+    ## cat("done - getK\n")
+    K
+}
+
+.getKb <- function(K, bhat, VV, ddf.vec, is.est, level=0.95){
+    used       <- which(!is.na(bhat))
+    bhat.used  <- bhat[used]
+    K   <- K[, used, drop=FALSE]
+    res <- matrix(NA, nrow=nrow(K), ncol=3)
+    for (ii in 1:nrow(res)){
+        kk <- K[ii,]
+        if (is.est[ii]){
+            est  <- sum(kk * bhat.used)
+            se   <- sqrt(sum(kk * (VV %*% kk)))
+            df2  <- ddf.vec[ii]
+            res[ii,] <- c(est, se, df2)
+        }
+    }
+    colnames(res) <- c("estimate","se","df")
+    t.stat <- res[,"estimate"]/res[,"se"]
+    cbind(res, t.stat)
+}
+
+
+.finalize <- function(.coef, K){
+    res   <- list(coef=.coef, grid=attr(K,"grid"), K=K)
+    class(res) <- "LSmeans"
+    res
+}
+
+print.LSmeans <- function(x, ...){
+    print(cbind(x$coef, x$grid))
+    invisible(x)
 }
 

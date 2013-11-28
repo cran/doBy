@@ -1,8 +1,8 @@
 \name{doBy}
 \alias{doBy}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Various utilities which includes functions for creating groupwise
-  calculations etc.}
+\title{Various utilitie. Functions for creating groupwise
+  calculations etc.; calculation of least-squares means; miscellaneous utilities} 
 \description{
   The core doBy functions were developed to make it easy to split data
   into groups (defined by the levels of a set of factors) and performing
@@ -13,14 +13,15 @@
   }
 
 \details{
-  Functions summaryBy, splitBy, orderBy, sampleBy, transformBy are the core doBy
-  functions
+  Functions summaryBy, splitBy, orderBy, sampleBy, transformBy etc. are the doBy
+  functions.
 
-  There is no need for a  plotBy function -- the 
-  xyplot function in the lattice package already fulfills these needs
+  \code{linest()} calculates linear estimates based on a matrix for
+  various model objects. The \code{esticon()} function has a similar
+  functionality, but it will be removed at some point of time.
 
-  The esticon function calculates linear functions of parameter
-  estimates under various types of models.
+  \code{LSmeans()} and \code{LSmatrix()} are used in connection with
+  calculating least--squares means. 
 
   There are various other utility functions in the package.
 }
@@ -41,8 +42,7 @@
 
 data(dietox)
 
-summaryBy(Weight+Feed~Evit+Cu+Time,      data=dietox, FUN=c(mean,var),
-na.rm=TRUE, use="pair")  
+summaryBy(Weight+Feed~Evit+Cu+Time, data=dietox, FUN=c(mean,var), na.rm=TRUE, use="pair")  
 
 orderBy(~Time+Evit, data=dietox)
 
