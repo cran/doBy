@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 
-%\VignetteIndexEntry{doBy}
 %\VignettePackage{doBy}
+%\VignetteIndexEntry{doBy: Groupwise computations and other utilities}
 
 \usepackage{hyperref,a4wide,color,boxedminipage,Sweave}
 \usepackage[utf8]{inputenc}
@@ -27,9 +27,9 @@ prettyDate <- format(Sys.Date())
 
 
 \SweaveOpts{keep.source=T,prefix.string=figures/doBy}
-\setkeys{Gin}{height=3in}
+%\setkeys{Gin}{height=3in}
 
-\title{The \texttt{doBy} package}
+\title{Groupwise computations and other utilities in the  \texttt{doBy} package}
 \author{S{\o}ren H{\o}jsgaard}
 \date{\pkg{doBy} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
 
@@ -39,30 +39,30 @@ prettyDate <- format(Sys.Date())
 
 %\SweaveInput{Rmarkup.STY}
 
-\definecolor{darkred}{rgb}{.7,0,0} 
-\definecolor{midnightblue}{rgb}{0.098,0.098,0.439} 
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
 
 \DefineVerbatimEnvironment{Sinput}{Verbatim}{
   fontfamily=tt,
   %%fontseries=b,
   %% xleftmargin=2em,
   formatcom={\color{midnightblue}}
-} 
+}
 \DefineVerbatimEnvironment{Soutput}{Verbatim}{
   fontfamily=tt,
   %%fontseries=b,
-  %% xleftmargin=2em,  
+  %% xleftmargin=2em,
   formatcom={\color{darkred}}
-} 
+}
 \DefineVerbatimEnvironment{Scode}{Verbatim}{
   fontfamily=tt,
   %%fontseries=b,
-  %% xleftmargin=2em,  
+  %% xleftmargin=2em,
   formatcom={\color{blue}}
-} 
+}
 
 \fvset{listparameters={\setlength{\topsep}{-2pt}}}
-\renewenvironment{Schunk}{\linespread{.90}}{}    
+\renewenvironment{Schunk}{\linespread{.90}}{}
 
 
 \tableofcontents
@@ -192,25 +192,25 @@ summaryBy( conc + uptake ~ Plant, data=CO2, FUN=myfun2)
 Another usage is to specify a list of functions each of which returns
 a single value:
 
-@ 
+@
 <<>>=
 summaryBy( conc + uptake ~ Plant, data=CO2, FUN=list( mean, var ) )
-@ %def 
+@ %def
 
 Notice that if we specify a list of functions of which some returns a
 vector with more than one element, then the proper names are not
 retrieved:
-@ 
+@
 <<>>=
 summaryBy(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 ))
-@ %def 
+@ %def
 
 One can ``hard code'' the function names into the output as
-@ 
+@
 <<>>=
 summaryBy(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 ),
           fun.names=c("mean","var","mm","vv"))
-@ %def 
+@ %def
 
 \subsubsection{Statistics on functions of data}
 \label{sec:xxx}
@@ -446,29 +446,29 @@ dietox$FE <- unlist(v)
 \subsection{The \code{scaleBy} function}
 
 Standardize the \code{iris} data within each value of \code{"Species"}:
-@ 
+@
 <<>>=
-x<-scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"), 
+x<-scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
                  "Species"),     data=iris)
 head(x)
 head(iris)
-@ %def 
+@ %def
 
 \section{Create By--functions on the fly}
 \label{sec:create-functions-fly}
 
 Create a function for creating groupwise t-tests
 
-@ 
+@
 <<>>=
 mydata <- data.frame(y=rnorm(32), x=rnorm(32),
 g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
-g3=factor(rep(c(1,2),each=4))) 
+g3=factor(rep(c(1,2),each=4)))
 head(mydata)
-@ %def 
+@ %def
 
 
-@ 
+@
 <<>>=
 ## Based on the formula interface to t.test
 t.testBy1 <- function(formula, group, data, ...){
@@ -478,16 +478,16 @@ t.testBy1 <- function(formula, group, data, ...){
 t.testBy2 <- function(formula, group, data, ...){
   xyFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
 }
-@ %def 
+@ %def
 
 Notice: The optional \code{class} argument will facilitate that you
 create your own print / summary methods etc.
 
-@ 
+@
 <<>>=
 t.testBy1(y~g1, ~g2, data=mydata)
 t.testBy2(y~x,  ~g2, data=mydata)
-@ %def 
+@ %def
 
 
 
@@ -504,7 +504,7 @@ t.testBy2(y~x,  ~g2, data=mydata)
 \subsection{Specialize}
 \label{sec:specialize}
 
-@ 
+@
 <<>>=
 ff  <- function(a,b=2,c=4){a+b+c}
 ff1 <- specialize(ff, arglist=list(a=1, b=7, yy=123))
@@ -512,15 +512,15 @@ ff1
 gg  <- rnorm
 gg1 <- specialize(gg, list(n=10))
 gg1
-@ %def 
+@ %def
 
 Notice that this result is absurd:
-@ 
+@
 <<>>=
 f  <- function(a) {a <- a + 1; a}
 f1 <- specialize(f, list(a = 10))
 f1
-@ %def 
+@ %def
 
 
 \subsection{The \code{firstobs()} / \code{lastobs()} function}
@@ -595,7 +595,6 @@ head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
 Consider the vector
 @
 <<>>=
-#yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0)
 yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
 @ %def
 
@@ -604,7 +603,6 @@ at a certain time point. By default time points are assumed
 equidistant but for illustration we define time time variable
 @
 <<>>=
-#tvar <- seq_along(yvar) + c(0.1,0.2,0.3)
 tvar <- seq_along(yvar) + c(0.1,0.2)
 @ %def
 
@@ -721,93 +719,6 @@ plot(tvar,lynx,type='l',lty=2)
 mm <- lm(lynx~tae+I(tae^2)+I(tae^3), data=tse2)
 lines(fitted(mm)~tvar, data=tse2, col='red')
 @ %def
-
-
-\section{Contrasts, estimable functions, LSMEANS}
-\label{sec:xxx}
-
-
-\subsection{The \code{esticon} function}
-\label{esticon}
-
-Consider a linear model which explains \code{Ozone} as a linear
-function of \code{Month} and \code{Wind}:
-@
-<<>>=
-data(airquality)
-airquality <- transform(airquality, Month=factor(Month))
-m<-lm(Ozone~Month*Wind, data=airquality)
-coefficients(m)
-@ %def
-
-When a parameter vector $\beta$ of (systematic) effects have been
-estimated, interest is often in a particular estimable function, i.e.\
-linear combination $\lambda^\top \beta$ and/or testing the hypothesis
-$H_0: \lambda^\top \beta=\beta_0$ where $\lambda$ is a specific vector
-defined by the user.
-
-Suppose for example we want to calculate the expected difference in
-ozone between consequtive months at wind speed 10 mph (which is about
-the average wind speed over the whole period).
-
-The \code{esticon} function provides a way of doing so.
- We can specify several $\lambda$ vectors at the same time. For example
-
-@
-<<echo=T>>=
-Lambda <- rbind(
-  c(0,-1,0,0,0,0,-10,0,0,0),
-  c(0,1,-1,0,0,0,10,-10,0,0),
-  c(0,0,1,-1,0,0,0,10,-10,0),
-  c(0,0,0,1,-1,0,0,0,10,-10)
-  )
-@ %def
-
-@
-<<>>=
-esticon(m, Lambda)
-@ %def
-
-
-In other cases, interest is in testing a hypothesis of a contrast
-$H_0: \Lambda \beta=\beta_0$ where $\Lambda$ is a matrix. For example
-a test of no interaction between \code{Month} and \code{Wind} can be
-made by testing jointly that the last four parameters in \code{m} are
-zero (observe that the test is a Wald test):
-@
-<<echo=T>>=
-Lambda <- rbind(
-  c(0,0,0,0,0,0,1,0,0,0),
-  c(0,0,0,0,0,0,0,1,0,0),
-  c(0,0,0,0,0,0,0,0,1,0),
-  c(0,0,0,0,0,0,0,0,0,1)
-  )
-@ %def
-
-@
-<<>>=
-esticon(m, Lambda, joint.test=T)
-@ %def
-
-For a linear normal model, one would typically prefer to do a
-likelihood ratio test instead. However, for generalized estimating
-equations of glm--type (as dealt with in the packages \pkg{geepack}
-and \pkg{gee}) there is no likelihood. In this case \code{esticon}
-function provides an operational alternative.
-
-Observe that another function for calculating contrasts as above is the
-\code{contrast} function in the \pkg{Design} package but it applies to
-a narrower range of models than \code{esticon} does.
-
-
-\subsection{LSMEANS}
-\label{sec:xxx}
-
-
-Marginal means (also called population means or LSMEANS) can be
-calulated with \verb'lsmeans()'. See the documentation of  \verb'lsmeans()' for
-examples.
-
 
 
 \section{Acknowledgements}

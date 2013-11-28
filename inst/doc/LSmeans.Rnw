@@ -1,0 +1,1328 @@
+\documentclass[11pt]{article}
+
+%\VignettePackage{doBy}
+%\VignetteIndexEntry{doBy: LSmeans and other linear estimates}
+%\VignetteIndexEntry{LSMEANS}
+%\VignetteIndexEntry{contrasts}
+%\VignetteIndexEntry{estimable functions}
+
+\usepackage{a4wide,hyperref}
+
+\usepackage{url,a4}
+\usepackage{boxedminipage,color}
+\usepackage[utf8]{inputenc}
+
+\usepackage[inline,nomargin,draft]{fixme}
+\newcommand\FXInline[2]{\textbf{\color{blue}#1}:
+  \emph{\color{blue} - #2}}
+
+\usepackage[cm]{fullpage}
+
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+
+\RequirePackage{color,fancyvrb,amsmath,amsfonts}
+
+\usepackage{framed}
+\usepackage{comment}
+\definecolor{shadecolor}{gray}{0.91}
+
+\def\R{\texttt{R}}
+\def\pkg#1{{\bf #1}}
+\def\doby{\pkg{doBy}}
+
+\def\code#1{\texttt{#1}}
+\def\cc#1{\texttt{#1}}
+
+\def\esticon{\code{esticon()}}
+\def\lsmeans{\code{LSmeans}}
+\def\linmat{\code{LSmatrix()}}
+\def\linest{\code{linest()}}
+
+
+\DeclareMathOperator{\EE}{\mathbb{E}}
+\DeclareMathOperator{\var}{\mathbb{V}ar}
+\DeclareMathOperator{\cov}{\mathbb{C}ov}
+\DeclareMathOperator{\norm}{N}
+\DeclareMathOperator{\spanx}{span}
+\DeclareMathOperator{\corr}{Corr}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\trace}{tr}
+\def\inv{^{-1}}
+\newcommand{\transp}{^{\top}}
+
+<<echo=FALSE,print=FALSE>>=
+require( doBy )
+prettyVersion <- packageDescription("doBy")$Version
+prettyDate <- format(Sys.Date())
+@
+
+\SweaveOpts{keep.source=T,prefix.string=figures/LSmeans}
+
+\title{LS--means (least--squares means) and other linear estimates}
+\author{S{\o}ren H{\o}jsgaard and Ulrich Halekoh}
+\date{\pkg{doBy} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+
+\begin{document}
+
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{
+  fontfamily=tt,
+  %%fontseries=b,
+  %% xleftmargin=2em,
+  formatcom={\color{midnightblue}}
+}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{
+  fontfamily=tt,
+  %%fontseries=b,
+  %% xleftmargin=2em,
+  formatcom={\color{blue}}
+}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{
+  fontfamily=tt,
+  %%fontseries=b,
+  %% xleftmargin=2em,
+  formatcom={\color{blue}}
+}
+
+\fvset{listparameters={\setlength{\topsep}{-2pt}}}
+\renewenvironment{Schunk}{\linespread{.90}}{}
+
+%%\renewenvironment{Schunk}{\begin{shaded}\small}{\end{shaded}}
+@
+<<echo=F>>=
+options("width"=90, "digits"=3)
+@ %def
+
+\maketitle
+\hrule
+\tableofcontents
+
+\parindent0pt
+\parskip5pt
+
+@
+<<echo=FALSE>>=
+dir.create("figures")
+oopt <- options()
+options("digits"=4, "width"=80, "prompt"="> ", "continue"="  ")
+##options(useFancyQuotes="UTF-8")
+@ %def
+
+
+%\tableofcontents
+\setkeys{Gin}{height=3in, width=3in}
+
+
+
+\begin{quote}
+  This is a draft; please feel free to suggest improvements.
+\end{quote}
+
+\section{Introduction}
+\label{sec:introduction}
+
+
+\subsection{Linear functions of parameters, contrasts}
+\label{sec:line-funct-param}
+
+
+A linear function of a $p$--dimensional parameter vector $\beta$ has
+the form
+\begin{displaymath}
+  C=K\beta
+\end{displaymath}
+where $K$ is a $q\times p$ matrix. The corresponding
+linear estimate is $\hat C = K \hat \beta$.
+A linear hypothesis has the form
+$H_0: K\beta=m$ for some $q$ dimensional vector $m$.
+
+\subsection{Least-squares means (LS--means)}
+\label{sec:least-squares-means}
+
+
+A special type of linear estimates is the so called least--squares
+means (or LS--means). Other names for these estimates include
+population means and marginal means. Consider an imaginary field
+experiment analyzed with model of the form
+@
+<<eval=F>>=
+lm( y ~ treat + block + year)
+@ %def
+where \cc{treat} is a treatment factor, \cc{block} is a blocking
+factor and \cc{year} is the year (a factor) where the experiment is
+repeated over several years. This model specifies the conditional mean
+$\EE(Y|\cc{treat}, \cc{block},\cc{year})$. One may be interested in
+predictions of the
+form $\EE(Y|\cc{treat})$. This quantity can not formally be found from the
+model. However, it is tempting to average the fitted values of
+$\EE(Y|\cc{treat}, \cc{block},\cc{year})$ across the levels of
+\cc{block} and \cc{year} and think of this average as
+$\EE(Y|\cc{treat})$. This average is precisely what is called the
+LS--means. If the experiment is balanced then this average is
+identical to the average of the observations when stratified according
+to \cc{treat}.
+
+An alternative is to think of \cc{block} and \cc{year} as random
+effects, for example:
+@
+<<eval=F>>=
+library(lme4)
+lmer( y ~ treat + (1|block) + (1|year))
+@ %def
+
+In this case one would directly obtain $\EE(Y|\cc{treat})$ from the
+model. However, there are at least two reasons why one may be hesitant
+to consider such a random effects model. Suppose there are three blocks
+and the experiment is repeated over three consecutive years. This
+means that the random effects are likely to be estimated with a large
+uncertainty (the estimates will have only two degrees
+of freedom). Furthermore, if \cc{block} and \cc{year} should be
+treated as random effects they should in principle come from a large
+population of possible blocks and years. This may or may not be
+reasonable for the blocks, but it is certainly a dubious assumption
+for the years.
+
+Below we describe \lsmeans\ as implemented in
+the \doby\ package. Notice that the \pkg{lsmeans} package
+\cite{Lenth:2013} also provides computations of LS--means, see
+\url{http://cran.r-project.org/web/packages/lsmeans/}.
+
+
+\section{Example: Warpbreaks}
+\label{sec:example:-warpbreaks}
+
+@
+<<>>=
+summary( warpbreaks )
+head( warpbreaks, 4 )
+ftable(xtabs( ~ wool + tension, data=warpbreaks))
+@ %def
+
+@
+<<fig=T, echo=F>>=
+ opar <- par(mfrow = c(1, 2), oma = c(0, 0, 1.1, 0))
+     plot(breaks ~ tension, data = warpbreaks, col = "lightgray",
+          varwidth = TRUE, subset = wool == "A", main = "Wool A")
+     plot(breaks ~ tension, data = warpbreaks, col = "lightgray",
+          varwidth = TRUE, subset = wool == "B", main = "Wool B")
+     mtext("warpbreaks data", side = 3, outer = TRUE)
+     par(opar)
+@ %def
+
+
+\subsection{A linear model}
+\label{sec:linear-model}
+
+@
+<<>>=
+(warp.lm <- lm(breaks ~ wool + tension, data=warpbreaks))
+@ %def
+
+The fitted values are:
+@
+<<>>=
+uni <- unique(warpbreaks[,2:3])
+prd <- cbind(breaks=predict(warp.lm, newdata=uni), uni); prd
+@ %def
+
+\subsection{The LS--means}
+\label{sec:lsmeans}
+
+We may be interested in making predictions of the number of breaks for
+each level of \cc{tension} for \emph{any} type or an \emph{average}
+type of \code{wool}.  The idea behind LS--means is
+to average the predictions above over the two
+wool types. These quantities are the \lsmeans\ for the effect
+\cc{tension}.
+
+This is done with:
+@
+<<>>=
+LSmeans(warp.lm, effect="tension")
+@ %def
+
+The term \lsmeans\ comes from that these quantities are the same as
+the least squares main effects of \cc{tension} when data is balanced:
+@
+<<>>=
+doBy::summaryBy(breaks ~ tension, data=warpbreaks)
+@ %def
+When data is not balanced these quantities are in general not the same.
+
+Under the hood, \cc{LSmeans()} generates a contrast matrix
+@
+<<>>=
+K <- LSmatrix(warp.lm, effect="tension"); K
+@ %def
+and passes this matrix onto \linest:
+@
+<<>>=
+linest( warp.lm, K=K )
+@ %def
+
+
+\subsection{Models with interactions}
+\label{sec:models-with-inter}
+
+Consider a model with interaction:
+@
+<<>>=
+(warp.lm2 <- update(warp.lm, .~.+wool:tension))
+@ %def
+
+In this case the contrast matrix becomes:
+@
+<<>>=
+K2 <- LSmatrix(warp.lm2, effect="tension"); K2
+linest(warp.lm2, K=K2)
+@ %def
+
+\subsection{Alternative models}
+\label{sec:alternative-models}
+
+We can calculate LS--means for e.g.\ a Poisson or a gamma model. Default is that
+the calculation is calculated on the scale of the linear
+predictor. However, if
+we think of LS--means as a prediction on the linear scale one may
+argue that it can also make sense to transform this prediction to
+the response scale:
+@
+<<>>=
+warp.poi <- glm(breaks ~ wool + tension, family=poisson, data=warpbreaks)
+LSmeans(warp.poi, effect="tension", type="link")
+LSmeans(warp.poi, effect="tension", type="response")
+@ %def
+
+%% SANITY CHECK
+%% @
+%% <<>>=
+%% K <- LSmatrix(warp.poi, effect="tension")
+%% doBy::esticon(warp.poi, K)
+%% @ %def
+
+@
+<<>>=
+warp.qpoi <- glm(breaks ~ wool + tension, family=quasipoisson, data=warpbreaks)
+LSmeans(warp.qpoi, effect="tension", type="link")
+LSmeans(warp.qpoi, effect="tension", type="response")
+@ %def
+
+
+For comparison with the linear model, we use identity link
+@
+<<echo=F,results=hide>>=
+warp.poi2 <- glm(breaks ~ wool + tension, family=poisson(link=identity),
+                 data=warpbreaks)
+LSmeans(warp.poi2, effect="tension", type="link")
+@ %def
+
+
+
+%% SANITY CHECK
+%% @
+%% <<>>=
+%% K <- LSmatrix(warp.poi2, effect="tension")
+%% doBy::esticon(warp.poi2, K)
+%% @ %def
+
+
+@
+<<>>=
+warp.gam <- glm(breaks ~ wool + tension, family=Gamma(link=identity),
+                 data=warpbreaks)
+LSmeans(warp.gam, effect="tension", type="link")
+@ %def
+
+%% SANITY CHECK
+%% @
+%% <<>>=
+%% K <- LSmatrix(warp.gam, effect="tension")
+%% doBy::esticon(warp.gam, K)
+%% @ %def
+
+
+
+
+Notice that the linear estimates are practically the same as for the
+linear model, but the standard errors are smaller and hence the
+confidence intervals are narrower.
+
+An alternative is to fit a quasi Poisson ``model''
+
+@
+<<>>=
+warp.poi3 <- glm(breaks ~ wool + tension, family=quasipoisson(link=identity), data=warpbreaks)
+LSmeans(warp.poi3, effect="tension")
+@ def
+
+For the sake of illustration we treat \cc{wool} as a random effect:
+@
+<<>>=
+library(lme4)
+warp.mm <- lmer(breaks ~ tension + (1|wool), data=warpbreaks)
+LSmeans(warp.mm, effect="tension")
+@ %def
+
+Notice here that the estimates themselves are very similar to those
+above but the standard errors are much larger. This comes from that
+there that \code{wool} is treated as a random effect.
+
+@
+<<>>=
+VarCorr(warp.mm)
+@ %def
+
+Notice that the degrees of freedom by default are adjusted using a
+Kenward--Roger approximation (provided that \pkg{pbkrtest} is
+installed). Unadjusted degrees of freedom are obtained with
+@
+<<>>=
+LSmeans(warp.mm, effect="tension", adjust.df=FALSE)
+@ %def
+
+Lastly, for gee-type ``models'' we get
+@
+<<>>=
+library(geepack)
+warp.gee <- geeglm(breaks ~ tension, id=wool, family=poisson, data=warpbreaks)
+LSmeans(warp.gee, effect="tension")
+LSmeans(warp.gee, effect="tension", type="response")
+@ %def
+
+
+
+\section{Example: ChickWeight}
+\label{sec:example:-chickweight}
+
+@
+<<fig=T>>=
+library(ggplot2)
+ChickWeight$Diet <- factor(ChickWeight$Diet)
+qplot(Time, weight, data=ChickWeight, colour=Chick, facets=~Diet,
+      geom=c("point","line"))
+@ %def
+
+Consider random regression model:
+@
+<<>>=
+rr <- lmer(weight~Time*Diet + (0+Time|Chick), data=ChickWeight)
+coef(summary(rr))
+@ %def
+
+
+The contrast matrix for \cc{Diet} becomes:
+@
+<<>>=
+LSmatrix(rr, effect="Diet")
+@ %def
+
+The value of \cc{Time} is by default taken to be the average of that
+variable. Hence the \lsmeans\ is the predicted weight for each diet at
+that specific point of time. We can consider other points of time with
+@
+<<>>=
+K1 <- LSmatrix(rr, effect="Diet", at=list(Time=1)); K1
+@ %def
+
+The \lsmeans\ for the intercepts is the predictions at
+\cc{Time=0}. The \lsmeans\ for the slopes becomes
+@
+<<>>=
+K0 <- LSmatrix(rr, effect="Diet", at=list(Time=0))
+K1-K0
+LSmeans(rr, K=K1-K0)
+@ %def
+
+We can cook up our own function for comparing trends:
+@
+<<>>=
+LSmeans_trend <- function(object, effect, trend){
+
+    K<-LSmatrix(object, effect=effect, at=as.list(setNames(1, trend))) -
+        LSmatrix(object, effect=effect, at=as.list(setNames(0, trend)))
+    LSmeans(object, K=K)
+}
+LSmeans_trend(rr, effect="Diet", trend="Time")
+@ %def
+
+\section{Example: Using covariates}
+\label{sec:using-covariates}
+
+Consider the following subset of the \code{CO2} dataset:
+@
+<<>>=
+data(CO2)
+CO2 <- transform(CO2, Treat=Treatment, Treatment=NULL)
+levels(CO2$Treat) <- c("nchil","chil")
+levels(CO2$Type) <- c("Que","Mis")
+ftable(xtabs( ~ Plant + Type + Treat, data=CO2), col.vars=2:3)
+##CO2 <- subset(CO2, Plant %in% c("Qn1", "Qc1", "Mn1", "Mc1"))
+@ %def
+
+@
+<<fig=T>>=
+qplot(x=log(conc), y=uptake, data=CO2, color=Treat, facets=~Type)
+@ %def
+
+Below, the covariate \code{conc} is fixed at the average value:
+@
+<<>>=
+co2.lm1 <- lm(uptake ~ conc + Type + Treat, data=CO2)
+LSmeans(co2.lm1, effect="Treat")
+@ %def
+
+If we use \code{log(conc)} instead we will get an error when
+calculating LS--means:
+@
+<<eval=F>>=
+co2.lm <- lm(uptake ~ log(conc) + Type + Treat, data=CO2)
+LSmeans(co2.lm, effect="Treat")
+@ %def
+
+In this case one can do
+@
+<<>>=
+co2.lm2 <- lm(uptake ~ log.conc + Type + Treat,
+             data=transform(CO2, log.conc=log(conc)))
+LSmeans(co2.lm2, effect="Treat")
+@ %def
+This also highlights what is computed: The average of the log of
+\code{conc}; not the log of the average of \code{conc}.
+
+In a similar spirit consider
+@
+<<>>=
+co2.lm3 <- lm(uptake ~ conc + I(conc^2) + Type + Treat, data=CO2)
+LSmeans(co2.lm3, effect="Treat")
+@ %def
+
+Above \verb'I(conc^2)' is the average of the squared values of
+\code{conc}; not the  square of the average of
+\code{conc}, cfr.\ the following.
+
+@
+<<>>=
+co2.lm4 <- lm(uptake ~ conc + conc2 + Type + Treat, data=
+              transform(CO2, conc2=conc^2))
+LSmeans(co2.lm4, effect="Treat")
+@ %def
+
+If we want to evaluate the LS--means at \code{conc=10} then we can do:
+@
+<<>>=
+LSmeans(co2.lm4, effect="Treat", at=list(conc=10, conc2=100))
+@ %def
+
+
+
+
+
+\section{Example: Non--estimable contrasts}
+\label{sec:exampl-non-estim}
+
+@
+<<echo=FALSE>>=
+## Make balanced dataset
+dat.bal <- expand.grid(list(AA=factor(1:2), BB=factor(1:3), CC=factor(1:3)))
+dat.bal$y <- rnorm(nrow(dat.bal))
+
+## Make unbalanced dataset:  'BB' is nested within 'CC' so BB=1
+## is only found when CC=1 and BB=2,3 are found in each CC=2,3,4
+dat.nst <- dat.bal
+dat.nst$CC <-factor(c(1,1,2,2,2,2,1,1,3,3,3,3,1,1,4,4,4,4))
+@ %def
+
+
+Consider this highly unbalanced simulated dataset:
+@
+<<>>=
+head(dat.nst)
+ftable(xtabs( ~ AA + BB + CC, data=dat.nst))
+@ %def
+
+We have
+@
+<<>>=
+mod.nst  <- lm(y ~ AA + BB : CC, data=dat.nst)
+coef(mod.nst)
+@ %def
+
+
+In this case some of the \lsmeans\ values are not estimable (see
+Section~\ref{sec:handl-non-estim} for details):
+@
+<<>>=
+LSmeans(mod.nst, effect=c("BB", "CC"))
+@ %def
+
+
+
+\section{Miscellaneous}
+\label{sec:miscellaneous}
+
+\subsection{LS--means and population averages}
+\label{sec:ls-means-population}
+
+
+@
+<<echo=F>>=
+simdat<-structure(list(treat = structure(c(1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L
+), .Label = c("t1", "t2"), class = "factor"), year = structure(c(1L,
+1L, 1L, 1L, 2L, 2L, 2L, 2L), .Label = c("1", "2"), class = "factor"),
+    y = c(0.9, 1, 1.1, 3, 3, 4.9, 5, 5.1)), .Names = c("treat", "year",
+"y"), row.names = c(NA, -8L), class = "data.frame")
+@ %def
+@
+
+Consider these simulated data
+<<>>=
+simdat
+@ %def
+shown in the figure below.
+@
+<<fig=T>>=
+qplot(treat, y, data=simdat, color=year)
+@ %def
+
+The LS--means under an additive model for the factor \cc{treat} is
+@
+<<>>=
+LSmeans( lm(y~treat+year, data=simdat), effect="treat")
+@ %def
+whereas the population means are
+@
+<<>>=
+summaryBy(y~treat, data=simdat)
+@ %def
+Had data been balanced (same number of observations for each
+combination of \cc{treat} and \cc{year}) the results would have been the
+same. An argument in favor of the LS--means is that these figures
+better represent what one would expect on in an ``average year''.
+
+
+
+\subsection{Pairwise comparisons}
+\label{sec:pairwise-comparisons}
+
+We will just mention that for certain other linear estimates, the
+matrix $K$ can be generated automatically using \cc{glht()} from the
+\pkg{multcomp} package. For example, pairwise comparisons of all
+levels of \code{tension} can be obtained with
+
+@
+<<>>=
+library("multcomp")
+g1 <- glht(warp.lm, mcp(tension="Tukey"))
+summary( g1 )
+@ %def
+
+The $K$ matrix generated in this case is:
+@
+<<>>=
+K1 <- g1$linfct; K1
+@ %def
+
+
+\subsection{Handling non--estimability}
+\label{sec:handl-non-estim}
+
+The model matrix for the model in Section~\ref{sec:exampl-non-estim}
+does not have full column rank and therefore not all values are
+calculated by \cc{LSmeans()}.
+
+@
+<<>>=
+X <- model.matrix( mod.nst ); as(X,"Matrix")
+@ %def
+
+We consider a linear normal model, i.e.\
+an $n$ dimensional random vector $y=(y_i)$ for which
+$\EE(y)=\mu=X\beta$ and $\cov(y)=\sigma^2I$ where $X$ does not have
+full column rank
+We are
+interested in linear functions of $\beta$, say
+\begin{displaymath}
+  c=k\transp\beta= \sum_j k_j \beta_j .
+\end{displaymath}
+
+@
+<<>>=
+K <- LSmatrix(mod.nst, effect="BB", at=list(CC=2));K
+LSmeans(mod.nst, K=K)
+@ %def
+
+A least squares estimate of $\beta$ is
+\begin{displaymath}
+  \hat \beta = G X\transp y
+\end{displaymath}
+where $G$ is a generalized inverse of $X\transp  X$. Since the
+generalized inverse is not unique then neither is the estimate
+$\hat\beta$. One least squares estimate of $\beta$ is
+@
+<<>>=
+XtXinv <- MASS::ginv(t(X)%*%X)
+bhat <- as.numeric(XtXinv %*% t(X) %*% dat.nst$y)
+zapsmall(bhat)
+@ %def
+
+Hence $\hat c = k\transp\hat \beta$ is in general not
+unique.
+@
+<<>>=
+K %*% bhat
+@ %def
+
+However, for some values of $k$, the estimate $\hat c$ is
+unique (i.e.\ it does not depend on the choice of generalized
+inverse). Such linear functions are said to be estimable and can be
+described as follows:
+
+All we specify with $\mu=X\beta$ is that $\mu$ is a vector in the
+linear subspace $L=C(X)$ where $C(X)$ denotes the column space of
+$X$.
+We can only learn about $\beta$ through $X\beta$ so the only thing we can
+say something about is linear combinations $\rho\transp X\beta$. Hence
+we can only say something about $k\transp\beta$ if there exists
+$\rho$ such that $k\transp\beta=\rho\transp X \beta$, i.e., if
+$k=X\transp\rho$, that is, if $k$ is in the column space
+$C(X\transp)$ of $X\transp$. That is, if $k$ is perpendicular to
+all vectors in the null space $N(X)$ of $X$. To check
+this, we find a basis $B$ for $N(X)$. This can be done in many ways,
+for example via a singular value decomposition of $X$, i.e.\
+\begin{displaymath}
+  X = U D V\transp
+\end{displaymath}
+A basis for $N(X)$ is given by those columns of $V$ that corresponds
+to zeros on the diagonal of $D$.
+
+@
+<<>>=
+S<-svd(X)
+names(S)
+@ %def
+
+@
+<<>>=
+B<-S$v[, S$d<1e-10, drop=FALSE ]; zapsmall(B) ## Basis for N(X)
+zapsmall( rowSums(K%*%B) )
+@ %def
+
+
+\bibliography{doBy}
+
+
+\end{document}
+
+
+
+%% Example:
+%% @
+%% <<>>=
+%% ff <- factor(rep(1:3, each=2))
+%% X1 <- cbind(rep(1,6),model.matrix(~0+ff)); X1
+%% y  <- 1:6
+%% @ %def
+
+%% @
+%% <<>>=
+%% S <- svd(X1)
+%% lapply(S, zapsmall)
+%% @ %def
+
+%% A basis of $N(X1)$ is
+%% @
+%% <<>>=
+%% B <- S$v[, S$d/max(S$d) < 1e-10, drop=F]
+%% (B <- as.numeric(B/max(B)))
+%% @ %def
+
+%% Hence valid vectors $\lambda$ must satisfy that $
+%%   \lambda_1 - \lambda_2 - \lambda_3 - \lambda_4  = 0.$
+
+%% @
+%% <<>>=
+%% lam <- c(1, 1, 0, 0)
+%% sum( lam*B ) # Orthogonal
+%% @ %def
+
+%% @
+%% <<>>=
+%% (b.hat <- as.numeric(MASS::ginv(t(X1)%*%X1) %*% t(X1) %*% y))
+%% sum( lam * b.hat )
+%% @ %def
+
+%% Take another basis for the mean space:
+%% @
+%% <<>>=
+%% X2 <- X1
+%% X2[,3]<-0
+%% (b.hat2 <- as.numeric(MASS::ginv(t(X2)%*%X2) %*% t(X2) %*% y))
+%% sum( lam * b.hat2 )
+%% @ %def
+
+%% On the other other hand, the following does not produce a unique estimate:
+%% @
+%% <<>>=
+%% lam2 <- c(1, 0, 0, 0)
+%% sum( lam2 * b.hat )
+%% sum( lam2 * b.hat2 )
+%% @ %def
+
+
+%% @
+%% <<>>=
+%% XtX <- t(X1)%*%X1
+%% XtX
+%% S <- svd(XtX)
+
+%% d <- S$d
+%% d[d>1e-10] <- 1/d[d>1e-10]
+%% d <- diag(d)
+%% G <- S$v %*% d %*% t(S$u)
+%% zapsmall(XtX %*% G %*% XtX)
+
+%% d[4,4] <- 100
+%% G <- S$v %*% d %*% t(S$u)
+%% zapsmall(XtX %*% G %*% XtX)
+
+%% d[4,1] <- 100000
+%% G <- S$v %*% d %*% t(S$u)
+%% zapsmall(XtX %*% G %*% XtX)
+
+
+%% @ %def
+
+
+
+%% \listoffixmes
+
+
+%% For a regression model with parameters $\beta=(\beta^1, \beta^2,\dots,
+%% \beta^p)$ we shall refer to a weighted sum of the form
+%% \begin{displaymath}
+%%   \sum_j w_j \beta^j
+%% \end{displaymath}
+%% as a contrast. Notice that it is common in the litterature to require
+%% that $\sum_j w_j=0$ for the sum $  \sum_j w_j \beta^j$ to be called a
+%% contrast but we do not follow this tradition here.
+%% We are interested in contrasts of the form $c=\lambda\transp\beta$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%% The matrix \cc{KK} may also be used as input to \cc{linest()}:
+%% @
+%% <<results=hide>>=
+%% linest(warp.lm, K=K1)
+%% @ %def
+
+
+
+
+
+
+
+
+
+
+
+
+%% @
+%% <<>>=
+%% warp1 <- lm(breaks ~ wool + tension, data=warpbreaks)
+%% warp2 <- lm(breaks ~ wool + tension + wool:tension, data=warpbreaks)
+%% @ %def
+
+%% @
+%% <<>>=
+%% (g1 <- glht(warp1, mcp(wool="Tukey")))
+%% (g2 <- glht(warp2, mcp(wool="Tukey")))
+%% @ %def
+
+%% <<>>=
+%% summary(g1, test=univariate())
+%% confint(g1, calpha=univariate_calpha())
+%% summary(g2, test=univariate())
+%% confint(g2, calpha=univariate_calpha())
+%% @
+
+%% @
+%% <<>>=
+%% linestMatrix(warp1, "wool")
+%% linestMatrix(warp2, "wool")
+%% linestMatrix(warp1, "tension")
+%% linestMatrix(warp2, "tension")
+%% @ %def
+
+
+
+%% Consider an $n$ dimensional random vector $y=(y_i)$ for which
+%% $\EE(y)=\mu=X\beta$ and $\cov(y)=V$. Here $X$ is an $n\times p$ with
+%% $n>p$. We are
+%% interested in linear functions of $\beta$, say
+%% \begin{displaymath}
+%%   c=w\transp\beta= \sum_j w_j \beta_j .
+%% \end{displaymath}
+
+%% If $X$ has full rank, the least squares estimate of $\beta$ is given by
+%% \begin{displaymath}
+%%   \hat \beta = (X\transp V\inv X)\inv X\transp V\inv y = Py
+%% \end{displaymath}
+%% The estimated linear function then becomes
+%% \begin{displaymath}
+%%     \hat c=w\transp\hat\beta= \sum_j w_j \hat\beta_j .
+%% \end{displaymath}
+
+
+
+
+
+%% @
+%% <<echo=F>>=
+%% library(doBy)
+%% dd <- expand.grid(A=factor(1:2),B=factor(1:3),C=factor(1:2))
+%% dd$y <- rnorm(nrow(dd))
+%% dd$x <- rnorm(nrow(dd))^2
+%% dd$z <- rnorm(nrow(dd))
+%% @ %def
+
+%% Consider these balanced simulated data:
+%% @
+%% <<>>=
+%% head(dd,5)
+%% ftable(xtabs(~A+B+C, data=dd), col.vars=2:3)
+%% @ %def
+
+%% Consider the additive model
+%% \begin{equation}
+%%   \label{eq:1}
+%%   y_i = \beta_0 + \beta^1_{A(i)}+\beta^2_{B(i)} + \beta^3_{C(i)} + e_i
+%% \end{equation}
+%% where $e_i \sim N(0,\sigma^2)$. We fit this model:
+
+%% @
+%% <<>>=
+%% mm <- lm(y~A+B+C, data=dd); coef(mm)
+%% ##mm.int <- update(mm, .~.+A:C); coef(mm.int)
+%% @ %def
+
+%% Notice that the parameters corresponding to the factor levels
+%% \code{A=1}, \code{B=1} and \code{C=1} are set to zero to ensure
+%% identifiability of the remaining parameters.
+
+
+%% The effect of changing the factor $B$ from \code{B=2} to \code{B=3} can
+%% be found as
+%% @
+%% <<>>=
+%% w <- c(0,0,-1,1,0); sum(coef(mm)*w)
+%% @ %def
+
+
+
+
+
+
+%% \begin{displaymath}
+%%   b^A_1+b^A_2+b^B_1+b^B_2+b^B_3+b^C_1+b^C_2
+%% \end{displaymath}
+
+%% \begin{displaymath}
+%%   b^A_1+b^A_2+b^B_1+b^B_2+b^B_3+b^C_1+b^C_2+b^{AC}_{11}+b^{AC}_{21}+b^{AC}_{12}+b^{AC}_{22}
+%% \end{displaymath}
+
+
+%% @
+%% <<>>=
+%% dd2<-dd
+%% dd2$B <- relevel(dd$B, ref=2)
+%% mm2 <- lm(y~A+B+C, data=dd2); coef(mm2)
+%% @ %def
+
+
+%% @
+%% <<>>=
+%% sum(coef(mm2)*w)
+%% @ %def
+
+
+
+%% @
+%% <<>>=
+%% linestMatrix(mm, at=list(B=2))
+%% @ %def
+
+%% @
+%% <<>>=
+%% linest(mm, KK=matrix(w, nrow=1))
+%% @ %def
+
+
+%% \section{Population means}
+%% \label{sec:xxx}
+
+%% Population means (sometimes also called marginal means)
+%% are in some sciences much used for reporting marginal effects (to be
+%% described below). Population means are known as LSMEANS in SAS
+%% jargon.
+%% Population means is a special kind of contrasts as defined in
+%% Section~\ref{sec:line-funct-param}.
+
+%% The model (\ref{eq:1}) is a specification of the conditional mean
+%% $\EE(y|A,B,C)$ as a function of the factors $A,B,C$.  Sometimes one is
+%% interested in quantities like $\EE(y|A)$.
+%% For example, suppose that $A$ is a treatment of main interest, $B$ is a
+%% blocking factor and $C$ represents days on which the experiment was
+%% carried out.
+
+%% This quantity can not formally be found from the model unless $B$ and
+%% $C$ are random variables such that we may find $\EE(y|A)$ by
+%% integration.
+
+%% Then it is tempting to average $\EE(y|A,B,C)$ over $B$
+%% and $C$ (average over block and day) and think of this average as
+%% $\EE(y|A)$.
+
+%% From a practical perspective the effect of
+%% @
+%% <<>>=
+%% summaryBy(y~A, data=dd)
+%% @ %def
+
+
+%% \subsection{A brute--force calculation}
+%% \label{sec:xxx}
+
+%% The population mean for $A=1$ is
+%% \begin{equation}
+%%   \label{eq:2}
+%%   \beta^0 + \beta^1_{A1} + \frac{1}{3} (\beta^2_{B1}+\beta^2_{B2}+\beta^2_{B3})
+%%   + \frac{1}{2}(\beta^3_{C1}+\beta^3_{C2})
+%% \end{equation}
+
+%% Recall that the
+%% parameters corresponding to the factor levels
+%% \code{A=1}, \code{B=1} and \code{C=1} are set to zero to ensure
+%% identifiability of the remaining parameters. Therefore we may also
+%% write the population mean for $A=1$ as
+%% \begin{equation}
+%%   \label{eq:3}
+%%   \beta^0 + \frac{1}{3} (\beta^2_{B2}+\beta^2_{B3})
+%%   + \frac{1}{2}(\beta^3_{C2})
+%% \end{equation}
+
+
+%% %% This quantity can be estimated as:
+
+%% %% @
+%% %% <<>>=
+%% %% w <- c(1, 0, 1/3, 1/3, 1/2); w * coef(mm)
+%% %% sum( w * coef(mm) )
+%% %% @ %def
+
+
+%% We may find the population mean for all levels of $A$ as
+%% @
+%% <<echo=T>>=
+%% W <- matrix(c(1, 0, 1/3, 1/3, 1/2,
+%%                1, 1, 1/3, 1/3, 1/2), nr=2, byrow=TRUE)
+%% W %*% coef(mm)
+%% @ %def
+
+%% Notice that the matrix $W$ is based on that the first level of $A$ is
+%% set as the reference level. If the reference level is changed then so
+%% must $W$ be.
+
+%% Given that one has specified $W$, the \esticon\ function in the
+%% \code{doBy} package be used for the calculations above and the
+%% function also provides standard errors, confidence
+%% limits etc:
+%% %% @
+%% %% <<>>=
+%% %% esticon(mm, W)
+%% %% @ %def
+
+%% @
+%% <<>>=
+%% linest(mm, KK=W)
+%% @ %def
+
+
+%% \section{Using \linmat\  and \linest}
+%% \label{sec:xxx}
+
+%% Writing the matrix $W$ is somewhat tedious and hence error prone. In
+%% addition, there is a potential risk of getting the wrong answer if the
+%% the reference level of a factor has been changed.  The \popmatrix\
+%% function provides an automated way of generating such matrices.  The
+%% above \verb+W+ matrix is constructed by
+
+%% @
+%% <<>>=
+%% ( pma <- linestMatrix(mm, effect="A") )
+%% @ %def
+
+
+%% \fxnote{summary-metode}
+
+%% @
+%% <<>>=
+%% ( pme <- linest(mm, effect='A') )
+%% @ %def
+
+%% \fxnote{igen brug for en summary metode}
+
+
+
+%% The \verb+effect+ argument requires  to calculate the population means
+%% for each level of
+%% $A$ aggregating across the levels of the other variables in the data.
+%% Likewise we may do:
+%% @
+%% <<>>=
+%% linestMatrix(mm,effect=c('A','C'))
+%% @ %def
+
+
+%% This gives the matrix for calculating the estimate for each
+%% combination of \code{A} and \code{C} when averaging over \code{B}.
+%% Consequently
+%% @
+%% <<>>=
+%% linestMatrix(mm)
+%% linest(mm)
+%% @ %def
+%% gives the ``total average''.
+
+
+%% \fxnote{hvorfor er rowname 'estimate'}
+
+%% \subsection{Using the \code{at} argument}
+
+%% We may be interested in finding the population means
+%% at all levels of  $A$
+%% but only at $C=1$. This is obtained by using the \code{at} argument:
+%% @
+%% <<>>=
+%% linestMatrix(mm,effect='A', at=list(C='1'))
+%% @ %def
+%% Notice here that average is only taken over $B$. Another way of
+%% creating the population means
+%% at  all levels of $(A,C)$ is therefore
+%% <<eval=F>>=
+%% linestMatrix(mm,effect='A', at=list(C=c('1','2')))
+%% @ %def
+
+%% There is a possibility of an ambiguous specification if the same variable appears in
+%% both the \code{effect} and the \code{at} argument.
+%% This ambiguity is due to the fact that the \verb+effect+ argument asks
+%% for the populations means at all levels of the variables but the
+%% \verb+at+ chooses only specific levels.
+%% This ambiguity is resolved as follows: Any variable in the \code{at}
+%% argument is removed from the \code{effect} argument such that the
+%% following two statements are equivalent
+%% @
+%% <<results=hide>>=
+%% linestMatrix( mm, effect=c('A', 'C'), at=list(C='1') )
+%% linestMatrix( mm, effect='A', at=list(C='1') )
+%% @ %def
+
+
+
+
+
+%% \subsection{Using covariates}
+
+%% Next consider the model where a covariate is included:
+%% @
+%% <<>>=
+%% mm2 <- lm(y~A+B+C+C:x, data=dd)
+%% coef(mm2)
+%% @ %def
+
+%% In this case we get
+%% <<>>=
+%% popMatrix(mm2,effect='A', at=list(C='1'))
+%% @ %def
+
+%% Above, $x$ has been replaced by its average and that is the general
+%% rule for models including covariates. However we may use the \code{at}
+%% argument to ask for calculation of the population mean at some
+%% user-specified value of $x$, say 12:
+%% <<>>=
+%% popMatrix(mm2,effect='A', at=list(C='1',x=12))
+%% @ %def
+
+
+%% \subsection{Using transformed covariates}
+
+%% Next consider the model where a  transformation of a covariate is included:
+%% @
+%% <<>>=
+%% mm3 <- lm(y~A+B+C+C:log(x), data=dd)
+%% coef(mm3)
+%% @ %def
+
+%% In this case we can not use \popmatrix\ (and hence
+%% \popmeans\ directly.  Instead we have first to
+%% generate a new variable, say \verb+log.x+, with
+%% \verb+log.x+$=\log(x)$, in the data and then proceed as
+
+%% <<results=hide>>=
+%% dd <- transform(dd, log.x = log(x))
+%% mm3 <- lm(y~A+B+C+C:log.x, data=dd)
+%% popMatrix(mm3,effect='A', at=list(C='1'))
+%% @ %def
+
+%% \section{The \code{engine} argument of \popmeans}
+
+%% The \popmatrix is a function to generate a linear tranformation matrix
+%% of the model parameters with emphasis on constructing such matrices
+%% for population means.  \popmeans\ invokes by default the \esticon\
+%% function on this linear transformation matrix for calculating
+%% parameter estimates and confidecne intervals.  A similar function to
+%% \esticon\ is the \verb+glht+ function of the
+%% \pkg{multcomp} package.
+
+%% %%  The \code{glht()} function
+%% %%  can be chosen via the \verb+engine+ argument of \popmeans:
+%% %% <<>>=
+%% %%  library(multcomp)
+%% %% g<-popMeans(mm,effect='A', at=list(C='1'),engine="glht")
+%% %% g
+%% %% @ %def
+
+
+%% @
+%% <<>>=
+%% library(multcomp)
+%% ( KK <- linestMatrix( mm, effect='A', at=list(C='1')) )
+%% ( g <- glht(mm, KK) )
+%% @ %def
+
+
+
+%% This allows to apply the methods available on the \verb+glht+ object like
+%% <<>>=
+%% summary(g,test=univariate())
+%% confint(g,calpha=univariate_calpha())
+%% @
+%% % which yield the same results as the \esticon\ function.
+
+%% By default the functions will adjust the tests  and confidence intervals for multiplicity
+%% <<>>=
+%% summary(g)
+%% confint(g)
+%% @
+
+%% \section{Estimable functions}
+%% \label{sec:estimable-functions}
+
+
+%% \section{Linear functions of parameters, contrasts}
+%% \label{sec:line-funct-param}
+
+
+
+
+
+
+
+%% \section{Contrasts, estimable functions, LSMEANS}
+%% \label{sec:xxx}
+
+
+%% \subsection{The \code{esticon} function}
+%% \label{esticon}
+
+%% Consider a linear model which explains \code{Ozone} as a linear
+%% function of \code{Month} and \code{Wind}:
+%% @
+%% <<>>=
+%% data(airquality)
+%% airquality <- transform(airquality, Month=factor(Month))
+%% m<-lm(Ozone~Month*Wind, data=airquality)
+%% coefficients(m)
+%% @ %def
+
+%% When a parameter vector $\beta$ of (systematic) effects have been
+%% estimated, interest is often in a particular estimable function, i.e.\
+%% linear combination $\lambda^\top \beta$ and/or testing the hypothesis
+%% $H_0: \lambda^\top \beta=\beta_0$ where $\lambda$ is a specific vector
+%% defined by the user.
+
+%% Suppose for example we want to calculate the expected difference in
+%% ozone between consequtive months at wind speed 10 mph (which is about
+%% the average wind speed over the whole period).
+
+%% The \code{esticon} function provides a way of doing so.
+%%  We can specify several $\lambda$ vectors at the same time. For example
+
+%% @
+%% <<echo=T>>=
+%% Lambda <- rbind(
+%%   c(0,-1,0,0,0,0,-10,0,0,0),
+%%   c(0,1,-1,0,0,0,10,-10,0,0),
+%%   c(0,0,1,-1,0,0,0,10,-10,0),
+%%   c(0,0,0,1,-1,0,0,0,10,-10)
+%%   )
+%% @ %def
+
+%% @
+%% <<>>=
+%% esticon(m, Lambda)
+%% @ %def
+
+
+%% In other cases, interest is in testing a hypothesis of a contrast
+%% $H_0: \Lambda \beta=\beta_0$ where $\Lambda$ is a matrix. For example
+%% a test of no interaction between \code{Month} and \code{Wind} can be
+%% made by testing jointly that the last four parameters in \code{m} are
+%% zero (observe that the test is a Wald test):
+%% @
+%% <<echo=T>>=
+%% Lambda <- rbind(
+%%   c(0,0,0,0,0,0,1,0,0,0),
+%%   c(0,0,0,0,0,0,0,1,0,0),
+%%   c(0,0,0,0,0,0,0,0,1,0),
+%%   c(0,0,0,0,0,0,0,0,0,1)
+%%   )
+%% @ %def
+
+%% @
+%% <<>>=
+%% esticon(m, Lambda, joint.test=T)
+%% @ %def
+
+%% For a linear normal model, one would typically prefer to do a
+%% likelihood ratio test instead. However, for generalized estimating
+%% equations of glm--type (as dealt with in the packages \pkg{geepack}
+%% and \pkg{gee}) there is no likelihood. In this case \code{esticon}
+%% function provides an operational alternative.
+
+%% Observe that another function for calculating contrasts as above is the
+%% \code{contrast} function in the \pkg{Design} package but it applies to
+%% a narrower range of models than \code{esticon} does.
+

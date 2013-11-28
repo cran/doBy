@@ -1,18 +1,29 @@
+2013-11-28 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* LSmeans, LSmatrix and linest functions added. (There are not yet
+	methods for nlme and survival objects but they will be added).
+
+	* popMeans and popMatrix functions removed
+
+	* Vignette on LSmeans added.
+
+	* Version 4.5-10 uploaded
+
 2013-07-20 Søren Højsgaard <sorenh@math.aau.dk>
-	
+
 	* splitBy and summaryBy have been reworked.
 
 	* formulaFunBy and xyFunBy functions added.
 
 	* Vignettes expanded.
-	
+
 	* summaryBy, splitBy now also accept a list / vector as "formula"
-	specification. 
-	
+	specification.
+
 	* recodeVar works properly on formulas
 
 	* Version 4.5-7 uploaded
-	
+
 2013-03-19 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* parseGroupFormula function added. The function will take a
@@ -34,41 +45,41 @@
 	* Version 4.5-5 uploaded
 
 2012-05-28 Søren Højsgaard <sorenh@math.aau.dk>
-	
+
 	* Updates of Rmarkup
 
-	* Version 4.5-4 uploaded		
+	* Version 4.5-4 uploaded
 
-	
+
 2012-05-19 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Updates of Rmarkup
 
-	* Version 4.5-3 uploaded		
+	* Version 4.5-3 uploaded
 
-	
+
 2012-02-17 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* descStat function added. Thanks to Gregor Gorjanc.
-	
+
 	* popMeans extended so that the grid values appear in the output
 	by default
 
-	* Version 4.5.2 uploaded		
+	* Version 4.5.2 uploaded
 
 2012-01-29 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Minor enhancement to Rmarkup()
 
-	* Version 4.5.1 uploaded		
-	
+	* Version 4.5.1 uploaded
+
 2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* popMeans method for lme objects added
 
 	* lsmeans aliases for popMeans removed
 
-	* Version 4.5.0 uploaded	
+	* Version 4.5.0 uploaded
 
 
 2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
@@ -76,39 +87,39 @@
 	* Small changes to package structure
 
 	* Version 4.4.6 uploaded
-	
+
 2012-01-17 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* URL updated
 
 	* Rscript2HTML changed to Rmarkup
-	
+
 	* Version 4.4.5 uploaded
-	
+
 2011-12-30 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Change of email address
-	
-	* Version 4.4.4 uploaded.	
+
+	* Version 4.4.4 uploaded.
 
 2011-11-01 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Function lmBy (and related methods) added
 
-	* Version 4.4.3 uploaded.	
+	* Version 4.4.3 uploaded.
 
 2011-11-01 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* Dataset milkman added
 
-	* Version 4.4.2 uploaded.	
-	
+	* Version 4.4.2 uploaded.
+
 2011-10-23 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* funBy function added (documentation to be done)
 
 	* scaleBy function added
-	
+
 	* Minor bug fixed in summaryBy
 
 	* popMeans extended to mer objects
@@ -117,7 +128,7 @@
 	package
 
 	* Version 4.4.1 uploaded.
-	
+
 2011-06-05 Søren Højsgaard <sorenh@agrsci.dk>
 
 	* subSeq function speeded up by considerably
