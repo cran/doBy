@@ -3,7 +3,7 @@
 %\VignettePackage{doBy}
 %\VignetteIndexEntry{doBy: Groupwise computations and other utilities}
 
-\usepackage{hyperref,a4wide,color,boxedminipage,Sweave}
+\usepackage{hyperref,color,boxedminipage,Sweave}
 \usepackage[utf8]{inputenc}
 
 \def\proglang#1{{#1}}

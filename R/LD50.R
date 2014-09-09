@@ -34,7 +34,7 @@
  return(result)
 }
 
-dose.LD50 <- function(x,lambda){
+.dose.LD50 <- function(x,lambda){
  if(length(which(is.na(lambda))) !=1){
    stop("lambda must contain exactly one entry which is NA")
  } else {

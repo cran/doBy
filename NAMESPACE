@@ -1,9 +1,9 @@
 exportPattern("^[^\\.]")
 
-import(lme4)
+##import(lme4)
 #import(MASS)
-
 ##import(multcomp)
+import(methods)
 import(survival)
 importFrom(MASS, ginv)
 ## importFrom(lme4, lmer, fixef)

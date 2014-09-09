@@ -7,7 +7,7 @@
   from first calling splitBy.
 }
 \usage{
-lapplyBy(formula, data = parent.frame(), FUN)
+lapplyBy(formula, data = parent.frame(), FUN, keep.groupid = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,6 +15,8 @@ lapplyBy(formula, data = parent.frame(), FUN)
   \item{data}{A dataframe}
   \item{FUN}{A function to be applied to each element in the splitted
     list, see 'Examples' below.}
+  \item{keep.groupid}{If TRUE, the grouping information is stored as a
+    dataframe in an attribute called groupid. }
 }
 %\details{
 %  ~~ If necessary, more details than the description above ~~
@@ -25,10 +27,9 @@ lapplyBy(formula, data = parent.frame(), FUN)
 %\references{ ~put references to the literature/web site here ~ }
 
 \author{Søren Højsgaard, \email{sorenh@math.aau.dk}}
-%\note{ ~~further notes~~ 
-%
-% ~Make other sections like Warning with \section{Warning }{....} ~
-%}
+%% \note{
+%%   The \code{keep.groupid} argument is a recent addition, and i
+%% }
 
 \seealso{
   \code{\link{orderBy}},
@@ -47,7 +48,7 @@ dietox <- orderBy(~Pig+Time, data=dietox)
 v<-lapplyBy(~Pig, data=dietox, function(d) c(NA, diff(d$Weight)/diff(d$Feed)))
 dietox$FE <- unlist(v)
 
-## Technically this is the same as 
+## Technically this is the same as
 dietox <- orderBy(~Pig+Time, data=dietox)
 wdata <- splitBy(~Pig, data=dietox)
 v <- lapply(wdata, function(d) c(NA, diff(d$Weight)/diff(d$Feed)))

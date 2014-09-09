@@ -1,22 +1,28 @@
 \name{LSmeans}
 \alias{LSmeans}
 \alias{LSmeans.default}
-\alias{LSmeans.glm}
-\alias{LSmeans.lm}
-\alias{LSmeans.geeglm}
 \alias{LSmeans.lmerMod}
-\alias{LSmeans.merMod}
+\alias{popMeans}
+\alias{popMeans.default}
+\alias{popMeans.lmerMod}
+
+%% \alias{LSmeans.glm}
+%% \alias{LSmeans.lm}
+%% \alias{LSmeans.geeglm}
+%% \alias{LSmeans.merMod}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute linear estimates
+Compute linear estimates, including LS-means (aka population means or
+marginal means)
 }
 \description{
 Compute linear estimates for a range of models. One example of linear
-estimates is population means (also known as LSMEANS).
+estimates is LS-means (least squares means, also known as population
+means and as marginal means).
 }
 \usage{
-LSmeans(object, effect = NULL, at = NULL, level=0.95, 
+LSmeans(object, effect = NULL, at = NULL, level=0.95,
       %only.at = TRUE, grid = TRUE,
       %df.adjust = FALSE,
       ...)
@@ -34,32 +40,6 @@ LSmeans(object, effect = NULL, at = NULL, level=0.95,
     A list of values of covariates (including levels of some factors)
     to be used in the calculations
   }
-  %% \item{K}{
-  %%   A contrast matrix. If given then the specifications in \code{effect}
-  %%   and \code{at} are ignored. Otherwise, the matrix is generated
-  %%   according to the specifications in \code{effect}
-  %%   and \code{at}.
-
-  %% }
-
-  %% \item{only.at}{
-  %%   If FALSE and \code{at} is not NULL then the contrast matrix is
-  %%   formed as if \code{at} was not specified. Then the values of
-  %%   \code{at} are set afterwards such that the contrast matrix will
-  %%   contain several identical rows.
-  %% }
-  %% \item{grid}{
-  %%   If \code{TRUE} and \code{engine='esticon'} then the values of the
-  %%   covariates at which the population means are calculated are appended
-  %%   to the result.
-  %% }
-
-  %% \item{df.adjust}{
-  %%   If \code{object} is a \code{lmerMod} object, the degrees of freedom
-  %%   can be adjusted according by a Kenward-Roger method. For other model
-  %%   objects, this argument has no effect.
-  %% }
-
   \item{level}{
     The level of the (asymptotic) confidence interval.
   }
@@ -117,8 +97,11 @@ LSmeans(mod.nst, at=list(BB=1, CC=2))
 ## Above: NA's are correct; not an estimable function
 
 
+
+
 if( require( lme4 )){
 warp.mm <- lmer(breaks ~ -1 + tension + (1|wool), data=warpbreaks)
+LSmeans(warp.mm, effect="tension")
 class(warp.mm)
 fixef(warp.mm)
 coef(summary(warp.mm))

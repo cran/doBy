@@ -6,6 +6,8 @@ linest <- function(object, K, level=0.95, ...){
 linest.lm <- function(object, K, level=0.95, ...){
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
+    ## print(is.est)
+
     bhat <- coef(object)
     VV0  <- vcov(object)
     ddf  <- object$df.residual
@@ -93,16 +95,20 @@ linest.geeglm <- function(object, K, level=0.95, type=c("link","response"), ...)
 }
 
 linest.lmerMod <- function(object, K, level=0.95, adjust.df=TRUE, ...){
+
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
-    bhat <- fixef(object)
+    bhat <- lme4::fixef(object)
 
     if (adjust.df){
         if (require(pbkrtest)){
-            VV0  <- vcovAdj(object)
+            VVu  <- vcov(object)
+            VV   <- pbkrtest::vcovAdj(object)
+            print(VVu)
+            print(VV)
+            print(K)
             ddf.vec <- unlist(lapply(1:nrow(K),
-                                     function(ii) ddf_Lb(VV0, K[ii,])))
-                                     ##function(ii) ddf_Lb(VV0, VV0, K[ii,], 0)))
+                                     function(ii) pbkrtest::ddf_Lb(VV , K[ii,], VVu)))
         } else {
             stop("adjustment of degrees of freedom requires that 'pbkrtest' is installed")
         }
@@ -110,10 +116,11 @@ linest.lmerMod <- function(object, K, level=0.95, adjust.df=TRUE, ...){
         a <- logLik(object)
         ddf<-attributes(a)$nall - attributes(a)$df
         ddf.vec <- rep(ddf, length(bhat))
-        VV0 <- vcov(object)
+        VV  <- vcov(object)
     }
 
-    res    <- .getKb( K, bhat, VV0, ddf.vec, is.est)
+
+    res    <- .getKb( K, bhat, VV, ddf.vec, is.est)
     p.value <- 2*pt(res[,"t.stat"], df=res[,"df"], lower.tail=FALSE)
     qq<-qt(1-(1-level)/2, df=res[,"df"])
     lwr <- res[,"estimate"] - qq * res[,"se"]

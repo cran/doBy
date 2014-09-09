@@ -1,3 +1,18 @@
+2014-09-08 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Added the 'haldCement' data
+
+	* lapplyBy: Argument keep.groupid added
+
+	* nullBasis function/method added
+
+	* popMeans function re-introduced (just a different name for
+	LSmeans)
+
+	* dose.LD50 removed; car::deltaMethod can probably do the same.
+
+	* Version 4.5-11 uploaded.
+
 2013-11-28 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* LSmeans, LSmatrix and linest functions added. (There are not yet

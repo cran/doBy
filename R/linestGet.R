@@ -134,9 +134,33 @@
 
 .get_null_basis <- function(object){
     S <- svd(model.matrix(object))
-    null.basis <- S$v[,S$d<1e-6, drop=FALSE]
+    null.basis <- S$v[,S$d<1e-15, drop=FALSE]
     null.basis
 }
+
+nullBasis <- function(object){
+    UseMethod("nullBasis")
+}
+
+nullBasis.matrix <-
+    nullBasis.Matrix <- function(object){
+    S <- svd( object )
+    id <- S$d<1e-15
+    if (any(id)){
+        null.basis <- S$v[,id, drop=FALSE]
+        null.basis
+    }
+}
+
+nullBasis.lm <- function(object){
+    mm <- model.matrix( object )
+    nullBasis( mm )
+}
+
+nullBasis.glm <- nullBasis.lm
+nullBasis.lmerMod <- nullBasis.lm
+nullBasis.geeglm <- nullBasis.lm
+
 
 .is_estimable <- function(KK, null.basis){
     is.est <-

@@ -2,6 +2,15 @@
 \alias{internal}
 
 %\alias{}
+\alias{nullBasis}
+\alias{nullBasis.lm}
+\alias{nullBasis.glm}
+\alias{nullBasis.geeglm}
+\alias{nullBasis.lmerMod}
+\alias{nullBasis.matrix}
+\alias{nullBasis.Matrix}
+
+\alias{LSmatrix-class}
 
 \alias{asNumericMatrix2}
 \alias{matrix2dataFrame2}

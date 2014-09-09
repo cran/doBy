@@ -60,7 +60,7 @@ esticon.mer <- esticon.merMod <- function (obj, cm, beta0, conf.int = TRUE, leve
     .wald(obj, cm, beta0)
   } else {
     stat.name <- "X2.stat"
-    coef.mat  <- matrix(fixef(obj))
+    coef.mat  <- matrix(lme4::fixef(obj))
     vcv <- as.matrix(vcov(obj))
     df  <- 1
     .esticonCore(obj, cm, beta0, conf.int=conf.int, level, coef.mat, vcv, df, stat.name)

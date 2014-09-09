@@ -16,8 +16,8 @@ splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matri
   cls<-lapply( data, class )
   factor.columns <- which(unlist(lapply(cls, function(x) any( x %in% "factor"))))
   #print(factor.columns)
-  
-  
+
+
   cls       <- lapply(data, class)
   num.idx   <- cls %in% c("numeric","integer")
   fac.var   <- data.var[ !num.idx ]
@@ -27,7 +27,7 @@ splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matri
     rhs.fac <- union( fac.var, rhs.fac)
   }
   #str(list(rhs.var=rhs.var, rhs.fac=rhs.fac, fac.var=fac.var))
-  
+
   rh.trivial <- length( rhs.var ) == 0 #; cat(sprintf("rh.trivial=%d\n", rh.trivial))
 
   ## FIXME rhs.fac, rhs.var -- clean up!!!
@@ -36,11 +36,11 @@ splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matri
     grps <- rep.int(1, nrow(data))
     unique.grps <- 1
     rh.idx    <- 1
-  } else {      
+  } else {
     grps <- .get_rhs_string( data, rhs.fac, sep.string="|")
     unique.grps <- unique(grps)
     rh.idx    <- match(unique.grps, grps)
-  }    
+  }
 
 
   groupData <- vector("list", length(unique.grps))
@@ -51,31 +51,27 @@ splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matri
       for (jj in 1:length(factor.columns)){
         dd[, factor.columns[ jj ]] <- factor( dd[, factor.columns[ jj ]] )
       }
-    }    
-    groupData[[ ii ]] <- dd    
+    }
+    groupData[[ ii ]] <- dd
   }
-  
+
   idxvec <- vector("list", length(unique.grps))
   names(idxvec) <- unique.grps
   for (ii in 1:length(unique.grps)){
     idxvec[[ii]] <- which(grps==unique.grps[ii])
-  }      
+  }
 
   groupid <- data[rh.idx, rhs.fac, drop=FALSE]
-  rownames(groupid) <- 1:nrow(groupid)     
+  rownames(groupid) <- 1:nrow(groupid)
 
   attr(groupData,"groupid") <- groupid
   attr(groupData,"idxvec")  <- idxvec
   attr(groupData,"grps")    <- grps
-  
+
   class(groupData) <- c("splitByData", "list")
 
   groupData
-
-
 }
-  
-
 
 print.splitByData <- function(x,...){
 #  print(attr(x,"groupid"))

@@ -81,3 +81,18 @@ print.LSmatrix <- function(x,...){
     XXlist
 }
 
+setOldClass("LSmatrix")
+setAs("LSmatrix","matrix",
+      function(from){
+          attr(from,"at")<- attr(from,"grid")<-NULL
+          class(from)<-"matrix"
+          from
+      })
+setAs("LSmatrix","Matrix",
+      function(from){
+          attr(from,"at")<- attr(from,"grid")<-NULL
+          class(from)<-"matrix"
+          from
+          as(from,"Matrix")
+      })
+
