@@ -1,35 +1,42 @@
 
-linest <- function(object, K, level=0.95, ...){
+linest <- function(object, K=NULL, level=0.95, ...){
     UseMethod("linest")
 }
 
-linest.lm <- function(object, K, level=0.95, ...){
+
+linest.lm <- function(object, K=NULL, level=0.95, ...){
+    bhat <- coef(object)
+    if (is.null(K))
+        K <- .defineK( bhat )
+
+
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
-    ## print(is.est)
-
-    bhat <- coef(object)
     VV0  <- vcov(object)
     ddf  <- object$df.residual
     ddf.vec <- rep(ddf, nrow( K ))
     res    <- .getKb( K, bhat, VV0, ddf.vec, is.est)
 
-    p.value <- 2*pt(res[,"t.stat"], df=res[,"df"], lower.tail=FALSE)
+    p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
 
     qq<-qt(1-(1-level)/2, df=res[,"df"])
     lwr <- res[,"estimate"] - qq * res[,"se"]
     upr <- res[,"estimate"] + qq * res[,"se"]
-    res <- cbind(res, p.value, lwr, upr)
+    #res <- cbind(res, p.value, lwr, upr)
+    res <- cbind( res, p.value )
 
     .finalize(res, K)
 
 }
 
-linest.glm <- function(object, K, level=0.95, type=c("link","response"), ...){
+linest.glm <- function(object, K=NULL, level=0.95, type=c("link","response"), ...){
     type <- match.arg(type)
+    bhat <- coef(object)
+    if (is.null(K))
+        K <- .defineK( bhat )
+
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
-    bhat <- coef(object)
     VV0  <- vcov(object)
     ddf.vec <- rep(object$df.residual, nrow( K ))
     res     <- .getKb( K, bhat, VV0, ddf.vec, is.est)
@@ -56,18 +63,21 @@ linest.glm <- function(object, K, level=0.95, type=c("link","response"), ...){
         upr <- family(object)$linkinv(upr)
     }
 
-    res <- cbind(res, p.value, lwr, upr)
-
+    ##res <- cbind(res, p.value, lwr, upr)
+    res <- cbind( res, p.value )
     .finalize(res, K)
 
 }
 
 
-linest.geeglm <- function(object, K, level=0.95, type=c("link","response"), ...){
+linest.geeglm <- function(object, K=NULL, level=0.95, type=c("link","response"), ...){
     type <- match.arg(type)
+    bhat <- coef(object)
+    if (is.null(K))
+        K <- .defineK( bhat )
+
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
-    bhat <- coef(object)
     VV0  <- summary(object)$cov.scaled
     ddf.vec <- rep(1, nrow(K))
     res     <- .getKb( K, bhat, VV0, ddf.vec, is.est)
@@ -89,24 +99,24 @@ linest.geeglm <- function(object, K, level=0.95, type=c("link","response"), ...)
         upr <- family(object)$linkinv(upr)
     }
 
-    res <- cbind(res, p.value, lwr, upr)
-
+    ## res <- cbind(res, p.value, lwr, upr)
+    res <- cbind( res, p.value )
     .finalize(res, K)
 }
 
-linest.lmerMod <- function(object, K, level=0.95, adjust.df=TRUE, ...){
-
-    is.est <- .is_estimable(K, .get_null_basis( object ))
+linest.lmerMod <- function(object, K=NULL, level=0.95, adjust.df=TRUE, ...){
 
     bhat <- lme4::fixef(object)
+
+    if (is.null(K))
+        K <- .defineK( bhat )
+
+    is.est <- .is_estimable(K, .get_null_basis( object ))
 
     if (adjust.df){
         if (require(pbkrtest)){
             VVu  <- vcov(object)
             VV   <- pbkrtest::vcovAdj(object)
-            print(VVu)
-            print(VV)
-            print(K)
             ddf.vec <- unlist(lapply(1:nrow(K),
                                      function(ii) pbkrtest::ddf_Lb(VV , K[ii,], VVu)))
         } else {
@@ -121,17 +131,17 @@ linest.lmerMod <- function(object, K, level=0.95, adjust.df=TRUE, ...){
 
 
     res    <- .getKb( K, bhat, VV, ddf.vec, is.est)
-    p.value <- 2*pt(res[,"t.stat"], df=res[,"df"], lower.tail=FALSE)
+    p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
     qq<-qt(1-(1-level)/2, df=res[,"df"])
     lwr <- res[,"estimate"] - qq * res[,"se"]
     upr <- res[,"estimate"] + qq * res[,"se"]
-    res <- cbind(res, p.value, lwr, upr)
-
+    ##res <- cbind(res, p.value, lwr, upr)
+    res <- cbind( res, p.value )
     .finalize(res, K)
 
 }
 
-linest.merMod <- function(object, K, level=0.95, ...){
+linest.merMod <- function(object, K=NULL, level=0.95, ...){
     cl <- match.call()
     cl[[1]] <- as.name("linest.lmerMod")
     cl$adjust.df <- FALSE
@@ -140,26 +150,10 @@ linest.merMod <- function(object, K, level=0.95, ...){
 
 
 
-
-
 ### UTILITIES ###
 
 .getK <- function(object, effect=NULL, at=NULL){
-    ## cat(".getK()\n");
-    ## cat("effect:"); print(effect);
-    ## cat("at:"); print(at)
-
-    ## print(K)
-    ## if (is.null(K)){
-
-    ## } else {
-    ##     if (!inherits(K, "matrix")) stop("'K' must be a matrix\n")
-    ## }
-    ## K
-
     K <- LSmatrix(object, effect=effect, at=at)
-    ## print(K)
-    ## cat("done - getK\n")
     K
 }
 
@@ -184,12 +178,22 @@ linest.merMod <- function(object, K, level=0.95, ...){
 
 
 .finalize <- function(.coef, K){
-    res   <- list(coef=.coef, grid=attr(K,"grid"), K=K)
-    class(res) <- "LSmeans"
+    ## print(rownames(K))
+    if (!is.null(rownames(K)))
+        rownames(.coef) <- rownames(K)
+    res  <- list(coef=.coef, grid=attr(K,"grid"), K=K)
+    class(res) <- "linearEstimate"
     res
 }
 
-print.LSmeans <- function(x, ...){
+.defineK <- function( bhat ){
+    K <- diag( 1, length( bhat ) )
+    rownames( K ) <- names( bhat )
+    ## print(K)
+    K
+}
+
+print.linearEstimate <- function(x, ...){
     print(cbind(x$coef, x$grid))
     invisible(x)
 }

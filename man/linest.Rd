@@ -16,45 +16,19 @@ Compute linear estimates for a range of models. One example of linear
 estimates is population means (also known as LSMEANS).
 }
 \usage{
-linest(object, K, level=0.95, ...) %df.adjust = FALSE,
+linest(object, K=NULL, level=0.95, ...) %df.adjust = FALSE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
     Model object
   }
-  %% \item{effect}{
-  %%   A vector of variables. For each configuration of these the estimate
-  %%   will be calculated.
-  %% }
-  %% \item{at}{
-  %%   A list of values of covariates (including levels of some factors)
-  %%   to be used in the calculations
-  %% }
   \item{K}{
-    A contrast matrix. If given then the specifications in \code{effect}
-    and \code{at} are ignored. Otherwise, the matrix is generated
-    according to the specifications in \code{effect}
-    and \code{at}.
+    Either \code{NULL} or a matrix with p columns where p is the number
+    of parameters in the systematic
+    effects in the model. If \code{NULL} then \code{K} is taken to be
+    the p times p identity matrix
   }
-
-  %% \item{only.at}{
-  %%   If FALSE and \code{at} is not NULL then the contrast matrix is
-  %%   formed as if \code{at} was not specified. Then the values of
-  %%   \code{at} are set afterwards such that the contrast matrix will
-  %%   contain several identical rows.
-  %% }
-  %% \item{grid}{
-  %%   If \code{TRUE} and \code{engine='esticon'} then the values of the
-  %%   covariates at which the population means are calculated are appended
-  %%   to the result.
-  %% }
-
-  %% \item{df.adjust}{
-  %%   If \code{object} is a \code{lmerMod} object, the degrees of freedom
-  %%   can be adjusted according by a Kenward-Roger method. For other model
-  %%   objects, this argument has no effect.
-  %% }
 
   \item{level}{
     The level of the (asymptotic) confidence interval.

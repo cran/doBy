@@ -1,3 +1,21 @@
+2014-11-11 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* linest now accepts K=NULL, in which case K is taken to be the
+	diagonal materix
+
+	* No longer Depend(s) on MASS
+	
+	* Some datasets added
+	
+	* Version 4.5-12 uploaded.
+
+2014-09-26 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* summaryBy did not check if each element in FUN was a
+	function. Fixed now.
+
+	* Version 4.5-11 uploaded.
+
 2014-09-08 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Added the 'haldCement' data

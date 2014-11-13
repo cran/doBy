@@ -7,7 +7,6 @@ summaryBy <-
   {
     debug.info <- 0
 
-
     zzz <- .get_variables(formula, data, id, debug.info) ## ; str(zzz)
     lhs.num <- zzz$lhs.num
     rhs.grp <- zzz$rhs.grp
@@ -41,17 +40,18 @@ summaryBy <-
 
 ### Calculate groupwise statistics
     if (!is.list(FUN))
-      FUN <- list(FUN)
+        FUN <- list(FUN)
     ans <- NULL
     for (ff in 1:length(FUN)) {  ## loop over functions
-      currFUN <- FUN[[ff]]
-      for (vv in 1:length(lhs.num)) {  ## loop over variables
-        currVAR <- lh.data[,lhs.num[vv]]
-        zzz <- tapply(currVAR, rh.string.factor,
-                      function(x){ currFUN(x,...) }, simplify=FALSE)
-        zzz  <- do.call(rbind, zzz)
-        ans  <- cbind(ans, zzz)
-      }
+        ##currFUN <- FUN[[ff]]
+        currFUN <- match.fun( FUN[[ff]] )
+        for (vv in 1:length(lhs.num)) {  ## loop over variables
+            currVAR <- lh.data[,lhs.num[vv]]
+            zzz <- tapply(currVAR, rh.string.factor,
+                          function(x){ currFUN(x,...) }, simplify=FALSE)
+            zzz  <- do.call(rbind, zzz)
+            ans  <- cbind(ans, zzz)
+        }
     }
 
 

@@ -17,7 +17,7 @@
 \alias{subsAttr2}
 \alias{doby.xtabs}
 
-\alias{print.LSmeans}
+\alias{print.linearEstimate}
 
 \alias{LSmatrix}
 \alias{LSmatrix.default}
