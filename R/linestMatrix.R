@@ -30,10 +30,14 @@ print.LSmatrix <- function(x,...){
 
 
 .get_linest_list <- function(object, effect=NULL, at=NULL){
+    ##cat(".get_linest_list\n")
     trms     <- delete.response( terms(object) )
     fact.lev <- .get_xlevels( object )            ## factor levels
+    ##cat("fact.lev:\n"); print(fact.lev)
     cov.ave  <- .get_covariate_ave( object, at )  ## average of covariates (except those mentioned in 'at'
+    ##cat("cov.ave:\n"); print(cov.ave)
     vartype  <- .get_vartypes( object )           ## which are factors and which are numerics
+    ##cat("vartype:\n"); print(vartype)
     at.factor.name <- intersect( vartype$factor, names(at) )
     cov.ave.name   <- names( cov.ave )
     effect         <- setdiff( effect, at.factor.name )
@@ -48,13 +52,32 @@ print.LSmatrix <- function(x,...){
         new.fact.lev  <- .set_xlevels( fact.lev, at=at )
         new.fact.lev  <- new.fact.lev[c(effect, at.factor.name)]#
     }
-
     if (is.null(new.fact.lev)){
         ##cat("No 'effect' and no 'at'-factors; hence just a global average... \n")
-        newdata <- expand.grid(fact.lev)
-        newdata[, cov.ave.name] <- cov.ave
+        ## print(fact.lev)
+        ## print(cov.ave.name)
+
+        if ( length(fact.lev) > 0 ){
+            ##cat("yes there are factors\n")
+            newdata <- expand.grid( fact.lev )
+            if (length( cov.ave.name ) > 0){
+                ##cat("yes there are covariates\n")
+                newdata[, cov.ave.name] <- cov.ave
+            }
+        } else {
+            if (length( cov.ave.name ) > 0){
+                ##cat("yes there are covariates\n")
+                newdata <- matrix(unlist(cov.ave), nrow=1L)
+                colnames(newdata) <- cov.ave.name
+                newdata <- as.data.frame( newdata )
+            } else {
+                ##cat("there are no factors or covariates\n")
+                newdata <- data.frame(1)
+            }
+        }
 
         XXlist <- list(.getX(object, newdata))
+        ## cat("XXlist:\n"); print(XXlist)
         attr(XXlist,"at")   <- at[intersect(vartype$numeric, names(at))]
         attr(XXlist,"grid") <- NULL
     } else {

@@ -1,12 +1,17 @@
+2014-12-07 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Bug fixed in LSmatrix; thanks to Ida Bulow Christensen for the
+	bug report.
+
 2014-11-11 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* linest now accepts K=NULL, in which case K is taken to be the
 	diagonal materix
 
 	* No longer Depend(s) on MASS
-	
+
 	* Some datasets added
-	
+
 	* Version 4.5-12 uploaded.
 
 2014-09-26 Søren Højsgaard <sorenh@math.aau.dk>

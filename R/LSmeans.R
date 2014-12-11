@@ -1,4 +1,5 @@
 
+
 LSmeans <- function(object, effect=NULL, at=NULL, level=0.95,...){
     UseMethod("LSmeans")
 }

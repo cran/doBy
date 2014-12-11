@@ -70,37 +70,60 @@
 }
 
 .get_vartypes <- function(object){
-  ## Common!!
-  trms <- terms( model.frame( object ))
-  trms <- delete.response( trms )
-  att  <- attributes( trms )
-  rhs.terms <- rownames(att$factors)[rowSums(att$factors)>0]
-  rhs.class <- att$dataClass[match(rhs.terms, names(att$dataClass))]
-  nums      <- rhs.terms[rhs.class=="numeric"]
-  ## END
+    #cat(".get_vartypes:\n")
+    ## Common!!
+    trms <- terms( model.frame( object ))
+    trms <- delete.response( trms )
+    att  <- attributes( trms )
+    #cat("factors:\n"); print(att$factors)
+    if (length(att$factors)>0){
+        rhs.terms <- rownames(att$factors)[rowSums(att$factors)>0]
+        rhs.class <- att$dataClass[match(rhs.terms, names(att$dataClass))]
+        nums      <- rhs.terms[rhs.class=="numeric"]
+        ##print(list(rhs.terms=rhs.terms, rhs.class=rhs.class, nums=nums))
+        fact      <- rhs.terms[rhs.class=="factor"]
+    } else {
+        nums <- character(0)
+        rhs.class <- character(0)
+        fact <- character(0)
+    }
 
-  fact      <- rhs.terms[rhs.class=="factor"]
-  list(numeric=nums, factor=fact)
+    ## END
+
+    ## print("here")
+    ## print(list(numeric=nums, factor=fact))
+    list(numeric=nums, factor=fact)
 }
 
 
 .get_covariate_ave <- function(object, at=NULL, tt=terms(object)){
-  ## Common!!
-  trms <- terms( model.frame( object ))
-  trms <- delete.response( trms )
-  att  <- attributes( trms )
-  rhs.terms <- rownames(att$factors)[rowSums(att$factors)>0]
-  rhs.class <- att$dataClass[match(rhs.terms, names(att$dataClass))]
-  nums      <- rhs.terms[rhs.class=="numeric"]
-  ## END
+    ##cat(".get_covariate_ave:\n")
+    ## Common!!
+    trms <- terms( model.frame( object ))
+    trms <- delete.response( trms )
+    att  <- attributes( trms )
+    ##ff <<- att$factors
+    if (length(att$factors)>0){
+        rhs.terms <- rownames(att$factors)[rowSums(att$factors)>0]
+        rhs.class <- att$dataClass[match(rhs.terms, names(att$dataClass))]
+        nums      <- rhs.terms[rhs.class=="numeric"]
+    } else {
+        nums <- character(0)
+        rhs.class <- character(0)
+    }
+    ##print(nums)
+    ## END
 
-  ans  <- lapply(model.frame(object)[,nums, drop=FALSE], mean)
-  nn   <- match(names(ans), names(at))
-  nn   <- nn[!is.na(nn)]
-  at.num <- at[nn]
-  ans[names(at[nn])]  <- at.num
-  attr(ans, "at.num") <- at.num
-  ans
+    ## calculate average:
+    ans  <- lapply(model.frame(object)[,nums, drop=FALSE], mean)
+    ##cat("ans:\n"); print(ans)
+    nn   <- match(names(ans), names(at))
+    nn   <- nn[!is.na(nn)]
+    at.num <- at[nn]
+    ans[names(at[nn])]  <- at.num
+    ##cat("ans (after insertion of 'at' values):\n"); print(ans)
+    attr(ans, "at.num") <- at.num
+    ans
 }
 
 
@@ -110,13 +133,15 @@
 }
 
 .getX.default <- function(object, newdata){
-  tt <- terms(object)
-  Terms  <- delete.response(tt)
-  mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))
-  X   <- model.matrix(Terms, mf, contrasts.arg = .get_contrasts(object))
-  attr(X,"assign")<-NULL
-  attr(X, "contrasts") <- NULL
-  X
+    ##cat(".getX.default\n"); print(newdata)
+    tt <- terms(object)
+    Terms  <- delete.response(tt)
+    ##print(Terms)
+    mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))
+    X   <- model.matrix(Terms, mf, contrasts.arg = .get_contrasts(object))
+    attr(X,"assign")<-NULL
+    attr(X, "contrasts") <- NULL
+    X
 }
 
 

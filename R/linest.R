@@ -9,7 +9,6 @@ linest.lm <- function(object, K=NULL, level=0.95, ...){
     if (is.null(K))
         K <- .defineK( bhat )
 
-
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
     VV0  <- vcov(object)
@@ -85,10 +84,11 @@ linest.geeglm <- function(object, K=NULL, level=0.95, type=c("link","response"),
     p.value <- 2*pnorm(abs(res[,"t.stat"]), lower.tail=FALSE)
     qq <- qnorm(1-(1-level)/2)
     colnames(res)[4] <- "z.stat"
-    res <- res[,-3] # NO df's
-
+    res <- res[,-3, drop=FALSE] # NO df's
+    ## print("00000000000000000")
     lwr <- res[,"estimate"] - qq * res[,"se"]
     upr <- res[,"estimate"] + qq * res[,"se"]
+
 
     if (type=="response"){
         fit    <- family(object)$linkinv(res[,"estimate"])
