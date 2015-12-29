@@ -8,6 +8,8 @@ linest.lm <- function(object, K=NULL, level=0.95, ...){
     bhat <- coef(object)
     if (is.null(K))
         K <- .defineK( bhat )
+    if (!is.matrix(K))
+        K <- matrix(K, nrow=1)
 
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
@@ -33,6 +35,8 @@ linest.glm <- function(object, K=NULL, level=0.95, type=c("link","response"), ..
     bhat <- coef(object)
     if (is.null(K))
         K <- .defineK( bhat )
+    if (!is.matrix(K))
+        K <- matrix(K, nrow=1)
 
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
@@ -74,6 +78,8 @@ linest.geeglm <- function(object, K=NULL, level=0.95, type=c("link","response"),
     bhat <- coef(object)
     if (is.null(K))
         K <- .defineK( bhat )
+    if (!is.matrix(K))
+        K <- matrix(K, nrow=1)
 
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
@@ -110,11 +116,13 @@ linest.lmerMod <- function(object, K=NULL, level=0.95, adjust.df=TRUE, ...){
 
     if (is.null(K))
         K <- .defineK( bhat )
+    if (!is.matrix(K))
+        K <- matrix(K, nrow=1)
 
     is.est <- .is_estimable(K, .get_null_basis( object ))
 
     if (adjust.df){
-        if (require(pbkrtest)){
+        if (requireNamespace("pbkrtest", quietly=TRUE)){
             VVu  <- vcov(object)
             VV   <- pbkrtest::vcovAdj(object)
             ddf.vec <- unlist(lapply(1:nrow(K),
@@ -123,14 +131,14 @@ linest.lmerMod <- function(object, K=NULL, level=0.95, adjust.df=TRUE, ...){
             stop("adjustment of degrees of freedom requires that 'pbkrtest' is installed")
         }
     } else {
-        a <- logLik(object)
-        ddf<-attributes(a)$nall - attributes(a)$df
+        a   <- logLik(object)
+        ddf <- attributes(a)$nall - attributes(a)$df
         ddf.vec <- rep(ddf, length(bhat))
         VV  <- vcov(object)
     }
 
 
-    res    <- .getKb( K, bhat, VV, ddf.vec, is.est)
+    res     <- .getKb( K, bhat, VV, ddf.vec, is.est)
     p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
     qq<-qt(1-(1-level)/2, df=res[,"df"])
     lwr <- res[,"estimate"] - qq * res[,"se"]
@@ -157,7 +165,14 @@ linest.merMod <- function(object, K=NULL, level=0.95, ...){
     K
 }
 
+
+
 .getKb <- function(K, bhat, VV, ddf.vec, is.est, level=0.95){
+    #' cat(".getKb")
+    #' print(attributes(K))
+    off <- attr(K, "offset")
+    #' print(off)
+
     used       <- which(!is.na(bhat))
     bhat.used  <- bhat[used]
     K   <- K[, used, drop=FALSE]
@@ -171,6 +186,11 @@ linest.merMod <- function(object, K=NULL, level=0.95, ...){
             res[ii,] <- c(est, se, df2)
         }
     }
+
+
+    if (!is.null(off))
+        res[,1] <- res[,1] + off[[1]]
+
     colnames(res) <- c("estimate","se","df")
     t.stat <- res[,"estimate"]/res[,"se"]
     cbind(res, t.stat)

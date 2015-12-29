@@ -1,3 +1,9 @@
+2015-11-25 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* NAMESPACE file updated with S3 registrations
+
+	* potatoes dataset added
+	
 2014-12-07 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Bug fixed in LSmatrix; thanks to Ida Bulow Christensen for the

@@ -1,7 +1,7 @@
 \name{lmBy}
 \alias{lmBy}
 \alias{coef.lmBy}
-\alias{coef.summary.lmBy}
+\alias{coef.summary_lmBy}
 \alias{summary.lmBy}
 \alias{fitted.lmBy}
 \alias{residuals.lmBy}

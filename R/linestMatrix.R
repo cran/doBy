@@ -17,6 +17,7 @@ LSmatrix.default <- function(object, effect=NULL, at=NULL){
     res               <- do.call(rbind, res)
     attr(res, "at")   <- attr(aa, "at")
     attr(res, "grid") <- attr(aa, "grid")
+    attr(res, "offset") <- attr(aa, "offset")
     res
 }
 
@@ -34,13 +35,16 @@ print.LSmatrix <- function(x,...){
     trms     <- delete.response( terms(object) )
     fact.lev <- .get_xlevels( object )            ## factor levels
     ##cat("fact.lev:\n"); print(fact.lev)
-    cov.ave  <- .get_covariate_ave( object, at )  ## average of covariates (except those mentioned in 'at'
+    cov.ave  <- .get_covariate_ave( object, at )  ## average of covariates (except those mentioned in 'at')
     ##cat("cov.ave:\n"); print(cov.ave)
     vartype  <- .get_vartypes( object )           ## which are factors and which are numerics
     ##cat("vartype:\n"); print(vartype)
     at.factor.name <- intersect( vartype$factor, names(at) )
     cov.ave.name   <- names( cov.ave )
     effect         <- setdiff( effect, at.factor.name )
+
+    #' tmp <- list(fact.lev=fact.lev, cov.ave=cov.ave, vartype=vartype, at.factor.name=at.factor.name, cov.ave.name=cov.ave.name, effect=effect, at=at)
+    #' print(tmp)
 
     if (is.null(effect)){
         if (length( at.factor.name ) > 0){
@@ -91,18 +95,22 @@ print.LSmatrix <- function(x,...){
 
             newdata   <- expand.grid( fact.lev2 )
             newdata[, cov.ave.name]  <- cov.ave
-            XX             <- .getX(object, newdata)
-
+            XX             <- .getX(object, newdata, at)
             XXlist[[ ii ]] <- XX
         }
 
         grid.data[, names(cov.ave) ] <- cov.ave
         attr(XXlist,"at") <- at
         attr(XXlist,"grid") <- grid.data
+        attr(XXlist,"offset") <- attr(XX, "offset")
     }
     class(XXlist) <- "linestList"
     XXlist
 }
+
+
+
+
 
 setOldClass("LSmatrix")
 setAs("LSmatrix","matrix",

@@ -26,7 +26,7 @@
 \alias{funBy}
 
 \alias{print.lmBy}
-\alias{print.summary.lmBy}
+\alias{print.summary_lmBy}
 
 \alias{specialize}
 

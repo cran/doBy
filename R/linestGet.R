@@ -128,24 +128,49 @@
 
 
 
-.getX <- function(object, newdata){
+.getX <- function(object, newdata, at=NULL){
   UseMethod(".getX")
 }
 
-.getX.default <- function(object, newdata){
+.getX.default <- function(object, newdata, at=NULL){
     ##cat(".getX.default\n"); print(newdata)
     tt <- terms(object)
+
     Terms  <- delete.response(tt)
-    ##print(Terms)
+    #' print("HHHHHHHHH")
+    #' print(Terms)
+    #' print(newdata)
+
+    #' xlev <<- .get_xlevels(object)
+
+    offval <- NULL
+    #' print(newdata)
+    M <- attr(terms(formula(object)),"factors")
+    idx<-grep("offset\\(", rownames(M))
+    if (length(idx)>0){
+        off<- rownames(M)[idx]
+        offvar<-gsub("offset\\((.*)\\)", "\\1\\", off)
+        if ( !is.null(at) && !is.null(at[offvar]) )
+            offval <- at[offvar]
+        else
+            offval <- 1
+        d <- data.frame(rep(offval, nrow(newdata)))
+        names(d) <- offvar
+        newdata <- cbind(d, newdata)
+    }
+
+##    print(newdata)
     mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))
+
     X   <- model.matrix(Terms, mf, contrasts.arg = .get_contrasts(object))
-    attr(X,"assign")<-NULL
-    attr(X, "contrasts") <- NULL
+    attr(X, "assign" )    <- NULL
+    attr(X, "contrasts" ) <- NULL
+    attr(X, "offset" )    <- offval
     X
 }
 
 
-.getX.merMod <- function(object, newdata){
+.getX.merMod <- function(object, newdata, at=NULL){
    tt <- terms(object)
    Terms  <- delete.response(tt)
    mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))

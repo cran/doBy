@@ -36,16 +36,16 @@ print.lmBy <- function(x, ...){
 
 summary.lmBy <- function(object, ...){
   res <- lapply(object, summary)
-  class(res) <- "summary.lmBy"
+  class(res) <- "summary_lmBy"
   res
 }
 
-print.summary.lmBy <- function(x, ...){
+print.summary_lmBy <- function(x, ...){
   lapply(x, print)
   return(invisible(x))
 }
 
-coef.summary.lmBy <- function(object, simplify=FALSE, ...){
+coef.summary_lmBy <- function(object, simplify=FALSE, ...){
   ans <- lapply(object, coef)
   if (simplify){
     cc <- do.call(rbind, ans)

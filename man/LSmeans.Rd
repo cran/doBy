@@ -151,7 +151,6 @@ LSmeans(mod.nst, at=list(BB=1, CC=1))
 LSmeans(mod.nst, at=list(BB=1, CC=2))
 ## Above: NA's are correct; not an estimable function
 
-
 if( require( lme4 )){
  warp.mm <- lmer(breaks ~ -1 + tension + (1|wool), data=warpbreaks)
  LSmeans(warp.mm, effect="tension")
@@ -159,8 +158,8 @@ if( require( lme4 )){
  fixef(warp.mm)
  coef(summary(warp.mm))
  vcov(warp.mm)
- if (require(pbkrtest ))
- vcovAdj(warp.mm)
+ if (require(pbkrtest))
+   vcovAdj(warp.mm)
 }
 
 
