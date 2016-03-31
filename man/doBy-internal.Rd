@@ -1,15 +1,6 @@
 \name{internal}
 \alias{internal}
 
-%\alias{}
-\alias{nullBasis}
-\alias{nullBasis.lm}
-\alias{nullBasis.glm}
-\alias{nullBasis.geeglm}
-\alias{nullBasis.lmerMod}
-\alias{nullBasis.matrix}
-\alias{nullBasis.Matrix}
-
 \alias{LSmatrix-class}
 
 \alias{asNumericMatrix2}
@@ -31,6 +22,44 @@
 \alias{specialize}
 
 \alias{print.splitByData}
+\alias{get_contrasts}
+\alias{get_contrasts.default}
+\alias{get_contrasts.merMod}
+\alias{get_vartypes}
+\alias{get_X}
+\alias{get_X.merMod}
+\alias{get_X.default}
+\alias{get_xlevels}
+\alias{get_xlevels.default}
+\alias{get_xlevels.mer}
+\alias{get_xlevels.merMod}
+\alias{set_covariate_val}
+\alias{set_xlevels}
+%% \alias{}
+%% \alias{}
+%% \alias{}
+%% \alias{}
+
+\alias{get_contrasts.default}
+\alias{get_contrasts.merMod}
+\alias{get_X.default}
+\alias{get_xlevels.default}
+\alias{get_xlevels.mer}
+\alias{get_xlevels.merMod}
+\alias{get_X.merMod}
+
+
+  
+     
+
+
+
+
+\title{Internal functions for the doBy package}
+\description{Internal functions for the doBy package}
+\keyword{internal}% at least one, from doc/KEYWORDS
+
+
 
 %% \alias{linestMatrix}
 %% \alias{linestMatrix.default}
@@ -38,12 +67,22 @@
 %% \alias{print.linestMatrix}
 %% \alias{print.linest}
 
-\alias{pdiff}
+%%\alias{pdiff}
 
+%\alias{}
+%% \alias{nullBasis}
+%% \alias{nullBasis.lm}
+%% \alias{nullBasis.glm}
+%% \alias{nullBasis.geeglm}
+%% \alias{nullBasis.lmerMod}
+%% \alias{nullBasis.matrix}
+%% \alias{nullBasis.Matrix}
 
-\title{Internal functions for the doBy package}
-\description{Internal functions for the doBy package}
-\keyword{internal}% at least one, from doc/KEYWORDS
+%% \alias{null_basis}
+%%\alias{is_estimable}
+%% \alias{get_null_basis.matrix}
+%% \alias{get_null_basis.Matrix}
+%% \alias{get_null_basis.default}
 
 % \alias{HTMLCommand2}
 % \alias{HTMLdefault2}

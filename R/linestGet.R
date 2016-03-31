@@ -2,19 +2,19 @@
 ##
 ## Auxillary functions for calculating contrasts, lsmeans etc
 ##
-## Banff, August 2013, Søren Højsgaard
+## Banff, August 2013, SÃ¸ren HÃ¸jsgaard
 ##
 ## ######################################################################
 
-.get_xlevels <- function(obj){
-  UseMethod(".get_xlevels")
+get_xlevels <- function(obj){
+  UseMethod("get_xlevels")
 }
 
-.get_xlevels.default <- function(obj){
+get_xlevels.default <- function(obj){
   obj$xlevels
 }
 
-.get_xlevels.mer <- function(obj){
+get_xlevels.mer <- function(obj){
   ans <- lapply(obj@frame,levels)
   ans <- ans[unlist(lapply(ans, length))>0]
 
@@ -25,8 +25,8 @@
   ans
 }
 
-.get_xlevels.merMod <- function(obj){
-  ##cat(".get_xlevels.lmerMod\n")
+get_xlevels.merMod <- function(obj){
+  ##cat("get_xlevels.lmerMod\n")
   ans <- lapply(obj@frame,levels)
   ans <- ans[unlist(lapply(ans, length))>0]
 
@@ -38,19 +38,21 @@
   ans
 }
 
-.get_contrasts <- function(obj){
-  UseMethod(".get_contrasts")
+
+
+get_contrasts <- function(obj){
+  UseMethod("get_contrasts")
 }
 
-.get_contrasts.default <- function(obj){
+get_contrasts.default <- function(obj){
   obj$contrasts ## FIXME: check RL code
 }
 
-.get_contrasts.merMod <- function(obj){
+get_contrasts.merMod <- function(obj){
   attr(model.matrix(obj), "contrasts")
 }
 
-.set_xlevels <- function(xlev, at){
+set_xlevels <- function(xlev, at){
   nam     <- names(xlev)
   nn      <- match(nam, names(at))
   nn      <- nn[!is.na(nn)]
@@ -60,17 +62,9 @@
   xlev
 }
 
-.set_convals <- function(xlev, covariateVal){
-  nam     <- names(xlev)
-  nn      <- match(nam, names(covariateVal))
-  nn      <- nn[!is.na(nn)]
-  con.con <- covariateVal[nn]
-  xlev[names(covariateVal[nn])] <- con.con
-  xlev
-}
 
-.get_vartypes <- function(object){
-    #cat(".get_vartypes:\n")
+get_vartypes <- function(object){
+    #cat("get_vartypes:\n")
     ## Common!!
     trms <- terms( model.frame( object ))
     trms <- delete.response( trms )
@@ -93,6 +87,15 @@
     ## print("here")
     ## print(list(numeric=nums, factor=fact))
     list(numeric=nums, factor=fact)
+}
+
+set_covariate_val <- function(xlev, covariateVal){
+  nam     <- names(xlev)
+  nn      <- match(nam, names(covariateVal))
+  nn      <- nn[!is.na(nn)]
+  con.con <- covariateVal[nn]
+  xlev[names(covariateVal[nn])] <- con.con
+  xlev
 }
 
 
@@ -128,12 +131,12 @@
 
 
 
-.getX <- function(object, newdata, at=NULL){
-  UseMethod(".getX")
+get_X <- function(object, newdata, at=NULL){
+  UseMethod("get_X")
 }
 
-.getX.default <- function(object, newdata, at=NULL){
-    ##cat(".getX.default\n"); print(newdata)
+get_X.default <- function(object, newdata, at=NULL){
+    ##cat("get_X.default\n"); print(newdata)
     tt <- terms(object)
 
     Terms  <- delete.response(tt)
@@ -141,7 +144,7 @@
     #' print(Terms)
     #' print(newdata)
 
-    #' xlev <<- .get_xlevels(object)
+    #' xlev <<- get_xlevels(object)
 
     offval <- NULL
     #' print(newdata)
@@ -160,9 +163,9 @@
     }
 
 ##    print(newdata)
-    mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))
+    mf  <- model.frame(Terms, newdata, xlev = get_xlevels(object))
 
-    X   <- model.matrix(Terms, mf, contrasts.arg = .get_contrasts(object))
+    X   <- model.matrix(Terms, mf, contrasts.arg = get_contrasts(object))
     attr(X, "assign" )    <- NULL
     attr(X, "contrasts" ) <- NULL
     attr(X, "offset" )    <- offval
@@ -170,11 +173,11 @@
 }
 
 
-.getX.merMod <- function(object, newdata, at=NULL){
+get_X.merMod <- function(object, newdata, at=NULL){
    tt <- terms(object)
    Terms  <- delete.response(tt)
-   mf  <- model.frame(Terms, newdata, xlev = .get_xlevels(object))
-   X   <- model.matrix(Terms, mf, contrasts.arg = .get_contrasts(object))
+   mf  <- model.frame(Terms, newdata, xlev = get_xlevels(object))
+   X   <- model.matrix(Terms, mf, contrasts.arg = get_contrasts(object))
 #  X <- getME(object, "X")
    attr(X,"assign")<-NULL
    attr(X, "contrasts") <- NULL
@@ -182,87 +185,6 @@
 }
 
 
-.get_null_basis <- function(object){
-    S <- svd(model.matrix(object))
-    null.basis <- S$v[,S$d<1e-15, drop=FALSE]
-    null.basis
-}
-
-nullBasis <- function(object){
-    UseMethod("nullBasis")
-}
-
-nullBasis.matrix <-
-    nullBasis.Matrix <- function(object){
-    S <- svd( object )
-    id <- S$d<1e-15
-    if (any(id)){
-        null.basis <- S$v[,id, drop=FALSE]
-        null.basis
-    }
-}
-
-nullBasis.lm <- function(object){
-    mm <- model.matrix( object )
-    nullBasis( mm )
-}
-
-nullBasis.glm <- nullBasis.lm
-nullBasis.lmerMod <- nullBasis.lm
-nullBasis.geeglm <- nullBasis.lm
-
-
-.is_estimable <- function(KK, null.basis){
-    is.est <-
-        unlist(lapply(1:nrow(KK),
-                      function(ii){
-                          kk <- KK[ii,]
-                          all(abs(apply(null.basis, 2, function(x) sum(kk * x))) < 1e-04)
-                      }))
-    is.est
-}
-
-.do_contrast <- function(KK, bhat, V0, ddf, is.est){
-    used       <- which(!is.na(bhat))
-    not.used   <- which(is.na(bhat))
-    bhat.used  <- bhat[used]
-    VV <- V0
-    ddfm <- function(kk, se) ddf
-    res <- matrix(NA, nrow=nrow(KK), ncol=3)
-    for (ii in 1:nrow(res)){
-        if (is.est[ii]){
-            kk   <- KK[ii,used]
-            est  <- sum(kk*bhat.used)
-            se   <- sqrt(sum(kk * (VV %*% kk)))
-            df2  <- ddfm(kk, se)
-            res[ii,] <- c(est, se, df2)
-        }
-    }
-    colnames(res) <- c("estimate","SE","df")
-    res
-}
-
-.do_pairs <- function(KK){ ## pairwise differences of lsmeans
-    NN <- nrow(KK)
-    MM <- ncol(KK)
-    SS <- as.matrix(attr(KK,"grid")) ## todo: check if null
-    EE <- vector("list", NN*(NN-1)/2)
-    DD <- matrix(0, nrow=NN*(NN-1)/2, ncol=NN)
-    kk <- 1
-    for (ii in 1:(NN-1)){
-        for (jj in (ii+1):NN){
-            DD[kk, ii] <- 1
-            DD[kk, jj] <- -1
-            EE[[kk]] <- list(ff=SS[ii,], .ff=SS[jj,])
-            kk <- kk + 1
-        }
-    }
-    ff <- do.call(rbind, lapply(EE, function(x) x$ff))
-    .ff <- do.call(rbind, lapply(EE, function(x) x$.ff))
-    colnames(.ff) <- paste(".", colnames(.ff),sep='')
-    pair <- as.data.frame(cbind(ff, .ff))
-    list(DD=DD, grid=pair)
-}
 
 
 

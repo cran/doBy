@@ -1,16 +1,23 @@
+## #######################################################################
+##
+## Construction of LSmatrix and computation of LSmeans
+##
+## Author: Søren Højsgaard
+##
+## #######################################################################
+
 
 LSmatrix <- function(object, effect=NULL, at=NULL){
   UseMethod("LSmatrix")
 }
 
-
+## FIXME: LSmatrix.default: Should be a check of what 'object' is
 LSmatrix.default <- function(object, effect=NULL, at=NULL){
     res <- .get_linest_list( object, effect, at )
     res <- .finalize_linest_list ( res )
     class(res) <- c("LSmatrix", "matrix")
     res
 }
-
 
 .finalize_linest_list <- function (aa){
     res               <- lapply( aa, function( mm ) apply( mm, 2, mean ) )
@@ -29,15 +36,14 @@ print.LSmatrix <- function(x,...){
   invisible(x)
 }
 
-
 .get_linest_list <- function(object, effect=NULL, at=NULL){
     ##cat(".get_linest_list\n")
     trms     <- delete.response( terms(object) )
-    fact.lev <- .get_xlevels( object )            ## factor levels
+    fact.lev <- get_xlevels( object )            ## factor levels
     ##cat("fact.lev:\n"); print(fact.lev)
     cov.ave  <- .get_covariate_ave( object, at )  ## average of covariates (except those mentioned in 'at')
     ##cat("cov.ave:\n"); print(cov.ave)
-    vartype  <- .get_vartypes( object )           ## which are factors and which are numerics
+    vartype  <- get_vartypes( object )           ## which are factors and which are numerics
     ##cat("vartype:\n"); print(vartype)
     at.factor.name <- intersect( vartype$factor, names(at) )
     cov.ave.name   <- names( cov.ave )
@@ -53,7 +59,7 @@ print.LSmatrix <- function(x,...){
             new.fact.lev <- NULL
         }
     } else {
-        new.fact.lev  <- .set_xlevels( fact.lev, at=at )
+        new.fact.lev  <- set_xlevels( fact.lev, at=at )
         new.fact.lev  <- new.fact.lev[c(effect, at.factor.name)]#
     }
     if (is.null(new.fact.lev)){
@@ -80,7 +86,7 @@ print.LSmatrix <- function(x,...){
             }
         }
 
-        XXlist <- list(.getX(object, newdata))
+        XXlist <- list(get_X(object, newdata))
         ## cat("XXlist:\n"); print(XXlist)
         attr(XXlist,"at")   <- at[intersect(vartype$numeric, names(at))]
         attr(XXlist,"grid") <- NULL
@@ -91,11 +97,11 @@ print.LSmatrix <- function(x,...){
         XXlist    <- list()
         for (ii in 1:nrow(grid.data)){
             config    <- grid.data[ ii, ,drop=FALSE ]
-            fact.lev2 <- .set_xlevels(fact.lev,  at=config)
+            fact.lev2 <- set_xlevels(fact.lev,  at=config)
 
             newdata   <- expand.grid( fact.lev2 )
             newdata[, cov.ave.name]  <- cov.ave
-            XX             <- .getX(object, newdata, at)
+            XX             <- get_X(object, newdata, at)
             XXlist[[ ii ]] <- XX
         }
 
@@ -108,17 +114,40 @@ print.LSmatrix <- function(x,...){
     XXlist
 }
 
+## --------------------------------------------------------------------
 
+LSmeans <- function(object, effect=NULL, at=NULL, level=0.95,...){
+    UseMethod("LSmeans")
+}
 
+LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95,...){
+    K   <- LSmatrix(object, effect=effect, at=at)
+    out <- linest(object, K, level=level, ...)
+    out
+}
+
+LSmeans.lmerMod <- function(object, effect=NULL, at=NULL, level=0.95, adjust.df=TRUE, ...){
+    K   <- LSmatrix(object, effect=effect, at=at)
+    out <- linest(object, K, level=level, adjust.df=adjust.df, ...)
+    out
+}
+
+popMeans         <- LSmeans
+popMeans.default <- LSmeans.default
+popMeans.lmerMod <- LSmeans.lmerMod
+
+## --------------------------------------------------------------------
 
 
 setOldClass("LSmatrix")
+
 setAs("LSmatrix","matrix",
       function(from){
           attr(from,"at")<- attr(from,"grid")<-NULL
           class(from)<-"matrix"
           from
       })
+
 setAs("LSmatrix","Matrix",
       function(from){
           attr(from,"at")<- attr(from,"grid")<-NULL

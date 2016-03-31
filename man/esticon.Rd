@@ -112,6 +112,7 @@ esticon(lm1,rbind(lambda2,lambda3),joint.test=TRUE)
 # Using dataset 'veteran' in the survival package
 # from the Veterans' Administration Lung Cancer study
 
+if (require(survival)){
 library(survival);
 data(veteran)
 sapply(veteran,class)
@@ -133,7 +134,7 @@ CvB<-c(5,1,-1,0,-1)
 esti<-esticon(coxmod,rbind(AvB,CvB))
 esti
 exp(esti[,c(2,7,8)])
-
+}
 
 
 

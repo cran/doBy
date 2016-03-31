@@ -1,3 +1,11 @@
+2016-02-15 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Updated with version requirement for R version
+	
+	* slurry data added
+	
+	* Version 4.5-15 uploaded.
+	
 2015-11-25 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* NAMESPACE file updated with S3 registrations

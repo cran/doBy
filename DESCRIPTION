@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.5-14
+Version: 4.5-15
 Title: Groupwise Statistics, LSmeans, Linear Contrasts, Utilities
 Author: Søren Højsgaard <sorenh@math.aau.dk> and Ulrich Halekoh <uhalekoh@health.sdu.dk> 
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -16,10 +16,11 @@ Encoding: latin1
 URL: http://people.math.aau.dk/~sorenh/software/doBy/
 ZipData: no
 License: GPL (>= 2)
-Depends: R (>= 3.0), survival, methods
+Depends: R (>= 3.2.0), methods
 Imports: MASS, Matrix
-Suggests: pbkrtest (>= 0.4-3), ggplot2, multcomp, geepack, lme4
+Suggests: pbkrtest (>= 0.4-6), ggplot2, multcomp, geepack, lme4,
+        survival
 NeedsCompilation: no
-Packaged: 2015-12-29 09:54:55 UTC; sorenh
+Packaged: 2016-03-31 03:26:07 UTC; sorenh
 Repository: CRAN
-Date/Publication: 2015-12-29 21:59:45
+Date/Publication: 2016-03-31 17:38:50
