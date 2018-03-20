@@ -1,4 +1,27 @@
-2016-02-15 Søren Højsgaard <sorenh@math.aau.dk>
+2018-03-19 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
+
+	* Previous functionality of core xxBy-functions reestablished to
+	ensure that downstream packages work.
+
+	* Version 4.6-1 uploaded.
+
+2018-03-04 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
+
+	* Improvements of esticon and linest; methods added.
+
+	* Improvements of LSmeans vignette.
+
+	* Version 4.6-0 uploaded.
+	
+2016-01-01 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
+
+	* Converted to roxygen format
+
+	* Many of the less useful by functions are removed.
+
+	* Put on github
+	
+2016-02-15 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Updated with version requirement for R version
 	
@@ -6,18 +29,18 @@
 	
 	* Version 4.5-15 uploaded.
 	
-2015-11-25 Søren Højsgaard <sorenh@math.aau.dk>
+2015-11-25 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* NAMESPACE file updated with S3 registrations
 
 	* potatoes dataset added
 	
-2014-12-07 Søren Højsgaard <sorenh@math.aau.dk>
+2014-12-07 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Bug fixed in LSmatrix; thanks to Ida Bulow Christensen for the
 	bug report.
 
-2014-11-11 Søren Højsgaard <sorenh@math.aau.dk>
+2014-11-11 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* linest now accepts K=NULL, in which case K is taken to be the
 	diagonal materix
@@ -28,14 +51,14 @@
 
 	* Version 4.5-12 uploaded.
 
-2014-09-26 Søren Højsgaard <sorenh@math.aau.dk>
+2014-09-26 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* summaryBy did not check if each element in FUN was a
 	function. Fixed now.
 
 	* Version 4.5-11 uploaded.
 
-2014-09-08 Søren Højsgaard <sorenh@math.aau.dk>
+2014-09-08 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Added the 'haldCement' data
 
@@ -50,7 +73,7 @@
 
 	* Version 4.5-11 uploaded.
 
-2013-11-28 Søren Højsgaard <sorenh@math.aau.dk>
+2013-11-28 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* LSmeans, LSmatrix and linest functions added. (There are not yet
 	methods for nlme and survival objects but they will be added).
@@ -61,7 +84,7 @@
 
 	* Version 4.5-10 uploaded
 
-2013-07-20 Søren Højsgaard <sorenh@math.aau.dk>
+2013-07-20 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* splitBy and summaryBy have been reworked.
 
@@ -76,7 +99,7 @@
 
 	* Version 4.5-7 uploaded
 
-2013-03-19 Søren Højsgaard <sorenh@math.aau.dk>
+2013-03-19 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* parseGroupFormula function added. The function will take a
 	"group formula" with a vertical bar apart into components.
@@ -90,27 +113,27 @@
 
 	* Version 4.5-6 uploaded
 
-2012-11-16 Søren Højsgaard <sorenh@math.aau.dk>
+2012-11-16 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Rmarkup removed; the markdown package does a better job.
 
 	* Version 4.5-5 uploaded
 
-2012-05-28 Søren Højsgaard <sorenh@math.aau.dk>
+2012-05-28 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Updates of Rmarkup
 
 	* Version 4.5-4 uploaded
 
 
-2012-05-19 Søren Højsgaard <sorenh@math.aau.dk>
+2012-05-19 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Updates of Rmarkup
 
 	* Version 4.5-3 uploaded
 
 
-2012-02-17 Søren Højsgaard <sorenh@math.aau.dk>
+2012-02-17 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* descStat function added. Thanks to Gregor Gorjanc.
 
@@ -119,13 +142,13 @@
 
 	* Version 4.5.2 uploaded
 
-2012-01-29 Søren Højsgaard <sorenh@math.aau.dk>
+2012-01-29 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Minor enhancement to Rmarkup()
 
 	* Version 4.5.1 uploaded
 
-2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
+2012-01-18 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* popMeans method for lme objects added
 
@@ -134,13 +157,13 @@
 	* Version 4.5.0 uploaded
 
 
-2012-01-18 Søren Højsgaard <sorenh@math.aau.dk>
+2012-01-18 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Small changes to package structure
 
 	* Version 4.4.6 uploaded
 
-2012-01-17 Søren Højsgaard <sorenh@math.aau.dk>
+2012-01-17 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* URL updated
 
@@ -148,25 +171,25 @@
 
 	* Version 4.4.5 uploaded
 
-2011-12-30 Søren Højsgaard <sorenh@math.aau.dk>
+2011-12-30 SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
 
 	* Change of email address
 
 	* Version 4.4.4 uploaded.
 
-2011-11-01 Søren Højsgaard <sorenh@agrsci.dk>
+2011-11-01 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Function lmBy (and related methods) added
 
 	* Version 4.4.3 uploaded.
 
-2011-11-01 Søren Højsgaard <sorenh@agrsci.dk>
+2011-11-01 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Dataset milkman added
 
 	* Version 4.4.2 uploaded.
 
-2011-10-23 Søren Højsgaard <sorenh@agrsci.dk>
+2011-10-23 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* funBy function added (documentation to be done)
 
@@ -181,7 +204,7 @@
 
 	* Version 4.4.1 uploaded.
 
-2011-06-05 Søren Højsgaard <sorenh@agrsci.dk>
+2011-06-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* subSeq function speeded up by considerably
 
@@ -194,7 +217,7 @@
 
 	* Version 4.4.0 uploaded
 
-2011-05-05 Søren Højsgaard <sorenh@agrsci.dk>
+2011-05-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* HTMLreport changed to Rscript2HTML
 
@@ -202,7 +225,7 @@
 
 	* Version 4.3.1 uploaded.
 
-2011-03-28 Søren Højsgaard <sorenh@agrsci.dk>
+2011-03-28 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* popMeans (lsMeans) and linMeans functions added.
 
@@ -212,7 +235,7 @@
 
 	* Version 4.3.0 uploaded
 
-2011-02-02 Søren Højsgaard <sorenh@agrsci.dk>
+2011-02-02 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Bug fixed in timeSinceEvent
 
@@ -220,20 +243,20 @@
 
 	* Version 4.2.3 uploaded
 
-2011-01-12 Søren Højsgaard <sorenh@agrsci.dk>
+2011-01-12 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* HTMLreport function extended
 
 	* Version 4.2.1 uploaded
 
 
-2010-12-12 Søren Højsgaard <sorenh@agrsci.dk>
+2010-12-12 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* HTMLreport function has been added.
 
 	* Version 4.2.0 has been uploaded.
 
-2010-11-24 Søren Højsgaard <sorenh@agrsci.dk>
+2010-11-24 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* timeSinceEvent function has been added
 
@@ -243,7 +266,7 @@
 
 	* Version 4.1.2 has been uploaded.
 
-2010-11-11 Søren Højsgaard <sorenh@agrsci.dk>
+2010-11-11 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* recodevar deprecated.
 
@@ -255,13 +278,13 @@
 
 	* Version 4.1.1 has been uploaded.
 
-2010-11-09 Søren Højsgaard <sorenh@agrsci.dk>
+2010-11-09 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* lsmeans function has been added.
 
 	* Version 4.1.0 has been uploaded.
 
-2010-05-05 Søren Højsgaard <sorenh@agrsci.dk>
+2010-05-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* The sugar beets dataset 'beets' has been added
 
@@ -269,20 +292,20 @@
 
 	* Version 4.0.6 has been uploaded
 
-2009-10-21 Søren Højsgaard <sorenh@agrsci.dk>
+2009-10-21 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* orderBy applied to a dataframe with one column only returned a
 	vector. Has been fixed so that a dataframe is returned.
 
 	* Version 4.0.5 uploaded
 
-2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+2009-10-17 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Bug in NAMESPACE file fixed
 
 	* Version 4.0.4 uploaded
 
-2009-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+2009-10-17 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* esticon method for 'mer' objects added. (Was previously for
 	'lmer' objects).
@@ -290,7 +313,7 @@
 	* Version 4.0.3 uploaded
 
 
-2009-09-07 Søren Højsgaard <sorenh@agrsci.dk>
+2009-09-07 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Bug in summaryBy fixed: Strata did not match their values (as
 	defined by the rh.variables). Thanks to Pascal Hirsch for pointing
@@ -298,7 +321,7 @@
 
 	* Version 4.0.2 uploaded
 
-2009-08-17 Søren Højsgaard <sorenh@agrsci.dk>
+2009-08-17 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Bug in summaryBy fixed: id vars were included in the
 	stratification of data which they should not be. Thanks to Joshua
@@ -306,7 +329,7 @@
 
 	* Version 4.0.1 uploaded.
 
-2009-07-28 Søren Højsgaard <sorenh@agrsci.dk>
+2009-07-28 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* coxph method added for the esticon function. Thanks to
 	Alessandro A Leidi.
@@ -322,52 +345,52 @@
 	* Version 4.0.0 uploaded
 
 
-2009-01-12 Søren Højsgaard <sorenh@agrsci.dk>
+2009-01-12 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* splitBy had inconsistent output across cases. Fixed now
 
 	* Version 3.8 uploaded
 
-2008-12-21 Søren Højsgaard <sorenh@agrsci.dk>
+2008-12-21 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* splitBy failed if by-variables were constant. Fixed now.
 
 	* Version 3.7 uploaded.
 
-2008-10-14 Søren Højsgaard <sorenh@agrsci.dk>
+2008-10-14 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* splitBy now follows convention that first variable varies
 	fastest.
 
 	* Version 3.6 uploaded
 
-2008-10-14 Søren Højsgaard <sorenh@agrsci.dk>
+2008-10-14 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Updated description of dietox data
 
 	* Version 3.5 uploaded
 
 
-2008-09-26 Søren Højsgaard <sorenh@agrsci.dk>
+2008-09-26 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Small bug in summaryBy fixed
 
 	* Version 3.4 uploaded
 
 
-2008-09-26 Søren Højsgaard <sorenh@agrsci.dk>
+2008-09-26 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Small bug in summaryBy fixed
 
 	* Version 3.3 uploaded
 
-2008-09-18 Søren Højsgaard <sorenh@agrsci.dk>
+2008-09-18 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Longer formulas now accepted (bug caused by a naive use of deparse())
 
 	* Version 3.2 uploaded
 
-2008-06-13 Søren Højsgaard <sorenh@agrsci.dk>
+2008-06-13 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Bugs in variable names in summaryBy fixed
 
@@ -375,20 +398,20 @@
 
 	* Version 3.1 uploaded
 
-2008-05-20 Søren Højsgaard <sorenh@agrsci.dk>
+2008-05-20 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* summaryBy speeded up; postfix argument removed
 
 	* Version 3.0 uploaded
 
 
-2008-03-26 Søren Højsgaard <sorenh@agrsci.dk>
+2008-03-26 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Minor bugs removed.
 
 	* Version 2.3 uploaded
 
-2008-02-13 Søren Højsgaard <sorenh@agrsci.dk>
+2008-02-13 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* firstobs and lastobs functions added
 
@@ -396,7 +419,7 @@
 
 
 
-2007-12-05 Søren Højsgaard <sorenh@agrsci.dk>
+2007-12-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* splitBy: Results becomes a splitByData object. Two attributes
 	are added: 1) grps, which is the grouping factors coded into a
@@ -411,7 +434,7 @@
 	* Version 2.1 uploaded
 
 
-2007-09-30 Søren Højsgaard <sorenh@agrsci.dk>
+2007-09-30 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* DESCRIPTION file change from Depends: Hmisc to Imports: Hmisc;
 
@@ -420,7 +443,7 @@
 
 
 
-2007-05-01 Søren Højsgaard <sorenh@agrsci.dk>
+2007-05-01 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* summaryBy: Behaviour with . on rhs of formula when data contains
 	no factors has been corrected.
@@ -428,7 +451,7 @@
 	* Version 1.9 uploaded
 
 
-2007-05-01 Søren Højsgaard <sorenh@agrsci.dk>
+2007-05-01 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Miscellaneous corrections in the .Rd files
 
@@ -438,16 +461,16 @@
 
 	* Version 1.8 uploaded
 
-2007-04-21 Søren Højsgaard <sorenh@agrsci.dk>
+2007-04-21 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* orderBy changed so that signs in formula determines whether to
 	sort ascendingly or decreasingly
 
-2007-03-21 Søren Højsgaard <sorenh@agrsci.dk>
+2007-03-21 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* esticon extended to handle gls objects.
 
-2006-12-14 Søren Højsgaard <sorenh@agrsci.dk>
+2006-12-14 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.6 uploaded
 
@@ -455,14 +478,14 @@
 
 
 
-2006-11-05 Søren Højsgaard <sorenh@agrsci.dk>
+2006-11-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.5 uploaded
 
 	* Typo in package title corrected
 
 
-2006-11-05 Søren Højsgaard <sorenh@agrsci.dk>
+2006-11-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.4 built and uploaded
 
@@ -475,7 +498,7 @@
 	* A file describing how to generate the NAMESPACE file
 	automatically has been added.
 
-2006-10-23 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-23 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.3 built and uploaded
 
@@ -484,7 +507,7 @@
 
 
 
-2006-10-23 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-23 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.2 built and uploaded
 
@@ -495,7 +518,7 @@
 	* postfix argument in summaryBy can be a list
 
 
-2006-10-17 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-17 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.1 built and uploaded
 
@@ -505,7 +528,7 @@
 	work if a variable is of type 'character'
 
 
-2006-10-16 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-16 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 1.0 built and uploaded
 
@@ -517,7 +540,7 @@
 	* summaryBy: prefix=NULL changed to postfix=NULL, argument p2d has
 	been added
 
-2006-10-10 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-10 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 0.9 built and uploaded
 
@@ -527,7 +550,7 @@
 
 
 
-2006-10-03 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-03 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 0.8 built and uploaded
 
@@ -535,7 +558,7 @@
 
 	* Fixed bug so that summaryBy now works with do.call
 
-2006-10-01 Søren Højsgaard <sorenh@agrsci.dk>
+2006-10-01 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Version 0.7 built and uploaded
 
@@ -546,11 +569,11 @@
 	* summaryBy can now take . on both lhs and rhs of "~"
 
 
-2006-09-27 Søren Højsgaard <sorenh@agrsci.dk>
+2006-09-27 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Various bugs have been fixed
 
-2006-09-18 Søren Højsgaard <sorenh@agrsci.dk>
+2006-09-18 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* summaryBy has been reimplemented.
 
@@ -561,7 +584,7 @@
 
 	* transformBy function has been added
 
-2006-02-05 Søren Højsgaard <sorenh@agrsci.dk>
+2006-02-05 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* sampleBy modified allow for also 'systematic samples',
 	e.g. every 5th row.
@@ -569,13 +592,13 @@
 	* summaryBy takes ... arguments to FUN. No default NA action is
 	taken.
 
-2006-02-02 Søren Højsgaard <sorenh@agrsci.dk>
+2006-02-02 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* A sampleBy function has been added.
 
 	* A subsetBy function has been added.
 
-2006-01-26 Søren Højsgaard <sorenh@agrsci.dk>
+2006-01-26 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Function summaryBy modified so one can write log(x) on the left
 	hand side of '~'
@@ -583,7 +606,7 @@
 	* Function summaryBy modified such that NAs are removed. What to
 	do about Inf??
 
-2006-01-17 Søren Højsgaard <sorenh@agrsci.dk>
+2006-01-17 SÃ¸ren HÃ¸jsgaard <sorenh@agrsci.dk>
 
 	* Function summaryBy modified to take . as lhs in formula and to
 	take idvar = ~formula

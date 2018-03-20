@@ -1,4 +1,90 @@
+#' @title Function to calculate groupwise summary statistics
+#' 
+#' @description Function to calculate groupwise summary statistics, much like
+#'     the summary procedure of SAS
+#'
+#' @name by-summary
+#' 
+#' @details Extra arguments ('...') are passed onto the functions in
+#'     FUN. Hence care must be taken that all functions in FUN accept
+#'     these arguments - OR one can explicitly write a functions which
+#'     get around this.  This can particularly be an issue in
+#'     connection with handling NAs. See examples below.  Some code
+#'     for this function has been suggested by Jim
+#'     Robison-Cox. Thanks.
+#' 
+#' @param formula A formula object, see examples below
+#' @param data A data frame
+#' @param FUN A list of functions to be applied, see examples below.
+#' @param id A formula specifying variables which data are not grouped by but
+#'     which should appear in the output. See examples below.
+#' @param keep.names If TRUE and if there is only ONE function in FUN, then the
+#'     variables in the output will have the same name as the variables in the
+#'     input, see 'examples'.
+#' @param p2d Should parentheses in output variable names be replaced by dots?
+#' @param order Should the resulting dataframe be ordered according to the
+#'     variables on the right hand side of the formula? (using \link{orderBy}
+#' @param full.dimension If TRUE then rows of summary statistics are repeated
+#'     such that the result will have the same number of rows as the input
+#'     dataset.
+#' @param var.names Option for user to specify the names of the variables on the
+#'     left hand side.
+#' @param fun.names Option for user to specify function names to apply to the
+#'     variables on the left hand side.
+#' @param ... Additional arguments to FUN. This could for example be NA actions.
 
+#' @return A data frame
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#' @seealso \code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}},
+#'     \code{\link{splitBy}}, \code{\link{transformBy}}
+#' @keywords univar
+#' @examples
+#' 
+#' data(dietox)
+#' dietox12    <- subset(dietox,Time==12)
+#'
+#' fun <- function(x){
+#'   c(m=mean(x), v=var(x), n=length(x))
+#' }
+#' 
+#' summaryBy(cbind(Weight, Feed) ~ Evit + Cu, data=dietox12,
+#'           FUN=fun)
+#' 
+#' summaryBy(list(c("Weight", "Feed"), c("Evit", "Cu")), data=dietox12,
+#'           FUN=fun)
+#'
+#' ## Computations on several variables is done using cbind( )
+#' summaryBy(cbind(Weight, Feed) ~ Evit + Cu, data=subset(dietox, Time > 1),
+#'    FUN=fun)
+#' 
+#' ## Calculations on transformed data is possible using cbind( ), but
+#' # the transformed variables must be named
+#' 
+#' summaryBy(cbind(lw=log(Weight), Feed) ~ Evit + Cu, data=dietox12, FUN=mean)
+#'  
+#' ## There are missing values in the 'airquality' data, so we remove these
+#' ## before calculating mean and variance with 'na.rm=TRUE'. However the
+#' ## length function does not accept any such argument. Hence we get
+#' ## around this by defining our own summary function in which length is
+#' ## not supplied with this argument while mean and var are:
+#' 
+#' sumfun <- function(x, ...){
+#'   c(m=mean(x, na.rm=TRUE, ...), v=var(x, na.rm=TRUE, ...), l=length(x))
+#' }
+#' summaryBy(cbind(Ozone, Solar.R) ~ Month, data=airquality, FUN=sumfun )
+#' 
+#' ## Using '.' on the right hand side of a formula means to stratify by
+#' ## all variables not used elsewhere:
+#' 
+#' data(warpbreaks)
+#' summaryBy(breaks ~ wool + tension, warpbreaks, FUN=mean)
+#' summaryBy(breaks ~ ., warpbreaks, FUN=mean)
+#' summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
+#' 
+
+
+
+#' @rdname by-summary
 summaryBy <-
   function (formula, data=parent.frame(), id=NULL, FUN=mean, keep.names=FALSE,
             p2d=FALSE, order=TRUE, full.dimension=FALSE,
@@ -12,6 +98,8 @@ summaryBy <-
     rhs.grp <- zzz$rhs.grp
     ids.var <- zzz$form.ids.var
 
+##    str(list(lhs.num=lhs.num))
+    
     rh.trivial <- length( rhs.grp ) == 0 #; cat(sprintf("rh.trivial=%d\n", rh.trivial))
 
     rh.string <- .get_rhs_string( data, rhs.grp )
@@ -20,24 +108,50 @@ summaryBy <-
     rh.string.factor <- factor(rh.string, levels=rh.unique) ## This is important
 
 ### Get data for id.vars; use ids.var, data, rh.idx
-    ## print(ids.var)
-    ## .s <<- ids.var
-    ## print(rh.idx)
-    ## print(names(data))
     if (length(ids.var)>0){
       id.data <-  data[ rh.idx, ids.var, drop=FALSE ] ##; print(id.data)
     }
 
 ### Get lhs data; use lhs.num, data
 
-    lh.data <- do.call(cbind,lapply(paste(lhs.num), function(x)eval(parse(text=x), data)))
-    #print(lh.data)
-    colnames(lh.data) <- lhs.num
+    ## Below, we need lhs in the form cbind(y1, y2, y3) for further computations.
+    ##
+    ## It is OK to have computations in this form a la cbind(y1, y2,
+    ## y3, y4=y1+y2, y5=log(y2)).
+    ##
+    ## If lhs is y1 this is translated into cbind(y1).
+    ##
+    ## If lhs is ., this is translated into c(y1, y2, y3).
+    ##
+    ## It is also so (alas) that one may write y1 + y2 + y3,
+    ## which is also translated into c(y1, y2, y3)
+
+    
+    if (length(lhs.num) > 1) {
+        ## If lhs.num is vector of length > 1, wrap with cbind:
+        lhs.num <- paste0("cbind( ", toString(lhs.num), " )")
+    } else {
+        ## strip cbind( ... ) if it is there; then put cbind around
+        ## (if lhs is simply y1, then there is no cbind around).
+        ff2 <- gsub("^cbind\\((.*)\\)$", "\\1", lhs.num)
+        lhs.num <- paste0("cbind( ", ff2, " )")
+    }
+        
+    ## aa <- lapply(paste(lhs.num), function(x)eval(parse(text=x), data))
+    ## lh.data <- do.call(cbind, aa)
+    ## replace two lines above with
+    lh.data <- eval(parse(text=lhs.num), data)
+
+    ## Hack: redefine lhs.num : name of variables in data frame
+    lhs.num <- colnames(lh.data)
+    
+    ##colnames(lh.data) <- lhs.num
 
 
 ### Function names; use FUN
     funNames <- .get_fun_names( FUN )
 
+    ##print(rh.string.factor)
 ### Calculate groupwise statistics
     if (!is.list(FUN))
         FUN <- list(FUN)
@@ -46,7 +160,9 @@ summaryBy <-
         ##currFUN <- FUN[[ff]]
         currFUN <- match.fun( FUN[[ff]] )
         for (vv in 1:length(lhs.num)) {  ## loop over variables
+
             currVAR <- lh.data[,lhs.num[vv]]
+
             zzz <- tapply(currVAR, rh.string.factor,
                           function(x){ currFUN(x,...) }, simplify=FALSE)
             zzz  <- do.call(rbind, zzz)
@@ -104,7 +220,6 @@ summaryBy <-
     rownames(ans) <- 1:nrow(ans)
     if (length(unique(names(ans))) != length(names(ans)))
       warning("dataframe contains replicate names \n", call.=FALSE)
-
     ans
   }
 
@@ -297,3 +412,36 @@ summaryBy <-
   }
   return(value)
 }
+
+
+
+
+
+## #' @rdname by-summary
+## summary_by <- function(data, formula, FUN){
+##     summaryBy(formula=formula, data=data, FUN=FUN)
+## }
+
+## #' @rdname by-summary
+## .summaryBy <- function(formula, data, FUN){
+##     if (!inherits(formula, c("formula", "list")))
+##         stop("formula must be a formula or a list")
+    
+##     if (inherits(formula, "list")){
+##         f <- formula
+##         if ((length(f) == 2) &&
+##             all(sapply(f, function(z) inherits(z, what="character")))){
+##             formula <- paste("cbind(", toString(f[[1]]), ") ~ ", paste(f[[2]], collapse= " + "))   
+##             formula <- as.formula(formula)
+##         } else {
+##             stop("Can not create formula")
+##         }
+##     }
+##     ## if (inherits(FUN, "list") && 
+##     ##     all(sapply(FUN, inherits, "function"))) {
+##     ##     FUN <- function(x){lapply(FUN, function(f) do.call(f, list(x), quote=T))}
+##     ##     fun<<-FUN
+##     ## }
+##     ## print(FUN)
+##     aggregate(formula, data, FUN)
+## }

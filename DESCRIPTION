@@ -1,26 +1,25 @@
 Package: doBy
-Version: 4.5-15
+Version: 4.6-1
 Title: Groupwise Statistics, LSmeans, Linear Contrasts, Utilities
-Author: Søren Højsgaard <sorenh@math.aau.dk> and Ulrich Halekoh <uhalekoh@health.sdu.dk> 
-Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
-Description: The facilities can roughly be grouped as: 
- .
-   1) Facilities for groupwise computations of summary statistics and
- other facilities for working with grouped data: 'do' something to data 
- stratified 'by' some variables.  
- .
-   2) LSmeans (least-squares means), general linear contrasts.
- .
-   3) Miscellaneous other utilities.
-Encoding: latin1
+Author: SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk> and Ulrich Halekoh
+    <uhalekoh@health.sdu.dk>
+Maintainer: SÃ¸ren HÃ¸jsgaard <sorenh@math.aau.dk>
+Description: Contains:
+    1) Facilities for working with grouped data: 'do' something to data
+    stratified 'by' some variables.
+    2) LSmeans (least-squares means), general linear contrasts. 
+    3) Miscellaneous other utilities.
+Encoding: UTF-8
+VignetteBuilder: knitr
 URL: http://people.math.aau.dk/~sorenh/software/doBy/
 ZipData: no
 License: GPL (>= 2)
 Depends: R (>= 3.2.0), methods
-Imports: MASS, Matrix
+Imports: MASS, Matrix, dplyr, plyr, magrittr
 Suggests: pbkrtest (>= 0.4-6), ggplot2, multcomp, geepack, lme4,
-        survival
+        survival, knitr
+RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2016-03-31 03:26:07 UTC; sorenh
+Packaged: 2018-03-19 08:13:35 UTC; sorenh
 Repository: CRAN
-Date/Publication: 2016-03-31 17:38:50
+Date/Publication: 2018-03-20 12:00:22 UTC

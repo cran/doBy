@@ -17,16 +17,34 @@ importFrom("stats", "as.formula", "coef", "delete.response", "family",
            "fitted", "formula", "lm", "logLik", "median",
            "model.frame", "model.matrix", "pchisq", "pnorm", "pt",
            "qnorm", "qt", "residuals", "sd", "summary.lm", "terms",
-           "vcov")
+           "vcov", "aggregate", "printCoefmat")
 
+importFrom(plyr, dlply)
+importFrom(dplyr, arrange_)
+
+importFrom(magrittr, "%>%")
+export("%>%")
+
+importFrom("utils", "str")
+
+importFrom(methods, setOldClass) 
 
 ## S3method(coerceGraph, dgCMatrix)
 ## S3method(coerceGraph, graphNEL)
 ## S3method(coerceGraph, igraph)
 ## S3method(coerceGraph, matrix)
 
-S3method( coef,             lmBy            )
-S3method( coef,             summary_lmBy    )
+S3method( coef,             linest_class    )
+S3method( summary,          linest_class    )
+S3method( print,            linest_class    )
+S3method( confint,          linest_class    )
+
+S3method( coef,             esticon_class   )
+S3method( summary,          esticon_class   )
+S3method( print,            esticon_class   )
+
+##S3method( coef,             lmBy            )
+##S3method( coef,             summary_lmBy    )
 S3method( esticon,          coxph           )
 S3method( esticon,          geeglm          )
 S3method( esticon,          glm             )
@@ -37,7 +55,7 @@ S3method( esticon,          mer             )
 S3method( esticon,          merMod          )
 S3method( firstobs,         default         )
 S3method( firstobs,         formula         )
-S3method( fitted,           lmBy            )
+##S3method( fitted,           lmBy            )
 S3method( lastobs,          default         )
 S3method( lastobs,          formula         )
 S3method( linest,           geeglm          )
@@ -45,16 +63,16 @@ S3method( linest,           glm             )
 S3method( linest,           lm              )
 S3method( linest,           lmerMod         )
 S3method( linest,           merMod          )
-S3method( LSmatrix,         default         )
+S3method( LE_matrix,    default         )
 S3method( LSmeans,          default         )
 S3method( LSmeans,          lmerMod         )
-S3method( print,            linearEstimate  )
-S3method( print,            lmBy            )
-S3method( print,            LSmatrix        )
+
+##S3method( print,            lmBy            )
+S3method( print,            LE_matrix_class )
 S3method( print,            splitByData     )
-S3method( print,            summary_lmBy    )
-S3method( residuals,        lmBy            )
-S3method( summary,          lmBy            )
+##S3method( print,            summary_lmBy    )
+##S3method( residuals,        lmBy            )
+##S3method( summary,          lmBy            )
 
 ## S3method( get_null_basis, default)
 ## S3method( get_null_basis, matrix)
@@ -68,6 +86,7 @@ S3method( get_xlevels, default)
 S3method( get_xlevels, mer)
 S3method( get_xlevels, merMod)
 
+S3method(summary, LE_matrix_class)
 
 ## S3method( nullBasis,        geeglm          )
 ## S3method( nullBasis,        glm             )

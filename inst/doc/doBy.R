@@ -2,16 +2,17 @@
 ### Encoding: UTF-8
 
 ###################################################
-### code chunk number 1: doBy.Rnw:22-25
+### code chunk number 1: doBy.Rnw:34-37
 ###################################################
-require( doBy )
+#require( doBy )
 prettyVersion <- packageDescription("doBy")$Version
 prettyDate <- format(Sys.Date())
 
 
 ###################################################
-### code chunk number 2: doBy.Rnw:77-81
+### code chunk number 2: doBy.Rnw:82-87
 ###################################################
+library(doBy)
 dir.create("figures")
 oopt <- options()
 options("digits"=4, "width"=80, "prompt"=" ", "continue"="  ")
@@ -19,13 +20,13 @@ options(useFancyQuotes="UTF-8")
 
 
 ###################################################
-### code chunk number 3: doBy.Rnw:104-105
+### code chunk number 3: doBy.Rnw:110-111
 ###################################################
 library(doBy)
 
 
 ###################################################
-### code chunk number 4: doBy.Rnw:123-128
+### code chunk number 4: doBy.Rnw:127-132
 ###################################################
 data(CO2)
 CO2 <- transform(CO2, Treat=Treatment, Treatment=NULL)
@@ -35,227 +36,98 @@ CO2 <- subset(CO2, Plant %in% c("Qn1", "Qc1", "Mn1", "Mc1"))
 
 
 ###################################################
-### code chunk number 5: doBy.Rnw:140-141
+### code chunk number 5: doBy.Rnw:144-145
 ###################################################
 airquality <- subset(airquality, Month %in% c(5,6))
 
 
 ###################################################
-### code chunk number 6: doBy.Rnw:169-171
+### code chunk number 6: doBy.Rnw:175-178
 ###################################################
-myfun1 <- function(x){c(m=mean(x), v=var(x))}
-summaryBy( conc + uptake ~ Plant, data=CO2, FUN=myfun1)
+myfun1 <- function(x){c(m=mean(x), s=sd(x))}
+summaryBy(cbind(conc, uptake, lu=log(uptake)) ~ Plant, 
+          data=CO2, FUN=myfun1)
 
 
 ###################################################
-### code chunk number 7: doBy.Rnw:179-180
+### code chunk number 7: doBy.Rnw:182-183
 ###################################################
-summaryBy( list(c("conc","uptake"), "Plant"), data=CO2, FUN=myfun1)
+summaryBy(conc ~ Plant, data=CO2, FUN=mean)
 
 
 ###################################################
-### code chunk number 8: doBy.Rnw:186-188
+### code chunk number 8: doBy.Rnw:190-196
 ###################################################
-myfun2 <- function(x){c(mean(x), var(x))}
-summaryBy( conc + uptake ~ Plant, data=CO2, FUN=myfun2)
+## Will fail because of log(uptake)
+## summaryBy(list(c("conc", "uptake", "log(uptake)"), "Plant"), 
+##          data=CO2, FUN=myfun1)
+## Works
+summaryBy(list(c("conc", "uptake"), "Plant"), 
+          data=CO2, FUN=myfun1)
 
 
 ###################################################
-### code chunk number 9: doBy.Rnw:196-197
+### code chunk number 9: doBy.Rnw:233-235
 ###################################################
-summaryBy( conc + uptake ~ Plant, data=CO2, FUN=list( mean, var ) )
+x1 <- orderBy(~ Temp + Month, data=airquality)
+head(x1)
 
 
 ###################################################
-### code chunk number 10: doBy.Rnw:204-205
+### code chunk number 10: doBy.Rnw:241-242
 ###################################################
-summaryBy(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 ))
+x2 <- orderBy(~ - Temp + Month, data=airquality)
 
 
 ###################################################
-### code chunk number 11: doBy.Rnw:210-212
+### code chunk number 11: doBy.Rnw:246-248
 ###################################################
-summaryBy(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 ),
-          fun.names=c("mean","var","mm","vv"))
+x3 <- orderBy(c("Temp", "Month"), data=airquality)
+x4 <- orderBy(c("-Temp", "Month"), data=airquality)
 
 
 ###################################################
-### code chunk number 12: doBy.Rnw:222-224
+### code chunk number 12: doBy.Rnw:275-278
 ###################################################
-summaryBy(log(uptake) + I(conc+uptake) + conc+uptake ~ Plant, data=CO2,
-          FUN=myfun1)
+x <- splitBy(~ Month, data=airquality)
+lapply(x, head, 4)
+attributes(x)
 
 
 ###################################################
-### code chunk number 13: doBy.Rnw:230-232
+### code chunk number 13: doBy.Rnw:282-283
 ###################################################
-summaryBy(log(uptake) + I(conc+uptake) + conc + uptake ~ Plant, data=CO2,
-          FUN=myfun1, var.names=c("log.upt", "conc+upt", "conc", "upt"))
+splitBy("Month", data=airquality)
 
 
 ###################################################
-### code chunk number 14: doBy.Rnw:242-244
+### code chunk number 14: doBy.Rnw:302-304
 ###################################################
-summaryBy(log(uptake)+I(conc+uptake)~Plant, data=CO2, p2d=TRUE,
-FUN=myfun1)
-
-
-###################################################
-### code chunk number 15: doBy.Rnw:258-260
-###################################################
-summaryBy(conc+uptake~Plant, data=CO2, FUN=myfun1, id=~Type+Treat)
-summaryBy(conc+uptake~Plant, data=CO2, FUN=myfun1, id=c("Type","Treat"))
-
-
-###################################################
-### code chunk number 16: doBy.Rnw:279-280
-###################################################
-summaryBy(log(uptake)+I(conc+uptake)+. ~Plant, data=CO2, FUN=myfun1)
-
-
-###################################################
-### code chunk number 17: doBy.Rnw:291-292
-###################################################
-summaryBy(log(uptake) ~Plant+., data=CO2, FUN=myfun1)
-
-
-###################################################
-### code chunk number 18: doBy.Rnw:301-302
-###################################################
-summaryBy(log(uptake) ~ 1, data=CO2, FUN=myfun1)
-
-
-###################################################
-### code chunk number 19: doBy.Rnw:314-316
-###################################################
-summaryBy(conc+uptake+log(uptake)~Plant,
-data=CO2, FUN=mean, id=~Type+Treat, keep.names=TRUE)
-
-
-###################################################
-### code chunk number 20: doBy.Rnw:329-330
-###################################################
-x<-orderBy(~Temp+Month, data=airquality)
-
-
-###################################################
-### code chunk number 21: doBy.Rnw:334-335
-###################################################
+x <- subsetBy(~Month, subset=Wind > mean(Wind), data=airquality)
 head(x)
 
 
 ###################################################
-### code chunk number 22: doBy.Rnw:341-343
+### code chunk number 15: doBy.Rnw:323-327
 ###################################################
-x<-orderBy(~-Temp+Month, data=airquality)
+x <- transformBy(~Month, data=airquality, 
+                 minW=min(Wind), maxW=max(Wind),
+                 chg = diff(range(Wind)))
 head(x)
 
 
 ###################################################
-### code chunk number 23: doBy.Rnw:354-356
+### code chunk number 16: doBy.Rnw:331-334
 ###################################################
-x<-splitBy(~Month, data=airquality)
-x
+x <- transformBy("Month", data=airquality, 
+                 minW=min(Wind), maxW=max(Wind),
+                 chg = diff(range(Wind)))
 
 
 ###################################################
-### code chunk number 24: doBy.Rnw:362-363
+### code chunk number 17: doBy.Rnw:457-463
 ###################################################
-x[['5']]
-
-
-###################################################
-### code chunk number 25: doBy.Rnw:368-369
-###################################################
-attr(x,"groupid")
-
-
-###################################################
-### code chunk number 26: doBy.Rnw:379-380
-###################################################
-sampleBy(~1, frac=0.5, data=airquality)
-
-
-###################################################
-### code chunk number 27: doBy.Rnw:386-387
-###################################################
-sampleBy(~Month, frac=0.2, data=airquality,systematic=T)
-
-
-###################################################
-### code chunk number 28: doBy.Rnw:398-399
-###################################################
-subsetBy(~Month, subset=Wind>mean(Wind), data=airquality)
-
-
-###################################################
-### code chunk number 29: doBy.Rnw:412-414
-###################################################
-transformBy(~Month, data=airquality, minW=min(Wind), maxW=max(Wind),
-    chg=sum(range(Wind)*c(-1,1)))
-
-
-###################################################
-### code chunk number 30: doBy.Rnw:428-433
-###################################################
-data(dietox)
-dietox <- orderBy(~Pig+Time, data=dietox)
-FEfun  <- function(d){c(NA, diff(d$Weight)/diff(d$Feed))}
-v      <- lapplyBy(~Pig, data=dietox, FEfun)
-dietox$FE <- unlist(v)
-
-
-###################################################
-### code chunk number 31: doBy.Rnw:438-442
-###################################################
-dietox <- orderBy(~Pig+Time, data=dietox)
-wdata  <- splitBy(~Pig, data=dietox)
-v      <- lapply(wdata, FEfun)
-dietox$FE <- unlist(v)
-
-
-###################################################
-### code chunk number 32: doBy.Rnw:450-454
-###################################################
-x<-scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-                 "Species"),     data=iris)
-head(x)
-head(iris)
-
-
-###################################################
-### code chunk number 33: doBy.Rnw:463-467
-###################################################
-mydata <- data.frame(y=rnorm(32), x=rnorm(32),
-g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)),
-g3=factor(rep(c(1,2),each=4)))
-head(mydata)
-
-
-###################################################
-### code chunk number 34: doBy.Rnw:472-480
-###################################################
-## Based on the formula interface to t.test
-t.testBy1 <- function(formula, group, data, ...){
-  formulaFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
-}
-## Based on the default interface to t.test
-t.testBy2 <- function(formula, group, data, ...){
-  xyFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...)
-}
-
-
-###################################################
-### code chunk number 35: doBy.Rnw:487-489
-###################################################
-t.testBy1(y~g1, ~g2, data=mydata)
-t.testBy2(y~x,  ~g2, data=mydata)
-
-
-###################################################
-### code chunk number 36: doBy.Rnw:508-514
-###################################################
-ff  <- function(a,b=2,c=4){a+b+c}
+ff  <- function(a, b=2, c=4){a + b + c}
 ff1 <- specialize(ff, arglist=list(a=1, b=7, yy=123))
 ff1
 gg  <- rnorm
@@ -264,7 +136,7 @@ gg1
 
 
 ###################################################
-### code chunk number 37: doBy.Rnw:519-522
+### code chunk number 18: doBy.Rnw:468-471
 ###################################################
 f  <- function(a) {a <- a + 1; a}
 f1 <- specialize(f, list(a = 10))
@@ -272,7 +144,7 @@ f1
 
 
 ###################################################
-### code chunk number 38: doBy.Rnw:532-535
+### code chunk number 19: doBy.Rnw:481-484
 ###################################################
 x <- c(1,1,1,2,2,2,1,1,1,3)
 firstobs(x)
@@ -280,14 +152,14 @@ lastobs(x)
 
 
 ###################################################
-### code chunk number 39: doBy.Rnw:540-542
+### code chunk number 20: doBy.Rnw:489-491
 ###################################################
 firstobs(~Plant, data=CO2)
 lastobs(~Plant, data=CO2)
 
 
 ###################################################
-### code chunk number 40: doBy.Rnw:551-554
+### code chunk number 21: doBy.Rnw:500-503
 ###################################################
 x <- c(1:4,0:5,11,NA,NA)
 which.maxn(x,3)
@@ -295,7 +167,7 @@ which.minn(x,5)
 
 
 ###################################################
-### code chunk number 41: doBy.Rnw:563-568
+### code chunk number 22: doBy.Rnw:512-517
 ###################################################
 x <- c(1,1,2,2,2,1,1,3,3,3,3,1,1,1)
 subSeq(x)
@@ -305,7 +177,7 @@ subSeq(letters[x],item="a")
 
 
 ###################################################
-### code chunk number 42: doBy.Rnw:576-580
+### code chunk number 23: doBy.Rnw:525-529
 ###################################################
 x <- c("dec","jan","feb","mar","apr","may")
 src1 <- list(c("dec","jan","feb"), c("mar","apr","may"))
@@ -314,75 +186,75 @@ recodeVar(x,src=src1,tgt=tgt1)
 
 
 ###################################################
-### code chunk number 43: doBy.Rnw:587-589
+### code chunk number 24: doBy.Rnw:536-538
 ###################################################
 head(renameCol(CO2, 1:2, c("kk","ll")))
 head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
 
 
 ###################################################
-### code chunk number 44: doBy.Rnw:597-598
+### code chunk number 25: doBy.Rnw:546-547
 ###################################################
 yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
 
 
 ###################################################
-### code chunk number 45: doBy.Rnw:605-606
+### code chunk number 26: doBy.Rnw:554-555
 ###################################################
 tvar <- seq_along(yvar) + c(0.1,0.2)
 
 
 ###################################################
-### code chunk number 46: doBy.Rnw:611-612
+### code chunk number 27: doBy.Rnw:560-561
 ###################################################
 tse<- timeSinceEvent(yvar,tvar)
 
 
 ###################################################
-### code chunk number 47: doBy.Rnw:627-632
+### code chunk number 28: doBy.Rnw:576-581
 ###################################################
 plot(sign.tse~tvar, data=tse, type="b")
 grid()
-rug(tse$tvar[tse$yvar==1], col='blue',lwd=4)
+rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
 points(scale(tse$run), col=tse$run, lwd=2)
 lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
 
 
 ###################################################
-### code chunk number 48: doBy.Rnw:636-641
+### code chunk number 29: doBy.Rnw:585-590
 ###################################################
 plot(tae~tvar, data=tse, ylim=c(-6,6),type="b")
 grid()
-lines(tbe~tvar, data=tse, type="b", col='red')
-rug(tse$tvar[tse$yvar==1], col='blue',lwd=4)
-lines(run~tvar, data=tse, col='cyan',lwd=2)
+lines(tbe~tvar, data=tse, type="b", col="red")
+rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
+lines(run~tvar, data=tse, col="cyan",lwd=2)
 
 
 ###################################################
-### code chunk number 49: doBy.Rnw:645-649
+### code chunk number 30: doBy.Rnw:594-598
 ###################################################
 plot(ewin~tvar, data=tse,ylim=c(1,4))
-rug(tse$tvar[tse$yvar==1], col='blue',lwd=4)
+rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
 grid()
-lines(run~tvar, data=tse,col='red')
+lines(run~tvar, data=tse,col="red")
 
 
 ###################################################
-### code chunk number 50: doBy.Rnw:655-656
+### code chunk number 31: doBy.Rnw:604-605
 ###################################################
 tse$tvar[tse$abs<=1]
 
 
 ###################################################
-### code chunk number 51: doBy.Rnw:663-666
+### code chunk number 32: doBy.Rnw:612-615
 ###################################################
 lynx <- as.numeric(lynx)
 tvar <- 1821:1934
-plot(tvar,lynx,type='l')
+plot(tvar,lynx,type="l")
 
 
 ###################################################
-### code chunk number 52: doBy.Rnw:672-676
+### code chunk number 33: doBy.Rnw:621-625
 ###################################################
 yyy <- lynx>mean(lynx)
 head(yyy)
@@ -391,14 +263,14 @@ sss
 
 
 ###################################################
-### code chunk number 53: doBy.Rnw:680-682
+### code chunk number 34: doBy.Rnw:629-631
 ###################################################
-plot(tvar,lynx,type='l')
-rug(tvar[sss$midpoint],col='blue',lwd=4)
+plot(tvar,lynx,type="l")
+rug(tvar[sss$midpoint],col="blue",lwd=4)
 
 
 ###################################################
-### code chunk number 54: doBy.Rnw:687-690
+### code chunk number 35: doBy.Rnw:636-639
 ###################################################
 yvar <- rep(0,length(lynx))
 yvar[sss$midpoint] <- 1
@@ -406,14 +278,14 @@ str(yvar)
 
 
 ###################################################
-### code chunk number 55: doBy.Rnw:694-696
+### code chunk number 36: doBy.Rnw:643-645
 ###################################################
 tse <- timeSinceEvent(yvar,tvar)
 head(tse,20)
 
 
 ###################################################
-### code chunk number 56: doBy.Rnw:702-705
+### code chunk number 37: doBy.Rnw:651-654
 ###################################################
 len1 <- tapply(tse$ewin, tse$ewin, length)
 len2 <- tapply(tse$run, tse$run, length)
@@ -421,7 +293,7 @@ c(median(len1),median(len2),mean(len1),mean(len2))
 
 
 ###################################################
-### code chunk number 57: doBy.Rnw:710-713
+### code chunk number 38: doBy.Rnw:659-662
 ###################################################
 tse$lynx <- lynx
 tse2 <- na.omit(tse)
@@ -429,27 +301,27 @@ plot(lynx~tae, data=tse2)
 
 
 ###################################################
-### code chunk number 58: doBy.Rnw:717-720
+### code chunk number 39: doBy.Rnw:666-669
 ###################################################
-plot(tvar,lynx,type='l',lty=2)
+plot(tvar,lynx,type="l",lty=2)
 mm <- lm(lynx~tae+I(tae^2)+I(tae^3), data=tse2)
-lines(fitted(mm)~tvar, data=tse2, col='red')
+lines(fitted(mm)~tvar, data=tse2, col="red")
 
 
 ###################################################
-### code chunk number 59: doBy.Rnw:733-734
+### code chunk number 40: doBy.Rnw:682-683
 ###################################################
 options(oopt)
 
 
 ###################################################
-### code chunk number 60: doBy.Rnw:749-750
+### code chunk number 41: doBy.Rnw:698-699
 ###################################################
 CO2
 
 
 ###################################################
-### code chunk number 61: doBy.Rnw:755-756
+### code chunk number 42: doBy.Rnw:704-705
 ###################################################
 head(airquality, n=20)
 

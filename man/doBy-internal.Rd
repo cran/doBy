@@ -1,71 +1,41 @@
 \name{internal}
 \alias{internal}
 
-\alias{LSmatrix-class}
+\alias{orderByOLD}
+\alias{splitByOLD}
+\alias{summaryByOLD}
+
+\alias{LE_matrix_class-class}
+\alias{print.linest_class}
+\alias{print.esticon_class}
+\alias{print.LE_matrix_class}
+\alias{summary.LE_matrix_class}
 
 \alias{asNumericMatrix2}
 \alias{matrix2dataFrame2}
 \alias{subsAttr2}
 \alias{doby.xtabs}
 
-\alias{print.linearEstimate}
-
-\alias{LSmatrix}
-\alias{LSmatrix.default}
-\alias{print.LSmatrix}
-
-\alias{funBy}
 
 \alias{print.lmBy}
 \alias{print.summary_lmBy}
-
 \alias{specialize}
-
 \alias{print.splitByData}
-\alias{get_contrasts}
-\alias{get_contrasts.default}
-\alias{get_contrasts.merMod}
-\alias{get_vartypes}
-\alias{get_X}
-\alias{get_X.merMod}
-\alias{get_X.default}
-\alias{get_xlevels}
-\alias{get_xlevels.default}
-\alias{get_xlevels.mer}
-\alias{get_xlevels.merMod}
-\alias{set_covariate_val}
-\alias{set_xlevels}
-%% \alias{}
-%% \alias{}
-%% \alias{}
-%% \alias{}
 
-\alias{get_contrasts.default}
-\alias{get_contrasts.merMod}
-\alias{get_X.default}
-\alias{get_xlevels.default}
-\alias{get_xlevels.mer}
-\alias{get_xlevels.merMod}
-\alias{get_X.merMod}
+\alias{linest_class-class}
 
 
-  
-     
-
-
-
-
+\alias{\%>\%}
+ 
 \title{Internal functions for the doBy package}
 \description{Internal functions for the doBy package}
 \keyword{internal}% at least one, from doc/KEYWORDS
 
 
 
-%% \alias{linestMatrix}
-%% \alias{linestMatrix.default}
 
-%% \alias{print.linestMatrix}
-%% \alias{print.linest}
+
+%%\alias{funBy}
 
 %%\alias{pdiff}
 

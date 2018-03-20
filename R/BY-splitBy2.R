@@ -1,9 +1,43 @@
+### FIXME splitBy: Change names
+
+#' @title Split a data frame
+#' 
+#' @description Split a dataframe according to the levels of variables in the
+#'     dataframe. The variables to split by can be given as a formula or as a
+#'     character vector.
+#' 
+#' @name by-split
+#' 
+#' @param formula Variables to split data frame by, as ‘as.quoted’ variables,
+#'     a formula or character vector.
+#' @param data A data frame
+#' @param drop Logical indicating if levels that do not occur should be
+#'     dropped. Deprecated; levels that do not occur are ignored.
+#' @param ... Additional arguments, currently not used.
+#' @return A list of dataframes.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#' @seealso \code{\link{orderBy}}, \code{\link{summaryBy}},
+#'     \code{\link{transformBy}}
+#' @keywords utilities
+#' @examples
+#' 
+#' data(dietox, package="doBy")
+#' splitBy(formula = ~Evit + Cu, data = dietox)
+#' splitBy(formula = c("Evit", "Cu"), data = dietox)
+#' 
+#' splitBy(~Month, data=airquality)
+#' splitBy("Month", data=airquality)
+#' 
+#' @export splitBy
+
+
+#' @rdname by-split
 splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matrix=FALSE){
 
   data.var  <- names(data)
 
   if ( !(class(formula) %in% c("formula", "character")) ){
-    stop("'formula' must be a right hand sided formula or a character vector")
+      stop("'formula' must be a right hand sided formula or a character vector")
   }
 
   if ( class(formula) == "formula" ){
@@ -73,8 +107,19 @@ splitBy <-function (formula, data = parent.frame(), drop=TRUE) { #, return.matri
   groupData
 }
 
-print.splitByData <- function(x,...){
+print.splitByData <- function(x, ...){
 #  print(attr(x,"groupid"))
   print(cbind(listentry=names(x), attr(x,"groupid")))
   return(invisible(x))
 }
+
+
+
+## #' @rdname by-split
+## split_by <- function(data, formula){
+##     plyr::dlply(data, formula, base::identity)
+## }
+
+## splitBy <- function(formula, data, drop=TRUE){
+##     plyr::dlply(data, formula, identity)
+## }

@@ -1,3 +1,28 @@
+#' Rename columns in a matrix or a dataframe.
+#' 
+#' Rename columns in a matrix or a dataframe.
+#' 
+#' 
+#' @param indata A dataframe or a matrix
+#' @param src Source: Vector of names of columns in 'indata' to be renamed. Can
+#' also be a vector of column numbers.
+#' @param tgt Target: Vector with corresponding new names in the output.
+#' @return A dataframe if 'indata' is a dataframe; a matrix in 'indata' is a
+#' matrix.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+
+#' @keywords utitlities
+#' @examples
+#' 
+#' 
+#' renameCol(CO2, 1:2, c("kk", "ll"))
+#' renameCol(CO2, c("Plant", "Type"), c("kk", "ll"))
+#' 
+#' # These fail - as they should:
+#' # renameCol(CO2, c("Plant", "Type", "conc"), c("kk", "ll"))
+#' # renameCol(CO2, c("Plant", "Type", "Plant"), c("kk", "ll"))
+#' 
+#' @export renameCol
 renameCol <- function(indata, src, tgt){
 
   if (inherits(indata, "data.frame")) {
@@ -23,9 +48,7 @@ renameCol <- function(indata, src, tgt){
   if (length(src)!=length(tgt)){
     stop("length of src not equal to length of tgt")
   }
-  
-
-  
+    
   if (is.numeric(src)){
     idx <- src
     iii <- intersect(seq_along(dfnames), src)
