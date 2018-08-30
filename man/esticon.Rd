@@ -10,18 +10,11 @@
 \alias{esticon.mer}
 \alias{esticon.merMod}
 \alias{esticon.coxph}
-\alias{esticon.gls}
-\alias{esticon.geeglm}
-\alias{esticon.lm}
-\alias{esticon.glm}
-\alias{esticon.mer}
-\alias{esticon.coxph}
-\alias{esticon.lme}
 \alias{coef.esticon_class}
 \title{Contrasts for lm, glm, lme, and geeglm objects}
 \usage{
-esticon(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE,
-  ...)
+esticon(obj, L, beta0, conf.int = TRUE, level = 0.95,
+  joint.test = FALSE, ...)
 
 \method{esticon}{gls}(obj, L, beta0, conf.int = TRUE, level = 0.95,
   joint.test = FALSE, ...)

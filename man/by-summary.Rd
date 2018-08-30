@@ -6,13 +6,13 @@
 \title{Function to calculate groupwise summary statistics}
 \usage{
 summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-  keep.names = FALSE, p2d = FALSE, order = TRUE, full.dimension = FALSE,
-  var.names = NULL, fun.names = NULL, ...)
+  keep.names = FALSE, p2d = FALSE, order = TRUE,
+  full.dimension = FALSE, var.names = NULL, fun.names = NULL, ...)
 }
 \arguments{
-\item{formula}{A formula object, see examples below}
+\item{formula}{A formula object, see examples below.}
 
-\item{data}{A data frame}
+\item{data}{A data frame.}
 
 \item{id}{A formula specifying variables which data are not grouped by but
 which should appear in the output. See examples below.}
@@ -41,7 +41,7 @@ variables on the left hand side.}
 \item{...}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \value{
-A data frame
+A dataframe.
 }
 \description{
 Function to calculate groupwise summary statistics, much like

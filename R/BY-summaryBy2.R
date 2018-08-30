@@ -13,8 +13,8 @@
 #'     for this function has been suggested by Jim
 #'     Robison-Cox. Thanks.
 #' 
-#' @param formula A formula object, see examples below
-#' @param data A data frame
+#' @param formula A formula object, see examples below.
+#' @param data A data frame.
 #' @param FUN A list of functions to be applied, see examples below.
 #' @param id A formula specifying variables which data are not grouped by but
 #'     which should appear in the output. See examples below.
@@ -33,7 +33,7 @@
 #'     variables on the left hand side.
 #' @param ... Additional arguments to FUN. This could for example be NA actions.
 
-#' @return A data frame
+#' @return A dataframe.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}},
 #'     \code{\link{splitBy}}, \code{\link{transformBy}}

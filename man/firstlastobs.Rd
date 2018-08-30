@@ -8,11 +8,6 @@
 \alias{lastobs.default}
 \alias{firstobs.formula}
 \alias{lastobs.formula}
-\alias{firstobs}
-\alias{lastobs.default}
-\alias{firstobs.default}
-\alias{lastobs.formula}
-\alias{firstobs.formula}
 \title{Locate the index of the first/last unique value}
 \usage{
 lastobs(x, ...)

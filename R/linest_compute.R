@@ -251,9 +251,6 @@ linest.merMod <- function(object, L=NULL, level=0.95, ...){
 }
 
 
-
-
-
 .finalize_linest <- function(.coef, L){
     if (!is.null(rownames(L)))
         rownames(.coef) <- rownames(L)

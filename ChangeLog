@@ -1,3 +1,9 @@
+2018-08-30 Søren Højsgaard <sorenh@math.aau.dk>
+	
+	* sampleBy and lapplyBy functions reintroduced due to popular demand.
+
+	* Version 4.6-2 uploaded
+	
 2018-03-19 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Previous functionality of core xxBy-functions reestablished to

@@ -8,29 +8,24 @@
 \alias{popMeans}
 \alias{popMeans.default}
 \alias{popMeans.lmerMod}
-\alias{LSmeans.default}
-\alias{LSmeans.lmerMod}
-\alias{popMeans}
-\alias{popMeans.default}
-\alias{popMeans.lmerMod}
 \title{Compute  LS-means (aka population means or
     marginal means)}
 \usage{
 LSmeans(object, effect = NULL, at = NULL, level = 0.95, ...)
 
-\method{LSmeans}{default}(object, effect = NULL, at = NULL, level = 0.95,
-  ...)
+\method{LSmeans}{default}(object, effect = NULL, at = NULL,
+  level = 0.95, ...)
 
-\method{LSmeans}{lmerMod}(object, effect = NULL, at = NULL, level = 0.95,
-  adjust.df = TRUE, ...)
+\method{LSmeans}{lmerMod}(object, effect = NULL, at = NULL,
+  level = 0.95, adjust.df = TRUE, ...)
 
 popMeans(object, effect = NULL, at = NULL, level = 0.95, ...)
 
-\method{popMeans}{default}(object, effect = NULL, at = NULL, level = 0.95,
-  ...)
+\method{popMeans}{default}(object, effect = NULL, at = NULL,
+  level = 0.95, ...)
 
-\method{popMeans}{lmerMod}(object, effect = NULL, at = NULL, level = 0.95,
-  adjust.df = TRUE, ...)
+\method{popMeans}{lmerMod}(object, effect = NULL, at = NULL,
+  level = 0.95, adjust.df = TRUE, ...)
 }
 \arguments{
 \item{object}{Model object}
