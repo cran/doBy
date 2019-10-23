@@ -20,6 +20,7 @@
 #'     model. If \code{NULL} then \code{L} is taken to be the p times
 #'     p identity matrix
 #' @param level The level of the (asymptotic) confidence interval.
+#' @param confint Should confidence interval appear in output.
 #' @param ...  Additional arguments; currently not used.
 #' @return A dataframe with results from computing the contrasts.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
@@ -45,133 +46,74 @@
 #' linest( mod.nst, L )
 #' 
 #' @export linest
-linest <- function(object, L=NULL, level=0.95, ...){
+
+
+linest <- function(object, L=NULL, ...){
     UseMethod("linest")
 }
 
-
-linest.lm <- function(object, L=NULL, level=0.95, ...){
+linest.lm <- function(object, L=NULL, ...){
     bhat <- coef(object)
-    if (is.null(L))
-        L <- .defineL( bhat )
-    if (!is.matrix(L))
-        L <- matrix(L, nrow=1)
-
+    L  <- .constructL(L, bhat)    
     is.est <- is_estimable(L, null_basis( object ))
-
-    ##VV0  <- vcov(object)
     VV0  <- vcov(object, complete=FALSE)
-    ddf  <- object$df.residual
-    ddf.vec <- rep(ddf, nrow( L ))
-    res    <- .getLb( L, bhat, VV0, ddf.vec, is.est)
 
-    p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
-
-    qq  <- qt(1-(1-level)/2, df=res[,"df"])
-    lwr <- res[,"estimate"] - qq * res[,"se"]
-    upr <- res[,"estimate"] + qq * res[,"se"]
-    #res <- cbind(res, p.value, lwr, upr)
-    res <- cbind( res, p.value )
-
-    .finalize_linest(res, L)
-}
-
-linest.glm <- function(object, L=NULL, level=0.95, type=c("link", "response"), ...){
-    type <- match.arg(type)
-    bhat <- coef(object)
-    if (is.null(L))
-        L <- .defineL( bhat )
-    if (!is.matrix(L))
-        L <- matrix(L, nrow=1)
-
-    is.est <- is_estimable(L, null_basis( object ))
-
-    ##VV0  <- vcov(object)
-    VV0  <- vcov(object, complete=FALSE)
-    
     ddf.vec <- rep(object$df.residual, nrow( L ))
-    res     <- .getLb( L, bhat, VV0, ddf.vec, is.est)
-
-    if(family(object)[1] %in% c("poisson","binomial","quasipoisson","quasibinomial")){
-        p.value <- 2*pnorm(abs(res[,"t.stat"]), lower.tail=FALSE)
-        qq <- qnorm(1-(1-level)/2)
-        colnames(res)[4] <- "z.stat"
-        res <- res[,-3] # NO df's
-    } else {
-        p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
-        qq <- qt(1-(1-level)/2, df=res[,"df"])
-    }
-
-    lwr <- res[,"estimate"] - qq * res[,"se"]
-    upr <- res[,"estimate"] + qq * res[,"se"]
-
-    if (type=="response"){
-        fit    <- family(object)$linkinv(res[,"estimate"])
-        se.fit <- res[,"se"] * abs(family(object)$mu.eta(res[,"estimate"]))
-        res[,"estimate"]  <- fit
-        res[,"se"] <- se.fit
-        lwr <- family(object)$linkinv(lwr)
-        upr <- family(object)$linkinv(upr)
-    }
-
-    ##res <- cbind(res, p.value, lwr, upr)
-    res <- cbind( res, p.value )
+    res    <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
+    
+    p.value <- 2 * pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
+    res <- as.data.frame(cbind(res, p.value))
+    
     .finalize_linest(res, L)
-
 }
 
 
-linest.geeglm <- function(object, L=NULL, level=0.95, type=c("link","response"), ...){
-    type <- match.arg(type)
+linest.glm <- function(object, L=NULL, ...){
+
+
     bhat <- coef(object)
-    if (is.null(L))
-        L <- .defineL( bhat )
-    if (!is.matrix(L))
-        L <- matrix(L, nrow=1)
-
+    L  <- .constructL(L, bhat)        
     is.est <- is_estimable(L, null_basis( object ))
+    VV0  <- vcov(object, complete=FALSE)
+    ddf.vec <- rep(object$df.residual, nrow( L ))
+    res     <- .getLb2(L, bhat, VV0, ddf.vec, is.est)
 
+    if( family(object)[1] %in% c("poisson", "binomial", "Gamma", "quasipoisson", "quasibinomial")){
+        p.value <- 2*pnorm(abs(res[,"statistic"]), lower.tail=FALSE)
+        res <- res[, -4] # NO df's
+        ## qq <- qnorm(1-(1-level)/2)
+    } else {
+        p.value <- 2*pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
+        ## qq <- qt(1-(1-level)/2, df=res[,"df"])
+    }
+    res <- as.data.frame(cbind(res, p.value))
+    .finalize_linest(res, L)
+}
+
+
+linest.geeglm <- function(object, L=NULL, ...){
+
+    bhat <- coef(object)
+    L  <- .constructL(L, bhat)    
+    is.est <- is_estimable(L, null_basis( object ))
     VV0  <- summary(object)$cov.scaled
     ddf.vec <- rep(1, nrow(L))
-    res     <- .getLb( L, bhat, VV0, ddf.vec, is.est)
+    res     <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
 
-    p.value <- 2*pnorm(abs(res[,"t.stat"]), lower.tail=FALSE)
-    qq <- qnorm(1-(1-level)/2)
-    colnames(res)[4] <- "z.stat"
-    res <- res[,-3, drop=FALSE] # NO df's
-    ## print("00000000000000000")
-    lwr <- res[,"estimate"] - qq * res[,"se"]
-    upr <- res[,"estimate"] + qq * res[,"se"]
-
-
-    if (type=="response"){
-        fit    <- family(object)$linkinv(res[,"estimate"])
-        se.fit <- res[,"se"] * abs(family(object)$mu.eta(res[,"estimate"]))
-        res[,"estimate"]  <- fit
-        res[,"se"] <- se.fit
-        lwr <- family(object)$linkinv(lwr)
-        upr <- family(object)$linkinv(upr)
-    }
-
-    ## res <- cbind(res, p.value, lwr, upr)
-    res <- cbind( res, p.value )
+    res <- res[, 1:3]
+    p.value <- 2*pnorm(abs(res[,"statistic"]), lower.tail=FALSE)
+    res <- as.data.frame(cbind(res, p.value))
     .finalize_linest(res, L)
 }
 
-linest.lmerMod <- function(object, L=NULL, level=0.95, adjust.df=TRUE, ...){
+linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
 
     bhat <- lme4::fixef(object)
-
-    if (is.null(L))
-        L <- .defineL( bhat )
-    if (!is.matrix(L))
-        L <- matrix(L, nrow=1)
-
+    L  <- .constructL(L, bhat)    
     is.est <- is_estimable(L, null_basis( object ))
 
     if (adjust.df){
         if (requireNamespace("pbkrtest", quietly=TRUE)){
-            ##VVu  <- vcov(object)
             VVu  <- vcov(object, complete=FALSE)
             VV   <- pbkrtest::vcovAdj(object)
             ddf.vec <- unlist(lapply(1:nrow(L),
@@ -183,55 +125,46 @@ linest.lmerMod <- function(object, L=NULL, level=0.95, adjust.df=TRUE, ...){
         a   <- logLik(object)
         ddf <- attributes(a)$nall - attributes(a)$df
         ddf.vec <- rep(ddf, length(bhat))
-        ##VV  <- vcov(object)
         VV  <- vcov(object, complete=FALSE)
     }
 
+    res     <- .getLb2( L, bhat, VV, ddf.vec, is.est)
+    p.value <- 2*pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
 
-    res     <- .getLb( L, bhat, VV, ddf.vec, is.est)
-    p.value <- 2*pt(abs(res[,"t.stat"]), df=res[,"df"], lower.tail=FALSE)
-    qq  <- qt(1-(1-level)/2, df=res[,"df"])
-    lwr <- res[,"estimate"] - qq * res[,"se"]
-    upr <- res[,"estimate"] + qq * res[,"se"]
-    ##res <- cbind(res, p.value, lwr, upr)
-    res <- cbind( res, p.value )
+    res <- as.data.frame(cbind(res, p.value))
     .finalize_linest(res, L)
-
 }
 
-linest.merMod <- function(object, L=NULL, level=0.95, ...){
+linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
     cl <- match.call()
     cl[[1]] <- as.name("linest.lmerMod")
     cl$adjust.df <- FALSE
     eval(cl)
 }
 
+.finalize_linest <- function(.coef, L){
 
+    rownames(.coef) <- NULL
+    
+    if (!is.null(rownames(L)))
+        rownames(.coef) <- rownames(L)
 
-### UTILITIES ###
-
-.defineL <- function( bhat ){
-    L <- diag( 1, length( bhat ) )
-    rownames( L ) <- names( bhat )
-    L
+    ## .coef <- as.data.frame(.coef)
+    
+    res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
+    class(res) <- "linest_class"
+    res
 }
 
-.createL <- function(L, bhat){
-    if (is.null(L))
-        L <- .defineL( bhat )
-    L
-}
 
-.getLb <- function(L, bhat, VV, ddf.vec, is.est, level=0.95){
-    #' cat(".getLb")
-    #' print(attributes(L))
+.getLb2 <- function(L, bhat, VV, ddf.vec, is.est, level=0.95){
     off <- attr(L, "offset")
-    #' print(off)
 
     used       <- which(!is.na(bhat))
     bhat.used  <- bhat[used]
     L   <- L[, used, drop=FALSE]
     res <- matrix(NA, nrow=nrow(L), ncol=3)
+    
     for (ii in 1:nrow(res)){
         kk <- L[ii,]
         if (is.est[ii]){
@@ -245,19 +178,93 @@ linest.merMod <- function(object, L=NULL, level=0.95, ...){
     if (!is.null(off))
         res[,1] <- res[,1] + off[[1]]
 
-    colnames(res) <- c("estimate","se","df")
-    t.stat        <- res[,"estimate"] / res[,"se"]
-    cbind(res, t.stat)
+
+    
+    colnames(res) <- c("estimate","std.error","df") 
+    statistic        <- res[,"estimate"] / res[,"std.error"]
+    res <- cbind(res[,1:2, drop=FALSE], statistic, df=res[,3])
+
+    rownames(res) <- NULL
+    ##print(res)
+    res
 }
 
 
-.finalize_linest <- function(.coef, L){
-    if (!is.null(rownames(L)))
-        rownames(.coef) <- rownames(L)
-    .coef <- as.data.frame(.coef)
-    res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
-    class(res) <- "linest_class"
-    res
+#' @rdname linest
+#' @param x A 'linest_class' object (produced by \code{linest} methods).
+#' @param conf.int Should confidence intervals be added.
+#' @param conf.level Desired confidence level.
+tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
+    co <- stats::coef(x)
+    rownames(co) <- NULL
+    
+    if (ncol(co)==5){ ## There are degreeso of freedom in the output.
+        co <- co[,c(1,2,3,5,4)]
+        nn <- c("estimate", "std.error", "statistic", "p.value", "df")
+    } else
+        nn <- c("estimate", "std.error", "statistic", "p.value")
+
+    names(co) <- nn
+
+    if (conf.int){
+        ci <- .ci_fun(co, level=conf.level)
+        colnames(ci) <- c("conf.low", "conf.high")    
+        co <- cbind(co, ci)
+    }
+    as_tibble(co)
+}
+
+
+.ci_fun <- function (object, parm, level = 0.95, ...) 
+{
+    ##object <- coef(object)
+    cf <- object$estimate #cf <- coef(object)
+    pnames <- 1:nrow(object) ##names(cf)
+    if (missing(parm)) 
+        parm <- pnames
+    else if (is.numeric(parm)) 
+        parm <- pnames[parm]
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+    pct <- a 
+    DF <- object$df
+    if (!is.null(DF))
+        fac <- t(sapply(DF, function(d) qt(a, d)))
+    else
+        fac <- matrix(rep(qnorm(a), length(parm)), nrow=2)
+       
+    ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, pct))
+    ses  <- object$std.error[parm]
+    #print(list(a=a, DF=DF, ses=ses, fac=fac, cf=cf[parm], ci=ci))
+    #ci[] <- cf[parm] + ses %o% fac
+    ci[] <- cf[parm] + fac * ses
+    ci
+}
+
+
+### UTILITIES ###
+
+#' @rdname linest
+#' @param parm Specification of the parameters estimates for which
+#'     confidence inctervals are to be calculated.
+confint.linest_class <- function (object, parm, level = 0.95, ...) 
+{
+    co <- coef(object) 
+    .ci_fun(co, parm, level, ...)
+}
+
+.constructL <- function(L, bhat){
+    .defineL <- function( bhat ){
+        L <- diag(1, length(bhat))
+        rownames(L) <- names(bhat)
+        L
+    }
+
+    if (is.null(L))
+        L <- .defineL(bhat)
+    if (!is.matrix(L))
+        L <- matrix(L, nrow=1)
+    L
 }
 
 #' @rdname linest
@@ -291,38 +298,6 @@ summary.linest_class <- function (object, ...)
 }
 
 
-
-
-#' @rdname linest
-#' @param parm Specification of the parameters estimates for which
-#'     confidence inctervals are to be calculated.
-confint.linest_class <- function (object, parm, level = 0.95, ...) 
-{
-    object <- coef(object) 
-    cf <- object$estimate #cf <- coef(object)
-    pnames <- 1:nrow(object) ##names(cf)
-    if (missing(parm)) 
-        parm <- pnames
-    else if (is.numeric(parm)) 
-        parm <- pnames[parm]
-    a <- (1 - level)/2
-    a <- c(a, 1 - a)
-    pct <- a ## FIXME ::: gives problems. stats:::format.perc(a, 3)
-    if (!is.null(DF <- coef(object)$df))
-        fac <- qt(a, DF)
-    else
-        fac <- qnorm(a)
-       
-    ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, 
-        pct))
-    #ses <- sqrt(diag(vcov(object)))[parm]
-    ses  <- object$se[parm]
-    ci[] <- cf[parm] + ses %o% fac
-    ci
-}
-
-
-
 setOldClass("linest_class")
 setAs("linest_class", "data.frame",   function(from)
 {
@@ -332,3 +307,19 @@ setAs("linest_class", "data.frame",   function(from)
     attr(out, "K") <- from$K
     out
 })
+
+
+
+
+
+## .finalize_linest <- function(.coef, L, lwr, upr, confint){
+##     if (!is.null(rownames(L)))
+##         rownames(.coef) <- rownames(L)
+##     .coef <- as.data.frame(.coef)
+##     if (confint)
+##         .coef <- cbind(.coef, lwr, upr)
+    
+##     res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
+##     class(res) <- "linest_class"
+##     res
+## }

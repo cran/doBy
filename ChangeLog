@@ -1,3 +1,16 @@
+2019-10-23 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* taylor function added
+
+	* fev data from isdals added
+
+	* lmBy reintroduced due to popular demand.
+
+	* LE_matrix etc. handles a dataframe correctly for the 'at' argument
+
+	* Version 4.6-3 uploaded
+	
+	
 2018-08-30 Søren Højsgaard <sorenh@math.aau.dk>
 	
 	* sampleBy and lapplyBy functions reintroduced due to popular demand.

@@ -319,8 +319,6 @@ t(L)
 @
 
 
-
-
 \section{Using the \code{at=} argument}
 \label{sec:example:-chickweight}
 

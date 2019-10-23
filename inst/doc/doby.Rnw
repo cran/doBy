@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
-
+%\VignetteEngine{knitr::knitr} 
 %\VignettePackage{doBy}
-%\VignetteIndexEntry{doBy: Groupwise computations and other utilities}
+%\VignetteIndexEntry{doby: Groupwise computations and other utilities}
 
 \usepackage{hyperref,color,boxedminipage,Sweave}
 \usepackage[utf8]{inputenc}
@@ -31,14 +31,21 @@
 %\SweaveInput{Rmarkup.STY}
 
 
-<<echo=FALSE,print=FALSE>>=
+<<echo=FALSE>>=
 #require( doBy )
 prettyVersion <- packageDescription("doBy")$Version
 prettyDate <- format(Sys.Date())
 @
 
 
-\SweaveOpts{keep.source=T,prefix.string=figures/doBy}
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+tidy=FALSE,fig.path='figures/doBy'
+)
+@
+
 %\setkeys{Gin}{height=3in}
 
 \title{Groupwise computations and other utilities in the  \texttt{doBy} package}
@@ -106,7 +113,6 @@ utilities.
 
 %The package is loaded with:
 
-@
 <<echo=F>>=
 library(doBy)
 @ %def
@@ -123,7 +129,6 @@ experiment on the cold tolerance of the grass species {\em Echinochloa
 crus-galli}.
 To limit the amount of output we modify names and levels of variables
 as follows
-@
 <<>>=
 data(CO2)
 CO2 <- transform(CO2, Treat=Treatment, Treatment=NULL)
@@ -140,7 +145,6 @@ The \code{airquality}
 dataset contains  air quality measurements in New York, May to
 September 1973. The months are coded as $5,\dots,9$.
 To limit the output we only consider data for two months:
-@
 <<>>=
 airquality <- subset(airquality, Month %in% c(5,6))
 @ %def
@@ -179,7 +183,7 @@ summaryBy(cbind(conc, uptake, lu=log(uptake)) ~ Plant,
 @ %def
 
 A simpler call is
-<<results=hide>>= 
+<<results='hide'>>=
 summaryBy(conc ~ Plant, data=CO2, FUN=mean)
 @
 
@@ -187,7 +191,7 @@ Instead of formula we may specify a list containing the left hand side
 and the right hand side of a formula\footnote{This is a feature of
   \summaryby\ and it does not work with \code{aggregate}.} but that is
 possible only for variables already in the dataframe:
-<<results=hide>>= 
+<<results='hide'>>=
 ## Will fail because of log(uptake)
 ## summaryBy(list(c("conc", "uptake", "log(uptake)"), "Plant"), 
 ##          data=CO2, FUN=myfun1)
@@ -229,7 +233,6 @@ Ordering (or sorting) a data frame is possible with the \code{orderBy}
 function.
 Suppose we want to order the rows of the the \code{airquality} data by \code{Temp} and by
 \code{Month} (within \code{Temp}). This can be achieved by:
-@
 <<>>=
 x1 <- orderBy(~ Temp + Month, data=airquality)
 head(x1)
@@ -237,13 +240,12 @@ head(x1)
 
 If we want the ordering to be by decreasing values of one of the
 variables, we can do
-@
 <<>>=
 x2 <- orderBy(~ - Temp + Month, data=airquality)
 @ %def
 
 An alternative form is:
-<< >>= 
+<< >>=
 x3 <- orderBy(c("Temp", "Month"), data=airquality)
 x4 <- orderBy(c("-Temp", "Month"), data=airquality)
 @
@@ -271,7 +273,6 @@ x4 <- orderBy(c("-Temp", "Month"), data=airquality)
 
 Suppose we want to split the \code{airquality} data into a list of dataframes, e.g.\ one
 dataframe for each month. This can be achieved by:
-@
 <<>>=
 x <- splitBy(~ Month, data=airquality)
 lapply(x, head, 4)
@@ -279,7 +280,7 @@ attributes(x)
 @ %def
 
 An alternative call is
-<<results=hide >>= 
+<<results='hide' >>=
 splitBy("Month", data=airquality)
 @
 
@@ -298,7 +299,6 @@ splitBy("Month", data=airquality)
 Suppose we want to select those rows within each month for which the the
 wind speed is larger than the mean wind speed (within the month). This
 is achieved by:
-@
 <<>>=
 x <- subsetBy(~Month, subset=Wind > mean(Wind), data=airquality)
 head(x)
@@ -319,7 +319,6 @@ each month.
 
 The \code{transformBy} function is analogous to the \code{transform}
 function except that it works within groups. For example:
-@
 <<>>=
 x <- transformBy(~Month, data=airquality, 
                  minW=min(Wind), maxW=max(Wind),
@@ -328,7 +327,7 @@ head(x)
 @ %def
 
 Alternative forms:
-<< >>= 
+<< >>=
 x <- transformBy("Month", data=airquality, 
                  minW=min(Wind), maxW=max(Wind),
                  chg = diff(range(Wind)))
@@ -453,7 +452,6 @@ x <- transformBy("Month", data=airquality,
 \subsection{Specialize}
 \label{sec:specialize}
 
-@
 <<>>=
 ff  <- function(a, b=2, c=4){a + b + c}
 ff1 <- specialize(ff, arglist=list(a=1, b=7, yy=123))
@@ -464,7 +462,6 @@ gg1
 @ %def
 
 Notice that this result is absurd:
-@
 <<>>=
 f  <- function(a) {a <- a + 1; a}
 f1 <- specialize(f, list(a = 10))
@@ -477,7 +474,6 @@ f1
 
 To obtain the indices of the first/last occurences of an item in a
 vector do:
-@
 <<>>=
 x <- c(1,1,1,2,2,2,1,1,1,3)
 firstobs(x)
@@ -485,7 +481,6 @@ lastobs(x)
 @ %def
 
 The same can be done on a data frame, e.g.
-@
 <<>>=
 firstobs(~Plant, data=CO2)
 lastobs(~Plant, data=CO2)
@@ -496,7 +491,6 @@ lastobs(~Plant, data=CO2)
 
 The location of the $n$ largest / smallest entries in a numeric vector
 can be obtained with
-@
 <<>>=
 x <- c(1:4,0:5,11,NA,NA)
 which.maxn(x,3)
@@ -508,7 +502,6 @@ which.minn(x,5)
 
 Find (sub) sequences in a vector:
 
-@
 <<>>=
 x <- c(1,1,2,2,2,1,1,3,3,3,3,1,1,1)
 subSeq(x)
@@ -521,7 +514,6 @@ subSeq(letters[x],item="a")
 \subsection{Recoding values of a vector - \code{recodeVar()}}
 \label{sec:xxx}
 
-@
 <<>>=
 x <- c("dec","jan","feb","mar","apr","may")
 src1 <- list(c("dec","jan","feb"), c("mar","apr","may"))
@@ -532,7 +524,6 @@ recodeVar(x,src=src1,tgt=tgt1)
 \subsection{Renaming columns of a dataframe or matrix --  \code{renameCol()}}
 \label{sec:xxx}
 
-@
 <<>>=
 head(renameCol(CO2, 1:2, c("kk","ll")))
 head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
@@ -542,7 +533,6 @@ head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
 \label{sec:xxx}
 
 Consider the vector
-@
 <<>>=
 yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
 @ %def
@@ -550,14 +540,12 @@ yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
 Imagine that "1" indicates an event of some kind which takes place
 at a certain time point. By default time points are assumed
 equidistant but for illustration we define time time variable
-@
 <<>>=
 tvar <- seq_along(yvar) + c(0.1,0.2)
 @ %def
 
 Now we find time since event as
-@
-<<print=T>>=
+<<>>=
 tse<- timeSinceEvent(yvar,tvar)
 @ %def
 
@@ -572,8 +560,7 @@ The output reads as follows:
 \item \verb"tbe": Time before event.
 \end{itemize}
 
-@
-<<fig=T>>=
+<<>>=
 plot(sign.tse~tvar, data=tse, type="b")
 grid()
 rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
@@ -581,8 +568,7 @@ points(scale(tse$run), col=tse$run, lwd=2)
 lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
 @ %def
 
-@
-<<fig=T>>=
+<<>>=
 plot(tae~tvar, data=tse, ylim=c(-6,6),type="b")
 grid()
 lines(tbe~tvar, data=tse, type="b", col="red")
@@ -590,8 +576,7 @@ rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
 lines(run~tvar, data=tse, col="cyan",lwd=2)
 @ %def
 
-@
-<<fig=T>>=
+<<>>=
 plot(ewin~tvar, data=tse,ylim=c(1,4))
 rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
 grid()
@@ -600,7 +585,6 @@ lines(run~tvar, data=tse,col="red")
 
 
 We may now find times for which time since an event is at most 1 as
-@
 <<>>=
 tse$tvar[tse$abs<=1]
 @ %def
@@ -608,8 +592,7 @@ tse$tvar[tse$abs<=1]
 \subsection{Example: Using \code{subSeq()} and \code{timeSinceEvent()}}
 
 Consider the \verb|lynx| data:
-@
-<<fig=T>>=
+<<>>=
 lynx <- as.numeric(lynx)
 tvar <- 1821:1934
 plot(tvar,lynx,type="l")
@@ -617,7 +600,6 @@ plot(tvar,lynx,type="l")
 
 Suppose we want to estimate the cycle lengths. One way of doing this
 is as follows:
-@
 <<>>=
 yyy <- lynx>mean(lynx)
 head(yyy)
@@ -625,21 +607,18 @@ sss <- subSeq(yyy,TRUE)
 sss
 @ %def
 
-@
-<<fig=T>>=
+<<>>=
 plot(tvar,lynx,type="l")
 rug(tvar[sss$midpoint],col="blue",lwd=4)
 @ %def
 
 Create the "event vector"
-@
 <<>>=
 yvar <- rep(0,length(lynx))
 yvar[sss$midpoint] <- 1
 str(yvar)
 @ %def
 
-@
 <<>>=
 tse <- timeSinceEvent(yvar,tvar)
 head(tse,20)
@@ -647,26 +626,23 @@ head(tse,20)
 
 We get two different (not that different) estimates of period
 lengths:
-@
-<<print=T>>=
+<<>>=
 len1 <- tapply(tse$ewin, tse$ewin, length)
 len2 <- tapply(tse$run, tse$run, length)
-c(median(len1),median(len2),mean(len1),mean(len2))
+c(median(len1), median(len2), mean(len1), mean(len2))
 @ %def
 
 We can overlay the cycles as:
-@
-<<fig=T>>=
+<<>>=
 tse$lynx <- lynx
 tse2 <- na.omit(tse)
-plot(lynx~tae, data=tse2)
+plot(lynx ~ tae, data=tse2)
 @ %def
 
-@
-<<fig=T>>=
-plot(tvar,lynx,type="l",lty=2)
-mm <- lm(lynx~tae+I(tae^2)+I(tae^3), data=tse2)
-lines(fitted(mm)~tvar, data=tse2, col="red")
+<<>>=
+plot(tvar, lynx, type="l", lty=2)
+mm <- lm(lynx ~ tae + I(tae^2) + I(tae^3), data=tse2)
+lines(fitted(mm) ~ tvar, data=tse2, col="red")
 @ %def
 
 
@@ -678,7 +654,6 @@ Dennis Chabot, Gabor Grothendieck, Paul Murrell, Jim Robison-Cox  and Erik J{\o}
 reporting various bugs and making various suggestions to the
 functionality in the \doby{} package.
 
-@
 <<echo=F>>=
 options(oopt)
 @ %def
@@ -694,13 +669,11 @@ options(oopt)
 \label{sec:appdata}
 
 The reduced \code{C02} are:
-@
 <<>>=
 CO2
 @ %def
 
 The reduced \code{airquality} data are:
-@
 <<>>=
 head(airquality, n=20)
 @ %def

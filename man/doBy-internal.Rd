@@ -5,11 +5,11 @@
 \alias{splitByOLD}
 \alias{summaryByOLD}
 
-\alias{LE_matrix_class-class}
+\alias{linest_matrix_class-class}
 \alias{print.linest_class}
 \alias{print.esticon_class}
-\alias{print.LE_matrix_class}
-\alias{summary.LE_matrix_class}
+\alias{print.linest_matrix_class}
+\alias{summary.linest_matrix_class}
 
 \alias{asNumericMatrix2}
 \alias{matrix2dataFrame2}

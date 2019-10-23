@@ -34,12 +34,19 @@
 #' 
 #' @aliases esticon esticon.geeglm esticon.glm esticon.gls esticon.lm
 #'     esticon.lme esticon.mer esticon.merMod esticon.coxph
-#' @param obj Regression object (of type lm, glm, lme, geeglm)
-#' @param L Matrix (or vector) specifying linear functions of the regresson parameters (one
+#' 
+#' @param obj Regression object (of type lm, glm, lme, geeglm).
+#' @param x A linear contrast object (as returned by \code{esticon()}. 
+#' @param L Matrix (or vector) specifying linear functions of the regresson
+#'     parameters (one
 #'     linear function per row).  The number of columns must match the number of
 #'     fitted regression parameters in the model. See 'details' below.
+#' @param parm a specification of which parameters are to be given
+#'          confidence intervals, either a vector of numbers or a vector
+#'         of names.  If missing, all parameters are considered.
 #' @param beta0 A vector of numbers
 #' @param conf.int TRUE
+#' @param conf.level The desired confidence level.
 #' @param level The confidence level
 #' @param joint.test Logical value. If TRUE a 'joint' Wald test for the
 #'     hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
@@ -274,7 +281,8 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
 }
 
 
-.esticonCore <- function (obj, L, beta0, conf.int = NULL, level,coef.mat ,vcv,df,stat.name, coef.vec=coef.mat[,1] ) {
+.esticonCore <- function (obj, L, beta0, conf.int = NULL, level, coef.mat,
+                          vcv, df, stat.name, coef.vec=coef.mat[,1]) {
 
     ## Notice
     ## coef.mat: summary(obj)$coefficients
@@ -286,9 +294,11 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
         L <- matrix(L, nrow = 1)
     if (missing(beta0))
         beta0 <- rep(0, nrow(L))
+
+    ##print(list(L=L, beta0=beta0))
     
     idx <- !is.na(coef.vec) ## Only want columns of L for identifiable parameters
-    L <- L[ , idx, drop=FALSE]
+    L   <- L[ , idx, drop=FALSE]
     
     if (!dim(L)[2] == dim(coef.mat)[1])
         stop(paste("\n Dimension of ",
@@ -296,9 +306,17 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
                    ": ", paste(dim(L), collapse = "x"),
                    ", not compatible with no of parameters in ",
                    deparse(substitute(obj)), ": ", dim(coef.mat)[1], sep = ""))
+
     ct      <- L %*% coef.mat[, 1]
     ct.diff <- L %*% coef.mat[, 1] - beta0
-    vc      <- sqrt(diag(L %*% vcv %*% t(L)))
+    vcv.L   <- L %*% vcv %*% t(L)
+
+    if (is.null(vn <- rownames(L)))
+        vn <- 1:nrow(L)
+    rownames(vcv.L)  <- colnames(vcv.L) <- vn
+
+    vc      <- sqrt(diag(vcv.L))
+
     
     switch(stat.name,
            t.stat = {
@@ -307,19 +325,21 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
            X2.stat = {
                prob <- 1 - pchisq((ct.diff/vc)^2, df = 1)
            })
-    
+
+                      
     if (stat.name == "X2.stat") {
         out <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = (ct.diff/vc)^2,
                      df = df, prob = prob )
-        dimnames(out) <-
-            list(NULL, c("beta0","Estimate","Std.Error","X2.value","DF","Pr(>|X^2|)"))
     }
     else if (stat.name == "t.stat") {
         out <- cbind(hyp=beta0, est = ct, stderr = vc, t.value = ct.diff/vc,
                      df = df, prob = prob)
-        dimnames(out) <-
-            list(NULL, c("beta0","Estimate","Std.Error","t.value","DF","Pr(>|t|)"))
     }
+
+    dim.names <- list(NULL, c("beta0","estimate","std.error",
+                              "statistic","df","p.value"))    
+    dimnames(out) <- dim.names
+    out <- out[, c(2,3,4,6,1,5), drop=FALSE]
     
     conf.int <- "wald"
     if (!is.null(conf.int)) {
@@ -328,38 +348,34 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
         
         alpha <- 1 - level
         switch(stat.name,
-               t.stat  = { quant <- qt(1 - alpha/2, df  )  },
+               t.stat  = { quant <- qt(1 - alpha/2, df)  },
                X2.stat = { quant <- qnorm(1 - alpha/2) })
         
         cint <- cbind(ct.diff - vc * quant, ct.diff + vc * quant)
-        colnames(cint) <- c("Lower", "Upper")
+        colnames(cint) <- c("lwr", "upr")
+
         out <- cbind(out, cint)
     }
     out <- as.data.frame(out)
     ## FIXME esticon_class added; not sure if this is good idea?
     class(out) <- c("esticon_class", "data.frame")
     attr(out, "L") <- L
+    attr(out, "vcv") <- vcv.L
     out
-
-    ## out <- list(coef=as.data.frame(out),
-    ##             L = L)
-    ## class(out) <- "esticon_class"
-    ## out
-
 }
-
 
 
 #' @rdname esticon
 #' @param object An \code{esticon_class} object. 
 
 coef.esticon_class <- function (object, ...) {
-    as.data.frame(object)
-    ##object$coef
+    out <- object$estimate
+    names(out) <- rownames(object)
+    out
 }
 
 
-#' @rdname linest
+#' @rdname esticon
 summary.esticon_class <- function (object, ...) 
 {
     cat("Coefficients:\n")
@@ -377,12 +393,58 @@ summary.esticon_class <- function (object, ...)
 
 
 print.esticon_class <- function(x, ...){
-    ##cat("Coefficients:\n")
-    ##print.data.frame(x)
-    printCoefmat(x)
+    printCoefmat(x[,1:6])
 }
 
 
+#' @rdname esticon
+tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
+    co <- x[,1:6]
+    rownames(co) <- NULL
+
+    if (conf.int){
+        ci <- confint(x, level=conf.level)
+        colnames(ci) <- c("conf.low", "conf.high")    
+        co <- cbind(co, ci)
+    }
+    as_tibble(co)
+}
 
 
+#' @rdname esticon
+confint.esticon_class <- function (object, parm, level = 0.95, ...) 
+{
+    cf <- coef(object)
+    pnames <- names(cf)
+    if (missing(parm)) 
+        parm <- pnames
+    else if (is.numeric(parm)) 
+        parm <- pnames[parm]
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+
+    ## stats:::confint.default code
+    ## pct <- stats:::format.perc(a, 3)
+    ## fac <- qnorm(a)
+
+    ## replaced with
+    pct <- a 
+    DF <- object$df
+    fac  <- if (!is.null(DF)) qt(a, DF[1])
+            else fac <- qnorm(a)
+    ## to here
+    
+    ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, 
+                                                               pct))
+    ses <- sqrt(diag(vcov(object)))[parm]
+    ##str(list(cf=cf, parm=parm, fac=fac, ses=ses))
+    ci[] <- cf[parm] + ses %o% fac
+    ci
+}
+
+
+#' @rdname esticon
+vcov.esticon_class <- function (object, ...){
+    attr(object, "vcv")
+}
 

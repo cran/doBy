@@ -50,6 +50,7 @@
 #' MASS::Null( t(model.matrix(mod.nst)) )
 #' 
 #' @export null_basis
+
 null_basis <- function(object){
 
     .null_basis <- function(object){
@@ -133,47 +134,3 @@ is_estimable <- function(K, null.basis){
 }
 
 
-
-#' ## FIXME: do_contrast is never used
-#' .do_contrast <- function(KK, bhat, V0, ddf, is.est){
-#'     used       <- which(!is.na(bhat))
-#'     not.used   <- which(is.na(bhat))
-#'     bhat.used  <- bhat[used]
-#'     VV <- V0
-#'     ddfm <- function(kk, se) ddf
-#'     res <- matrix(NA, nrow=nrow(KK), ncol=3)
-#'     for (ii in 1:nrow(res)){
-#'         if (is.est[ii]){
-#'             kk   <- KK[ii,used]
-#'             est  <- sum(kk*bhat.used)
-#'             se   <- sqrt(sum(kk * (VV %*% kk)))
-#'             df2  <- ddfm(kk, se)
-#'             res[ii,] <- c(est, se, df2)
-#'         }
-#'     }
-#'     colnames(res) <- c("estimate","SE","df")
-#'     res
-#' }
-
-#' ## FIXME: do_pairs is never used
-#' .do_pairs <- function(KK){ ## pairwise differences of lsmeans
-#'     NN <- nrow(KK)
-#'     MM <- ncol(KK)
-#'     SS <- as.matrix(attr(KK,"grid")) ## todo: check if null
-#'     EE <- vector("list", NN*(NN-1)/2)
-#'     DD <- matrix(0, nrow=NN*(NN-1)/2, ncol=NN)
-#'     kk <- 1
-#'     for (ii in 1:(NN-1)){
-#'         for (jj in (ii+1):NN){
-#'             DD[kk, ii] <- 1
-#'             DD[kk, jj] <- -1
-#'             EE[[kk]] <- list(ff=SS[ii,], .ff=SS[jj,])
-#'             kk <- kk + 1
-#'         }
-#'     }
-#'     ff <- do.call(rbind, lapply(EE, function(x) x$ff))
-#'     .ff <- do.call(rbind, lapply(EE, function(x) x$.ff))
-#'     colnames(.ff) <- paste(".", colnames(.ff),sep='')
-#'     pair <- as.data.frame(cbind(ff, .ff))
-#'     list(DD=DD, grid=pair)
-#' }
