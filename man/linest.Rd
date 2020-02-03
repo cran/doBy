@@ -16,8 +16,7 @@
 \usage{
 linest(object, L = NULL, ...)
 
-\method{tidy}{linest_class}(x, conf.int = FALSE, conf.level = 0.95,
-  ...)
+\method{tidy}{linest_class}(x, conf.int = FALSE, conf.level = 0.95, ...)
 
 \method{confint}{linest_class}(object, parm, level = 0.95, ...)
 

@@ -1,9 +1,9 @@
-## ----echo=FALSE----------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 require( doBy )
 prettyVersion <- packageDescription("doBy")$Version
 prettyDate <- format(Sys.Date())
 
-## ----include=FALSE-------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 library(knitr)
 opts_chunk$set(
 tidy=FALSE,fig.path='figures/LSmeans', fig.height=3.5 

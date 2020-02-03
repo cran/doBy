@@ -38,6 +38,7 @@ which.maxn <- function(x,n=1){
     }
 }
 
+#' @export
 which.minn <- function(x,n=1){
   if (n==1)
     which.min(x)

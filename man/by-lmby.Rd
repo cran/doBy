@@ -14,15 +14,16 @@
 lmBy(formula, data, id = NULL, ...)
 }
 \arguments{
-\item{formula}{A linear model formula object of the form y ~ x1 + ... + xn |
-g1 + ... + gm.  In the formula object, y represents the response, x1,...,xn
-the covariates, and the grouping factors specifying the partitioning of
-the data according to which different lm fits should be performed.}
+\item{formula}{A linear model formula object of the form y ~ x1 +
+... + xn | g1 + ... + gm.  In the formula object, y represents
+the response, x1,...,xn the covariates, and the grouping
+factors specifying the partitioning of the data according to
+which different lm fits should be performed.}
 
 \item{data}{A dataframe}
 
-\item{id}{A formula describing variables from data which are to be available
-also in the output.}
+\item{id}{A formula describing variables from data which are to be
+available also in the output.}
 
 \item{\dots}{Additional arguments passed on to \code{lm()}.}
 }
@@ -30,8 +31,9 @@ also in the output.}
 A list of lm fits.
 }
 \description{
-The data is split into strata according to the levels of the
-    grouping factors and individual lm fits are obtained for each stratum.
+The data is split into strata according to the levels
+    of the grouping factors and individual lm fits are obtained for
+    each stratum.
 }
 \examples{
 
@@ -48,10 +50,10 @@ coef(summary(bb), simplify=TRUE)
 
 ## A more modern alternative based on tidyverse end broom
 
-if (require(tidyverse) && require(broom)){
-  gg <- CO2 \%>\% group_by(Treatment)
-  gg \%>\% do(broom::tidy(lm(1 / uptake ~ log(conc), data=.)))
-}
+## if (require(tidyverse) && require(broom)){
+##  gg <- CO2 \%>\% group_by(Treatment)
+##  gg \%>\% do(broom::tidy(lm(1 / uptake ~ log(conc), data=.)))
+##}
 
 }
 \author{

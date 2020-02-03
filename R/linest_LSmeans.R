@@ -1,13 +1,9 @@
 ## #############################################################################
-#'
 #' @title Compute  LS-means (aka population means or
 #'     marginal means)
-#' 
 #' @description LS-means (least squares means, also known as
 #'     population means and as marginal means) for a range of model types.
-#'
 #' @name ls-means
-#'
 ## #############################################################################
 #' 
 #' @details There are restrictions on the formulas allowed in the model object.
@@ -133,11 +129,13 @@
 ## HERE goes the LSmeans stuff
 ## --------------------------------------------------------------------
 
+#' @export
 #' @rdname ls-means
 LSmeans <- function(object, effect=NULL, at=NULL, level=0.95,...){
     UseMethod("LSmeans")
 }
 
+#' @export
 #' @rdname ls-means
 LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95,...){
     K   <- LE_matrix(object, effect=effect, at=at)
@@ -145,6 +143,7 @@ LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95,...){
     out
 }
 
+#' @export
 #' @rdname ls-means
 #' @param adjust.df Should denominator degrees of freedom be adjusted?
 LSmeans.lmerMod <- function(object, effect=NULL, at=NULL, level=0.95, adjust.df=TRUE, ...){
@@ -153,12 +152,15 @@ LSmeans.lmerMod <- function(object, effect=NULL, at=NULL, level=0.95, adjust.df=
     out
 }
 
+#' @export
 #' @rdname ls-means
 popMeans         <- LSmeans
 
+#' @export
 #' @rdname ls-means
 popMeans.default <- LSmeans.default
 
+#' @export
 #' @rdname ls-means
 popMeans.lmerMod <- LSmeans.lmerMod
 

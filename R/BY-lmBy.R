@@ -1,19 +1,20 @@
+##########################################################################
 #' @title List of lm objects with a common model
-#' 
-#' @description The data is split into strata according to the levels of the
-#'     grouping factors and individual lm fits are obtained for each stratum.
-#'
+#' @description The data is split into strata according to the levels
+#'     of the grouping factors and individual lm fits are obtained for
+#'     each stratum.
 #' @name by-lmby
-#' 
+##########################################################################
 #' @aliases lmBy coef.lmBy coef.summary_lmBy summary.lmBy fitted.lmBy
 #'     residuals.lmBy getBy
-#' @param formula A linear model formula object of the form y ~ x1 + ... + xn |
-#'     g1 + ... + gm.  In the formula object, y represents the response, x1,...,xn
-#'     the covariates, and the grouping factors specifying the partitioning of
-#'     the data according to which different lm fits should be performed.
+#' @param formula A linear model formula object of the form y ~ x1 +
+#'     ... + xn | g1 + ... + gm.  In the formula object, y represents
+#'     the response, x1,...,xn the covariates, and the grouping
+#'     factors specifying the partitioning of the data according to
+#'     which different lm fits should be performed.
 #' @param data A dataframe
-#' @param id A formula describing variables from data which are to be available
-#'     also in the output.
+#' @param id A formula describing variables from data which are to be
+#'     available also in the output.
 #' @param \dots Additional arguments passed on to \code{lm()}.
 #' @return A list of lm fits.
 #'
@@ -35,12 +36,13 @@
 #'
 #' ## A more modern alternative based on tidyverse end broom
 #'
-#' if (require(tidyverse) && require(broom)){
-#'   gg <- CO2 %>% group_by(Treatment)
-#'   gg %>% do(broom::tidy(lm(1 / uptake ~ log(conc), data=.)))
-#' }
+#' ## if (require(tidyverse) && require(broom)){
+#' ##  gg <- CO2 %>% group_by(Treatment)
+#' ##  gg %>% do(broom::tidy(lm(1 / uptake ~ log(conc), data=.)))
+#' ##}
 #' 
 
+#' @export
 #' @rdname by-lmby
 lmBy <- function(formula, data, id=NULL, ...){
   cl   <- match.call()
@@ -69,25 +71,27 @@ lmBy <- function(formula, data, id=NULL, ...){
   mm
 }
 
-
+#' @export
 print.lmBy <- function(x, ...){
   ##lapply(c(x), print)
   print(c(x))
   return(invisible(x))
 }
 
-
+#' @export
 summary.lmBy <- function(object, ...){
   res <- lapply(object, summary)
   class(res) <- "summary_lmBy"
   res
 }
 
+#' @export
 print.summary_lmBy <- function(x, ...){
   lapply(x, print)
   return(invisible(x))
 }
 
+#' @export
 coef.summary_lmBy <- function(object, simplify=FALSE, ...){
   ans <- lapply(object, coef)
   if (simplify){
@@ -108,28 +112,30 @@ coef.summary_lmBy <- function(object, simplify=FALSE, ...){
 }
 
 
+#' @export
 getBy <- function(object, name=c()){
   if (missing(name)) 
     stop("'name' must not be missing")
-  switch(class(object),
-         "lmBy"={
-           ii <- match(name, c("dataList","idData"))
-           if (is.na(ii))
-             stop(sprintf("%s not available", name))
-           attr(object,name)	
-         })
+  if (inherits(object, "lmBy"))
+  {
+      ii <- match(name, c("dataList", "idData"))
+      if (is.na(ii))
+          stop(sprintf("%s not available", name))
+      attr(object,name)	
+  }
   
 }
 
+#' @export
 coef.lmBy <- function(object, augment=FALSE, ...){
   ans <- do.call(rbind, lapply(object, coef))
   if (augment){
-    ans <- cbind(ans, getBy(object,"idData"))
+    ans <- cbind(ans, getBy(object, "idData"))
   }
   ans
 }
 
-
+#' @export
 fitted.lmBy <- function(object, augment=FALSE,...){
   ans <- lapply(object, fitted)
   if (augment) {
@@ -139,7 +145,7 @@ fitted.lmBy <- function(object, augment=FALSE,...){
   ans
 }
 
-
+#' @export
 residuals.lmBy <- function(object, augment=FALSE,...){
   ans <- lapply(object, residuals)
   if (augment) {

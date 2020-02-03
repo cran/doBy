@@ -1,4 +1,4 @@
-
+#' @export
 doby.xtabs <-
 function (formula = ~., data = parent.frame(),
           subset, na.action, exclude = c(NA,NaN), drop.unused.levels = FALSE,

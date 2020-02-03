@@ -51,6 +51,7 @@
 #' 
 #' @export null_basis
 
+#' @export
 null_basis <- function(object){
 
     .null_basis <- function(object){
@@ -77,11 +78,12 @@ null_basis <- function(object){
     ##if (class(object) %in% c("matrix","Matrix")){
     ##    .null_basis(object)
 
-    if (inherits(object, c("matrix","Matrix"))){
+    if (inherits(object, c("matrix", "Matrix"))){
         .null_basis(object)
     } else {
         m <- try(model.matrix(object), silent=TRUE)
-        if (class(m) != "try-error")
+        ##if (class(m) != "try-error")
+        if (!inherits(m, "try-error"))
             .null_basis(m)
         else
             stop("Can not find null basis for 'object'")

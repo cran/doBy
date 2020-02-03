@@ -1,13 +1,12 @@
+#########################################################################
 #' @title Ordering (sorting) rows of a data frame
-#' 
 #' @description Ordering (sorting) rows of a data frame by the certain
 #'     variables in the data frame. This function is essentially a
 #'     wrapper for the \code{order()} function - the important
 #'     difference being that variables to order by can be given by a
 #'     model formula.
-#'
 #' @name by-order
-#' 
+#########################################################################
 #' @details The sign of the terms in the formula determines whether
 #'     sorting should be ascending or decreasing; see examples below
 #' 
@@ -28,7 +27,7 @@
 ## #' order_by(CO2, c("conc", "Treatment"))
 ## #' order_by(CO2, c("-conc", "Treatment"))
 
-
+#' @export
 #' @rdname by-order
 orderBy <- function (formula, data){
 

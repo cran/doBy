@@ -1,10 +1,9 @@
+###############################################################################
 #' @title Function to calculate groupwise summary statistics
-#' 
-#' @description Function to calculate groupwise summary statistics, much like
-#'     the summary procedure of SAS
-#'
+#' @description Function to calculate groupwise summary statistics,
+#'     much like the summary procedure of SAS
 #' @name by-summary
-#' 
+###############################################################################
 #' @details Extra arguments ('...') are passed onto the functions in
 #'     FUN. Hence care must be taken that all functions in FUN accept
 #'     these arguments - OR one can explicitly write a functions which
@@ -83,7 +82,7 @@
 #' 
 
 
-
+#' @export
 #' @rdname by-summary
 summaryBy <-
   function (formula, data=parent.frame(), id=NULL, FUN=mean, keep.names=FALSE,
@@ -298,119 +297,119 @@ summaryBy <-
 
 .get_variables <- function(formula, data, id, debug.info){
 
-  data.var  <- names(data)
+    data.var  <- names(data)
 
-  if ( !(class(formula) %in% c("formula", "list")) ){
-    stop("'formula' must be a formula or a list")
-  }
-
-  if (class(formula) %in% "formula"){
-    if (length(formula) != 3) stop("Formula must have a left hand side")
-    rhs       <- formula[[3]]
-    form.rhs.var   <- all.vars(rhs) ## May contain "." and "1"
-
-    lhs       <- formula[[2]]
-    form.lhs.var   <- all.vars(lhs) ## May contain "."
-    #print(form.lhs.var)
-
-    zz <- .lhsParse(lhs)
-    form.lhs.var <-
-      if (length(zz)==1)
-        paste(zz)
-      else
-        paste(unlist(.lhsParse(lhs)))
-
-    ##print(form.lhs.var)
-
-  } else {
-    if (length(formula)>=2){
-      lhs <- formula[[1]]
-      rhs <- formula[[2]]
-      form.lhs.var <- lhs
-      form.rhs.var <- rhs
+    if (!inherits(formula, c("formula", "list")))
+        stop("'formula' must be a formula or a list")
+    
+    if (inherits(formula, "formula")){
+        if (length(formula) != 3) stop("Formula must have a left hand side")
+        rhs       <- formula[[3]]
+        form.rhs.var   <- all.vars(rhs) ## May contain "." and "1"
+        
+        lhs       <- formula[[2]]
+        form.lhs.var   <- all.vars(lhs) ## May contain "."
+                                        #print(form.lhs.var)
+        
+        zz <- .lhsParse(lhs)
+        form.lhs.var <-
+            if (length(zz)==1)
+                paste(zz)
+            else
+                paste(unlist(.lhsParse(lhs)))
+        
+        ##print(form.lhs.var)
+        
     } else {
-      stop("Invalid specification of formula")
+        if (length(formula)>=2){
+            lhs <- formula[[1]]
+            rhs <- formula[[2]]
+            form.lhs.var <- lhs
+            form.rhs.var <- rhs
+        } else {
+            stop("Invalid specification of formula")
+        }
     }
-  }
-
-  if (is.null(id)){
-    form.ids.var <- character(0)
-  } else {
-    if ( !(class(id) %in% c("formula", "character")) ){
-      stop("'id' must be a formula or a character vector")
-    }
-    if (class(id) %in% "formula"){
-      form.ids.var   <- all.vars(id)
+    
+    if (is.null(id)){
+        form.ids.var <- character(0)
     } else {
-      form.ids.var   <- id
+        if (!inherits(id, c("formula", "character"))){
+            stop("'id' must be a formula or a character vector")
+        }
+
+        if (inherits(id, "formula")){
+            form.ids.var   <- all.vars(id)
+        } else {
+            form.ids.var   <- id
+        }
     }
-  }
-
-  data.cls  <- lapply(data, class)
-  data.num.idx   <- data.cls %in% c("numeric","integer")
-  data.num.var   <- data.var[ data.num.idx  ]
-  data.fac.var   <- data.var[ !data.num.idx ]
-
-##   print(form.lhs.var)
-##   print(data.num.var)
-  lhs.num   <- intersect( form.lhs.var, data.num.var )
-  rhs.num   <- intersect( form.rhs.var, data.num.var )
-  ids.num   <- intersect( form.ids.var, data.num.var )
-  lhs.fac   <- intersect( form.lhs.var, data.fac.var )
-  rhs.fac   <- intersect( form.rhs.var, data.fac.var )
-  ids.fac   <- intersect( form.ids.var, data.fac.var )
-
-  lll <- list(data.var=data.var,
-              form.lhs.var=form.lhs.var, form.rhs.var=form.rhs.var, form.ids.var=form.ids.var,
-              lhs.num=lhs.num, rhs.num=rhs.num, ids.num=ids.num,
-              lhs.fac=lhs.fac, rhs.fac=rhs.fac, ids.fac=ids.fac )
-
-  #if (debug.info>=1)
-  ##{ cat("status:\n"); str(lll, vec.len=20) }
-
-  if ( "." %in% form.lhs.var ){ ## need all numeric variables not metioned elswhere on lhs
-    form.lhs.var <- setdiff(form.lhs.var, ".")
-    lhs.num <- union( form.lhs.var, setdiff(data.num.var, c(rhs.num, ids.num)))
-    if ( length( lhs.fac ) > 0 ){
-      isSpecial <- rep(NA, length( lhs.fac ))
-      for (j in 1:length(lhs.fac)){
-        isSpecial[j]<- (class(data[,lhs.fac[j]])[1] %in% c("POSIXt", "Date"))
-      }
-      lhs.num <- union( lhs.num, lhs.fac[ isSpecial ] )
+    
+    data.cls  <- lapply(data, class)
+    data.num.idx   <- data.cls %in% c("numeric","integer")
+    data.num.var   <- data.var[ data.num.idx  ]
+    data.fac.var   <- data.var[ !data.num.idx ]
+    
+    ##   print(form.lhs.var)
+    ##   print(data.num.var)
+    lhs.num   <- intersect( form.lhs.var, data.num.var )
+    rhs.num   <- intersect( form.rhs.var, data.num.var )
+    ids.num   <- intersect( form.ids.var, data.num.var )
+    lhs.fac   <- intersect( form.lhs.var, data.fac.var )
+    rhs.fac   <- intersect( form.rhs.var, data.fac.var )
+    ids.fac   <- intersect( form.ids.var, data.fac.var )
+    
+    lll <- list(data.var=data.var,
+                form.lhs.var=form.lhs.var, form.rhs.var=form.rhs.var, form.ids.var=form.ids.var,
+                lhs.num=lhs.num, rhs.num=rhs.num, ids.num=ids.num,
+                lhs.fac=lhs.fac, rhs.fac=rhs.fac, ids.fac=ids.fac )
+    
+                                        #if (debug.info>=1)
+    ##{ cat("status:\n"); str(lll, vec.len=20) }
+    
+    if ( "." %in% form.lhs.var ){ ## need all numeric variables not metioned elswhere on lhs
+        form.lhs.var <- setdiff(form.lhs.var, ".")
+        lhs.num <- union( form.lhs.var, setdiff(data.num.var, c(rhs.num, ids.num)))
+        if ( length( lhs.fac ) > 0 ){
+            isSpecial <- rep(NA, length( lhs.fac ))
+            for (j in 1:length(lhs.fac)){
+                isSpecial[j]<- (class(data[,lhs.fac[j]])[1] %in% c("POSIXt", "Date"))
+            }
+            lhs.num <- union( lhs.num, lhs.fac[ isSpecial ] )
+        }
+    } else {
+        lhs.num <- form.lhs.var
     }
-  } else {
-    lhs.num <- form.lhs.var
-  }
-
-  ## The grouping variable
-  if ("." %in% form.rhs.var){ ## need all factors not mentioned elsewhere as grouping factors
-    free.fac <- setdiff(data.fac.var, c(lhs.fac, ids.fac))
-    rhs.grp  <- c(setdiff(form.rhs.var, "."), free.fac)
-  } else {
-    rhs.grp <- form.rhs.var
-  }
-  rhs.grp <- intersect( rhs.grp, data.var )
-
-  rrr <- list(lhs.num=lhs.num, rhs.fac=rhs.fac, form.ids.var=form.ids.var,
-            form.rhs.var=form.rhs.var, rhs.grp=rhs.grp)
-  ##str(rrr)
-  rrr
- }
+    
+    ## The grouping variable
+    if ("." %in% form.rhs.var){ ## need all factors not mentioned elsewhere as grouping factors
+        free.fac <- setdiff(data.fac.var, c(lhs.fac, ids.fac))
+        rhs.grp  <- c(setdiff(form.rhs.var, "."), free.fac)
+    } else {
+        rhs.grp <- form.rhs.var
+    }
+    rhs.grp <- intersect( rhs.grp, data.var )
+    
+    rrr <- list(lhs.num=lhs.num, rhs.fac=rhs.fac, form.ids.var=form.ids.var,
+                form.rhs.var=form.rhs.var, rhs.grp=rhs.grp)
+    ##str(rrr)
+    rrr
+}
 
 
 
 .lhsParse <- function(x){
-  ##cat(".lhsParse:"); print(x); print(class(x))
-  if (class(x)=='name'){
-    value <- x
-  } else {
-    s <- paste(x[[1]])
-    value <- switch(s,
-                    '+'={  c(.lhsParse(x[[2]]),.lhsParse(x[[3]]))},
-                    'I'={  x[[2]]},
-                    {  deparse(x)})
-  }
-  return(value)
+    ##cat(".lhsParse:"); print(x); print(class(x))
+    if (inherits(x, 'name')){
+        value <- x
+    } else {
+        s <- paste(x[[1]])
+        value <- switch(s,
+                        '+'={  c(.lhsParse(x[[2]]),.lhsParse(x[[3]]))},
+                        'I'={  x[[2]]},
+                        {  deparse(x)})
+    }
+    value
 }
 
 

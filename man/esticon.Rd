@@ -17,36 +17,27 @@
 \alias{vcov.esticon_class}
 \title{Contrasts for lm, glm, lme, and geeglm objects}
 \usage{
-esticon(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+esticon(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{gls}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{gls}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{geeglm}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{geeglm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{lm}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{lm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{glm}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{glm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{mer}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{mer}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{coxph}(obj, L, beta0, conf.int = TRUE, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{coxph}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{lme}(obj, L, beta0, conf.int = NULL, level = 0.95,
-  joint.test = FALSE, ...)
+\method{esticon}{lme}(obj, L, beta0, conf.int = NULL, level = 0.95, joint.test = FALSE, ...)
 
 \method{coef}{esticon_class}(object, ...)
 
 \method{summary}{esticon_class}(object, ...)
 
-\method{tidy}{esticon_class}(x, conf.int = FALSE, conf.level = 0.95,
-  ...)
+\method{tidy}{esticon_class}(x, conf.int = FALSE, conf.level = 0.95, ...)
 
 \method{confint}{esticon_class}(object, parm, level = 0.95, ...)
 
@@ -90,9 +81,9 @@ Returns a matrix with one row per linear function.  Columns contain
     confidence intervals.
 }
 \description{
-Computes linear functions (i.e. weighted sums) of the estimated
-    regression parameters. Can also test the hypothesis, that such a function
-    is equal to a specific value.
+Computes linear functions (i.e. weighted sums) of the
+    estimated regression parameters. Can also test the hypothesis,
+    that such a function is equal to a specific value.
 }
 \details{
 Let the estimated parameters of the model be

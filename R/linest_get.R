@@ -18,16 +18,19 @@
 #' @param covariateVal FIXME: to be described
 #' @param newdata FIXME: to be described
 
+#' @export
 #' @rdname linest-get
 get_xlevels <- function(obj){
   UseMethod("get_xlevels")
 }
 
+#' @export
 #' @rdname linest-get
 get_xlevels.default <- function(obj){
   obj$xlevels
 }
 
+#' @export
 #' @rdname linest-get
 get_xlevels.mer <- function(obj){
   ans <- lapply(obj@frame,levels)
@@ -40,6 +43,7 @@ get_xlevels.mer <- function(obj){
   ans
 }
 
+#' @export
 #' @rdname linest-get
 get_xlevels.merMod <- function(obj){
   ##cat("get_xlevels.lmerMod\n")
@@ -54,22 +58,25 @@ get_xlevels.merMod <- function(obj){
   ans
 }
 
-
+#' @export
 #' @rdname linest-get
 get_contrasts <- function(obj){
   UseMethod("get_contrasts")
 }
 
+#' @export
 #' @rdname linest-get
 get_contrasts.default <- function(obj){
   obj$contrasts ## FIXME: check RL code
 }
 
+#' @export
 #' @rdname linest-get
 get_contrasts.merMod <- function(obj){
   attr(model.matrix(obj), "contrasts")
 }
 
+#' @export
 #' @rdname linest-get
 set_xlevels <- function(xlev, at){
   nam     <- names(xlev)
@@ -81,6 +88,7 @@ set_xlevels <- function(xlev, at){
   xlev
 }
 
+#' @export
 #' @rdname linest-get
 get_vartypes <- function(obj){
     #cat("get_vartypes:\n")
@@ -108,6 +116,7 @@ get_vartypes <- function(obj){
     list(numeric=nums, factor=fact)
 }
 
+#' @export
 #' @rdname linest-get
 set_covariate_val <- function(xlev, covariateVal){
   nam     <- names(xlev)
@@ -150,11 +159,13 @@ set_covariate_val <- function(xlev, covariateVal){
 
 
 
+#' @export
 #' @rdname linest-get
 get_X <- function(obj, newdata, at=NULL){
   UseMethod("get_X")
 }
 
+#' @export
 #' @rdname linest-get
 #' 
 get_X.default <- function(obj, newdata, at=NULL){
@@ -186,6 +197,7 @@ get_X.default <- function(obj, newdata, at=NULL){
     X
 }
 
+#' @export
 #' @rdname linest-get
 get_X.merMod <- function(obj, newdata, at=NULL){
    tt <- terms(obj)

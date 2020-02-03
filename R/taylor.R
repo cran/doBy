@@ -34,6 +34,7 @@
 #'
 #' 
 
+#' @export
 taylor <- function(fn, x0, ord=1){
 
     if (!is.function(fn)) stop("'fn' is not a function")

@@ -1,10 +1,9 @@
+#########################################################################
 #' @title Sampling from a data frame
-#'
-#' @description   A data frame is split according to some variables in a formula, and a
-#'  sample of a certain fraction of each is drawn.
-#'
+#' @description A data frame is split according to some variables in a
+#'     formula, and a sample of a certain fraction of each is drawn.
 #' @name by-sample
-#'
+#########################################################################
 #' @details If systematic=FALSE (default) then frac gives the fraction
 #'     of data sampled. If systematic=TRUE and frac=.2 then every 1/.2
 #'     i.e. every 5th observation is taken out.
@@ -24,9 +23,9 @@
 #' @examples
 #' data(dietox)
 #' sampleBy(formula = ~Evit+Cu, frac=.1, data = dietox)
-#' 
 
-
+#' @export
+#' @rdname by-sample
 sampleBy <- function(formula, frac=0.1, replace=FALSE, data=parent.frame(),
                      systematic=FALSE
                      ){

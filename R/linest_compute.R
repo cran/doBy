@@ -47,11 +47,12 @@
 #' 
 #' @export linest
 
-
+#' @export
 linest <- function(object, L=NULL, ...){
     UseMethod("linest")
 }
 
+#' @export
 linest.lm <- function(object, L=NULL, ...){
     bhat <- coef(object)
     L  <- .constructL(L, bhat)    
@@ -68,6 +69,7 @@ linest.lm <- function(object, L=NULL, ...){
 }
 
 
+#' @export
 linest.glm <- function(object, L=NULL, ...){
 
 
@@ -90,7 +92,7 @@ linest.glm <- function(object, L=NULL, ...){
     .finalize_linest(res, L)
 }
 
-
+#' @export
 linest.geeglm <- function(object, L=NULL, ...){
 
     bhat <- coef(object)
@@ -106,6 +108,7 @@ linest.geeglm <- function(object, L=NULL, ...){
     .finalize_linest(res, L)
 }
 
+#' @export
 linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
 
     bhat <- lme4::fixef(object)
@@ -135,6 +138,7 @@ linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
     .finalize_linest(res, L)
 }
 
+#' @export
 linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
     cl <- match.call()
     cl[[1]] <- as.name("linest.lmerMod")
@@ -190,6 +194,7 @@ linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
 }
 
 
+#' @export
 #' @rdname linest
 #' @param x A 'linest_class' object (produced by \code{linest} methods).
 #' @param conf.int Should confidence intervals be added.
@@ -244,6 +249,7 @@ tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
 
 ### UTILITIES ###
 
+#' @export
 #' @rdname linest
 #' @param parm Specification of the parameters estimates for which
 #'     confidence inctervals are to be calculated.
@@ -267,16 +273,19 @@ confint.linest_class <- function (object, parm, level = 0.95, ...)
     L
 }
 
+#' @export
 #' @rdname linest
 coef.linest_class <- function (object, ...) {
     object$coef
 }
 
+#' @export
 print.linest_class <- function (x, ...){
     cat("Coefficients:\n")
     printCoefmat(x$coef)
 }
 
+#' @export
 #' @rdname linest
 summary.linest_class <- function (object, ...) 
 {

@@ -17,15 +17,16 @@
 #' @export parseGroupFormula
 parseGroupFormula <- function(form)
 {
-  if (class(form) != "formula" || length(form) != 3)
-    stop("formula must be a two-sided formula object")
-  rhs <- form[[3]]
-  if (class(rhs) != "call" || rhs[[1]] != as.symbol('|'))
-    stop("rhs of formula must be a conditioning expression")
-  form[[3]] <- rhs[[2]]
-  groups <- rhs[[3]]
-  grpFormula <- as.formula(paste("~", deparse(groups)))
-  list(model = form, groups = groups, groupFormula=grpFormula)
+    if (!inherits(form, "formula") || length(form) != 3)
+        stop("formula must be a two-sided formula object")
+    rhs <- form[[3]]
+
+    if (!inherits(rhs, "call") || rhs[[1]] != as.symbol('|'))
+        stop("rhs of formula must be a conditioning expression")
+    form[[3]] <- rhs[[2]]
+    groups <- rhs[[3]]
+    grpFormula <- as.formula(paste("~", deparse(groups)))
+    list(model = form, groups = groups, groupFormula=grpFormula)
 }
 
 #' @title Convert right hand sided formula to a list

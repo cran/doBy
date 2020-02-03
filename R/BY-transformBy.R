@@ -1,10 +1,9 @@
+###############################################################################
 #' @title Function to make groupwise transformations
-#' 
 #' @description Function to make groupwise transformations of data by applying
 #'     the transform function to subsets of data.
-#'
 #' @name by-transform
-#' 
+###############################################################################
 #' @details The ... arguments are tagged vector expressions, which are evaluated
 #'     in the data frame data. The tags are matched against names(data), and for
 #'     those that match, the value replace the corresponding variable in data,
@@ -25,7 +24,8 @@
 #' transformBy(~Pig, data=dietox, minW=min(Weight), maxW=max(Weight), 
 #'     gain=diff(range(Weight)))
 #' 
-#' @export transformBy
+
+#' @export 
 transformBy <- function (formula, data, ...) {
 
   transform2<- function (data, ...) 

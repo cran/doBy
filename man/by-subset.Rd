@@ -3,26 +3,35 @@
 \name{by-subset}
 \alias{by-subset}
 \alias{subsetBy}
-\title{Finds subsets of a dataframe which is split by variables in a formula.}
+\title{Finds subsets of a dataframe which is split by variables in
+    a formula.}
 \usage{
-subsetBy(formula, subset, data = parent.frame(), select, drop = FALSE,
-  join = TRUE, ...)
+subsetBy(
+  formula,
+  subset,
+  data = parent.frame(),
+  select,
+  drop = FALSE,
+  join = TRUE,
+  ...
+)
 }
 \arguments{
-\item{formula}{A right hand sided formula or a character vector of variables
-to split by.}
+\item{formula}{A right hand sided formula or a character vector of
+variables to split by.}
 
-\item{subset}{logical expression indicating elements or rows to keep: missing
-values are taken as false.}
+\item{subset}{logical expression indicating elements or rows to
+keep: missing values are taken as false.}
 
 \item{data}{A data frame.}
 
-\item{select}{expression, indicating columns to select from a data frame.}
+\item{select}{expression, indicating columns to select from a data
+frame.}
 
 \item{drop}{passed on to \code{[} indexing operator.}
 
-\item{join}{If FALSE the result is a list of data frames (as defined by
-'formula'); if TRUE one data frame is returned.}
+\item{join}{If FALSE the result is a list of data frames (as
+defined by 'formula'); if TRUE one data frame is returned.}
 
 \item{...}{further arguments to be passed to or from other methods.}
 }
@@ -30,14 +39,14 @@ values are taken as false.}
 A data frame.
 }
 \description{
-A data frame is split by a formula into groups. Then subsets are found
-within each group, and the result is collected into a data frame.
+A data frame is split by a formula into groups. Then
+    subsets are found within each group, and the result is
+    collected into a data frame.
 }
 \examples{
 
 data(dietox)
 subsetBy(~Evit, Weight < mean(Weight), data=dietox)
-
 }
 \seealso{
 \code{\link{splitBy}}

@@ -1,10 +1,10 @@
-#' @name by-lapply
-#'
+
+#######################################################################
 #' @title Formula based version of lapply.
-#'
 #' @description This function is a wrapper for calling lapply on the
 #'     list resulting from first calling splitBy.
-#'
+#' @name by-lapply
+#######################################################################
 #' @param formula A formula describing how data should be split.
 #' @param data A dataframe.
 #' @param FUN A function to be applied to each element in the splitted
@@ -34,6 +34,7 @@
 #' dietox$FE <- unlist(v)
 #' 
 
+#' @export
 lapplyBy <- function (formula, data = parent.frame(), FUN) 
 {
     ddd <- splitBy(formula, data = data)

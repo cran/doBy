@@ -1,0 +1,48 @@
+doBy v4.6-4.1 (Release date: 2020-02-03)
+========================================
+
+Changes:
+
+  * NAMESPACE file is being generated automatically
+
+
+doBy v4.6-4 (Release date: 2020-02-01)
+=======================================
+
+Changes:
+
+  * Issue related to class vs inherits solved
+  * NEWS file added
+  * Update of fev data
+  * cropyield data added.
+
+
+doBy v4.6-3 (Release date: 2019-10-23)
+=======================================
+
+Bug fixes:
+
+  * LE_matrix etc. handles a dataframe correctly for the 'at' argument
+
+Changes:
+
+  * taylor function added
+  * fev data from isdals added
+  * lmBy reintroduced due to popular demand.
+
+doBy v4.6-2 (Release date: 2018-08-30)
+=======================================
+	
+Changes
+
+  * sampleBy and lapplyBy functions reintroduced due to popular demand.
+
+doBy v4.6-1 (Release date: 2018-03-19)
+=======================================
+
+Changes:
+
+  * Previous functionality of core xxBy-functions reestablished to
+    ensure that downstream packages work.
+
+

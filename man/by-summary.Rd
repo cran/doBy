@@ -5,9 +5,19 @@
 \alias{summaryBy}
 \title{Function to calculate groupwise summary statistics}
 \usage{
-summaryBy(formula, data = parent.frame(), id = NULL, FUN = mean,
-  keep.names = FALSE, p2d = FALSE, order = TRUE,
-  full.dimension = FALSE, var.names = NULL, fun.names = NULL, ...)
+summaryBy(
+  formula,
+  data = parent.frame(),
+  id = NULL,
+  FUN = mean,
+  keep.names = FALSE,
+  p2d = FALSE,
+  order = TRUE,
+  full.dimension = FALSE,
+  var.names = NULL,
+  fun.names = NULL,
+  ...
+)
 }
 \arguments{
 \item{formula}{A formula object, see examples below.}
@@ -44,8 +54,8 @@ variables on the left hand side.}
 A dataframe.
 }
 \description{
-Function to calculate groupwise summary statistics, much like
-    the summary procedure of SAS
+Function to calculate groupwise summary statistics,
+    much like the summary procedure of SAS
 }
 \details{
 Extra arguments ('...') are passed onto the functions in

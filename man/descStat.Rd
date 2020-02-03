@@ -15,8 +15,8 @@ descStat(x, na.rm = TRUE)
 A vector with named elements.
 }
 \description{
-Computing simple descriptive statistics of a numeric vector --
-    not unlike what proc means of SAS does
+Computing simple descriptive statistics of a numeric
+    vector - not unlike what proc means of SAS does
 }
 \examples{
 

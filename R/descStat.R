@@ -1,9 +1,8 @@
+###############################################################################
 #' @title Computing simple descriptive statistics of a numeric vector.
-#' 
-#' @description Computing simple descriptive statistics of a numeric vector --
-#'     not unlike what proc means of SAS does
-#' 
-#' 
+#' @description Computing simple descriptive statistics of a numeric
+#'     vector - not unlike what proc means of SAS does
+###############################################################################
 #' @param x A numeric vector
 #' @param na.rm Should missing values be removed
 #' @return A vector with named elements.

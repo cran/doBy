@@ -93,12 +93,14 @@
 #' linest(m1, K)
 #' LSmeans(m1)
 
+#' @export
 #' @rdname linest-matrix
 LE_matrix <- function(object, effect=NULL, at=NULL){
   UseMethod("LE_matrix")
 }
 
 ## FIXME: LE_matrix.default: Should be a check of what 'object' is
+#' @export
 #' @rdname linest-matrix
 LE_matrix.default <- function(object, effect=NULL, at=NULL){
     if (!is.null(at))
@@ -129,6 +131,7 @@ LE_matrix.default <- function(object, effect=NULL, at=NULL){
 ##     out
 ## }
 
+#' @export
 #' @rdname linest-matrix
 aggregate_linest_list <- function (linest_list){
     out               <- lapply( linest_list, function( mm ) apply( mm, 2, mean ) )
@@ -139,11 +142,13 @@ aggregate_linest_list <- function (linest_list){
     out
 }
 
+#' @export
 print.linest_matrix_class <- function(x, ...){
   prmatrix(x)
   invisible(x)
 }
 
+#' @export
 summary.linest_matrix_class <- function(object, ...){
     print(object)
     cat("at: \n"); print(attr(object, "at"))
@@ -152,6 +157,7 @@ summary.linest_matrix_class <- function(object, ...){
 }
 
 ## This is the workhorse for generating the "contrast matrix"
+#' @export
 #' @rdname linest-matrix
 get_linest_list <- function(object, effect=NULL, at=NULL){
 

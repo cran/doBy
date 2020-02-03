@@ -15,16 +15,14 @@ a formula or character vector.}
 
 \item{drop}{Logical indicating if levels that do not occur should be
 dropped. Deprecated; levels that do not occur are ignored.}
-
-\item{...}{Additional arguments, currently not used.}
 }
 \value{
 A list of dataframes.
 }
 \description{
-Split a dataframe according to the levels of variables in the
-    dataframe. The variables to split by can be given as a formula or as a
-    character vector.
+Split a dataframe according to the levels of variables
+    in the dataframe. The variables to split by can be given as a
+    formula or as a character vector.
 }
 \examples{
 
@@ -34,7 +32,6 @@ splitBy(formula = c("Evit", "Cu"), data = dietox)
 
 splitBy(~Month, data=airquality)
 splitBy("Month", data=airquality)
-
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{summaryBy}},

@@ -1,3 +1,4 @@
+#' @export
 specialize <- function(FUN, arglist){
   expr1 <- as.expression(body(FUN))
   expr2 <- do.call("substitute", list(expr1[[1]], arglist))

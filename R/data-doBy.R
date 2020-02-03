@@ -10,7 +10,7 @@
 #'     the sowing time defines the "split plot". Each plot was \eqn{25 m^2} and
 #'     the yield is recorded in kg. See 'details' for the experimental layout.
 #'
-#' @name data-beets
+#' @name beets
 #' 
 #' @docType data
 #' @format The format is: chr "beets"
@@ -67,7 +67,7 @@
 #' The factor \code{code} defines whether there was a mutation in the p53
 #' sequence (code=case) or not (code=control).
 #' 
-#' @name data-breastcancer
+#' @name breastcancer
 #'
 #' @docType data
 #'
@@ -109,7 +109,7 @@
 #' mortality of the moth tobacco budworm 'Heliothis virescens' for 6 doses of
 #' the pyrethroid trans-cypermethrin differentiated with respect to sex
 #'
-#' @name data-budworm
+#' @name budworm
 #' @docType data
 #' 
 #' @format This data frame contains 12 rows and 4 columns:
@@ -171,7 +171,7 @@
 #' Measurement of lean meat percentage of 344 pig carcasses together with
 #' auxillary information collected at three Danish slaughter houses
 #' 
-#' @name data-carcass
+#' @name carcass
 #' 
 #' @aliases carcass carcassall
 #' @format carcassall: A data frame with 344 observations on the following 17
@@ -251,7 +251,7 @@
 #' If a stomach is empty, a single observation is recorded with
 #' \code{prey.type} \code{Empty} and a \code{prey.mass} of zero.
 #' 
-#' @name data-codstom
+#' @name codstom
 #' @docType data
 #'
 #' @format A data frame with 10000 observations on the following 10 variables.
@@ -332,7 +332,7 @@
 #' Crime rates per 100,000 inhabitants in states of the USA for different crime
 #' types.
 #' 
-#' @name data-crimeRate
+#' @name crimeRate
 #' 
 #' @docType data
 #' @format This data frame contains:
@@ -358,12 +358,11 @@
 ## dietox
 ##
 
+
 #' Growth curves of pigs in a 3x3 factorial experiment
 #' 
 #' The \code{dietox} data frame has 861 rows and 7 columns.
 #'
-#' @name data-dietox
-#' 
 #' @details Data contains weight of slaughter pigs measured weekly for 12
 #'     weeks. Data also contains the startweight (i.e. the weight at week
 #'     1). The treatments are 3 different levels of Evit = vitamin E (dose: 0,
@@ -375,14 +374,14 @@
 #' @format This data frame contains the following columns:
 #' 
 #' \describe{
-#' \item{Weight}{Weight}
-#' \item{Feed}{Cumulated feed intake}
+#' \item{Weight}{Weight in Kg}
+#' \item{Feed}{Cumulated feed intake in Kg}
 #' \item{Time}{Time (in weeks) in the experiment}
-#' \item{Pig}{Id of each pig}
-#' \item{Evit}{Vitamin E dose}
-#' \item{Cu}{Copper dose}
+#' \item{Pig}{Factor; id of each pig}
+#' \item{Evit}{Factor; vitamin E dose; see 'details'.}
+#' \item{Cu}{Factor, copper dose; see 'details'}
 #' \item{Start}{Start weight in experiment, i.e. weight at week 1.}
-#' \item{Litter}{Id of litter of each pig}
+#' \item{Litter}{Factor, id of litter of each pig}
 #' }
 #' 
 #' @source Lauridsen, C., Højsgaard, S.,Sørensen, M.T. C. (1999) Influence of
@@ -392,11 +391,19 @@
 #' @examples
 #' 
 #' data(dietox)
-#' str(dietox) ;
-#' plot(dietox)
-#' 
+#' head(dietox)
+#' if (require(ggplot2)){
+#'   qplot(Time, Weight, data=dietox, col=Pig) + geom_line() +
+#'            theme(legend.position = "none") + facet_grid(Evit~Cu)
+#' } else {
+#'   coplot(Weight ~ Time | Evit * Cu, data=dietox)
+#' }
 #' 
 "dietox"
+
+
+
+
 
 
 ##
@@ -444,9 +451,9 @@
 #' \describe{
 #'   \item{\code{Age}}{Age in years.}
 #'   \item{\code{FEV}}{Forced expiratory volume in liters per second.}
-#'   \item{\code{Ht}}{Height in inches}
-#'   \item{\code{Gender}}{Gender}
-#'   \item{\code{Smoke}}{Smoking}
+#'   \item{\code{Ht}}{Height in centimeters.}
+#'   \item{\code{Gender}}{Gender.}
+#'   \item{\code{Smoke}}{Smoking status.}
 #' }
 #'
 #'
@@ -468,7 +475,7 @@
 #' composition.
 #' 
 #' 
-#' @name data-haldCement
+#' @name haldCement
 #' @docType data
 #'
 #' @format A data frame with 13 observations on the following 5 variables.
@@ -501,6 +508,27 @@
 "haldCement"
 
 
+#' Yield from Danish agricultural production of grain and root crop. 
+#'
+#' @name cropyield
+#' @docType data
+#' @format A dataframe with 97 rows and 7 columns. 
+#'   \describe{
+#'     \item{\code{year}}{From 1901 to 1997.}
+#'     \item{\code{precip}}{Milimeter precipitation.}
+#'     \item{\code{yield}}{Million feed units (se details).}
+#'     \item{\code{area}}{Area in 1000 ha for grains and root crop.}
+#'     \item{\code{fertil}}{1000 tons fertilizer.}
+#'     \item{\code{avgtmp1}}{Average temperature April-June (3 months).}
+#'     \item{\code{avgtmp2}}{Average temperature July-Octobre (4 months). }
+#'   }
+#'
+#' @details A feed unit is the amount of energy in a kg of barley.
+#' @references Danmarks statistik (Statistics Denmark).
+#' @keywords datasets
+"cropyield"
+
+
 
 #' Milk yield data for manually milked cows.
 #' 
@@ -509,7 +537,7 @@
 #' There are data for 222 cows. Some cows appear more than once in the dataset
 #' (in different lactations) and there are 288 different lactations.
 #' 
-#' @name data-milkman
+#' @name milkman
 #' @docType data
 #'
 #' @format
@@ -559,7 +587,7 @@
 #' 
 #' PCA regression
 #' 
-#' @name data-NIRmilk
+#' @name NIRmilk
 #' @docType data
 #' @format This data frame contains 18 rows and 158 columns.  The first column
 #'     is the sample number.  The columns Xwww contains the infra red light
@@ -579,7 +607,7 @@
 #' are two sizes: \code{length} is the longest length and \code{width} is the
 #' shortest length across a potato. #' 
 #' 
-#' @name data-potatoes
+#' @name potatoes
 #' @docType data
 #'
 #' @format A data frame with 20 observations on the following 3 variables.

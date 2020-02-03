@@ -22,7 +22,7 @@ get_linest_list(object, effect = NULL, at = NULL)
 \item{effect}{A vector of variables. For each configuration of
 these the estimate will be calculated.}
 
-\item{at}{Either a list or a dataframe. 1) If a list, then the list
+\item{at}{Either NULL, a list or a dataframe. 1) If a list, then the list
 must consist of covariates (including levels of some factors)
 to be used in the calculations. 2) If a dataframe, the
 dataframe is split rowwise and the function is invoked on each

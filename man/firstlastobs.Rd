@@ -42,15 +42,10 @@ Locate the index of the first/last unique value in i) a vector
 If writing ~a + b + c as formula, then only a is considered.
 }
 \examples{
-
-
 x <- c(rep(1, 5), rep(2, 3), rep(3, 7), rep(1, 4))
-
 firstobs(x)
 lastobs(x)
-
 data(dietox)
-
 firstobs(~Pig, data=dietox)
 lastobs(~Pig, data=dietox)
 

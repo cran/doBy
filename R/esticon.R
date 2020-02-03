@@ -1,11 +1,10 @@
+###############################################################################
 #' @title Contrasts for lm, glm, lme, and geeglm objects
-#' 
-#' @description Computes linear functions (i.e. weighted sums) of the estimated
-#'     regression parameters. Can also test the hypothesis, that such a function
-#'     is equal to a specific value.
-#'
+#' @description Computes linear functions (i.e. weighted sums) of the
+#'     estimated regression parameters. Can also test the hypothesis,
+#'     that such a function is equal to a specific value.
 #' @name esticon
-#' 
+###############################################################################
 #' @details Let the estimated parameters of the model be
 #' \deqn{\beta_1, \beta_2, \dots, \beta_p}
 #'
@@ -128,6 +127,8 @@ esticon.gls <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=
     }
 }
 
+
+#' @export
 #' @rdname esticon
 esticon.geeglm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
@@ -140,6 +141,7 @@ esticon.geeglm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.te
     }
 }
 
+#' @export
 #' @rdname esticon
 esticon.lm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
@@ -153,6 +155,7 @@ esticon.lm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=F
   }
 }
 
+#' @export
 #' @rdname esticon
 esticon.glm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
@@ -170,6 +173,7 @@ esticon.glm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=
     }
 }
 
+#' @export
 #' @rdname esticon
 esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
@@ -185,6 +189,7 @@ esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level
     }
 }
 
+#' @export
 #' @rdname esticon
 esticon.coxph <-
     function (obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...){
@@ -206,6 +211,7 @@ esticon.coxph <-
 ###
 ### ######################################################
 
+#' @export
 #' @rdname esticon
 esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=FALSE,...){
   warning("The esticon function has not been thoroughly teste on 'lme' objects")
@@ -244,33 +250,35 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
       beta0 <- rep(0, nrow(L))
 
     df <- nrow(L)
-    if ("geese" %in% class(obj)) {
-      coef.mat  <- obj$beta
-      vcv <- obj$vbeta
-    } else if ("geeglm" %in% class(obj)) {
-      coef.mat  <- obj$coef
-      vcv <- summary(obj)$cov.scaled
-    } else if ("gls" %in% class(obj)) {
+
+    if (inherits(obj, "geese")){
+        coef.mat  <- obj$beta
+        vcv <- obj$vbeta
+    } else if (inherits(obj, "geeglm")){
+        coef.mat  <- obj$coef
+        vcv <- summary(obj)$cov.scaled
+    } else if (inherits(obj, "gls")) {        
         ##vcv <- vcov(obj)
         vcv <- vcov(obj, complete=FALSE)
-      coef.mat  <- matrix(coef(obj))
-    } else if ("gee" %in% class(obj)) {
-      coef.mat  <- obj$coef
-      vcv <- obj$robust.variance
+        coef.mat  <- matrix(coef(obj))
+    } else if (inherits(obj, "gee")) {
+        coef.mat  <- obj$coef
+        vcv <- obj$robust.variance
     }
-    else if ("lm" %in% class(obj)) {
-      coef.mat  <- summary.lm(obj)$coefficients[, 1]
-      vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
-      if ("glm" %in% class(obj)) {
-        vcv <- summary(obj)$cov.scaled
-      }
+    else if (inherits(obj, "lm")) {
+        coef.mat  <- summary.lm(obj)$coefficients[, 1]
+        vcv <- summary.lm(obj)$cov.unscaled * summary.lm(obj)$sigma^2
+        if (inherits(obj, "glm")) {
+            vcv <- summary(obj)$cov.scaled
+        }
     }
-    else if ("coxph" %in% class(obj)) {
-      coef.mat <- obj$coef
-      vcv <- obj$var
+    else if (inherits(obj, "coxph")) {
+        coef.mat <- obj$coef
+        vcv <- obj$var
     }
     else
-      stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee', 'geese', 'coxph'")
+        stop("obj must be of class 'lm', 'glm', 'aov', 'gls', 'gee', 'geese', 'coxph'")
+    
     u      <- (L %*% coef.mat)-beta0
     vcv.u  <- L %*% vcv %*% t(L)
     W      <- t(u) %*% solve(vcv.u) %*% u
@@ -368,13 +376,14 @@ esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=
 #' @rdname esticon
 #' @param object An \code{esticon_class} object. 
 
+#' @export
 coef.esticon_class <- function (object, ...) {
     out <- object$estimate
     names(out) <- rownames(object)
     out
 }
 
-
+#' @export
 #' @rdname esticon
 summary.esticon_class <- function (object, ...) 
 {
@@ -392,11 +401,13 @@ summary.esticon_class <- function (object, ...)
 }
 
 
+#' @export
 print.esticon_class <- function(x, ...){
     printCoefmat(x[,1:6])
 }
 
 
+#' @export
 #' @rdname esticon
 tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
     co <- x[,1:6]
@@ -411,6 +422,7 @@ tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
 }
 
 
+#' @export
 #' @rdname esticon
 confint.esticon_class <- function (object, parm, level = 0.95, ...) 
 {
@@ -443,6 +455,7 @@ confint.esticon_class <- function (object, parm, level = 0.95, ...)
 }
 
 
+#' @export
 #' @rdname esticon
 vcov.esticon_class <- function (object, ...){
     attr(object, "vcv")
