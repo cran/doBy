@@ -11,7 +11,7 @@
 #' @param x A vector
 #' @param formula A formula (only the first term is used, see 'details').
 #' @param data A data frame
-#' @param \dots Currently not used
+#' @param ... Currently not used
 #' @return A vector.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @keywords utilities
@@ -34,7 +34,7 @@ firstobs <- function(x, ...) UseMethod("firstobs")
 
 #' @export
 #' @rdname firstlastobs
-lastobs.default <- function(x,...){
+lastobs.default <- function(x, ...){
   ux <- unique(x)
   m <-match(ux, x)
   sort(sapply(ux, function(i) {max(which(i==x))}))
@@ -42,7 +42,7 @@ lastobs.default <- function(x,...){
 
 #' @export
 #' @rdname firstlastobs
-firstobs.default <- function(x,...){
+firstobs.default <- function(x, ...){
   ux <- unique(x)
   m <- match(ux,x)
   sort(sapply(ux, function(i) {min(which(i==x))}))

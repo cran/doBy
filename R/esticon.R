@@ -1,9 +1,11 @@
 ###############################################################################
+##
 #' @title Contrasts for lm, glm, lme, and geeglm objects
 #' @description Computes linear functions (i.e. weighted sums) of the
 #'     estimated regression parameters. Can also test the hypothesis,
 #'     that such a function is equal to a specific value.
 #' @name esticon
+##
 ###############################################################################
 #' @details Let the estimated parameters of the model be
 #' \deqn{\beta_1, \beta_2, \dots, \beta_p}
@@ -175,7 +177,7 @@ esticon.glm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=
 
 #' @export
 #' @rdname esticon
-esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
+esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE, ...){
     if (joint.test) .wald(obj, L, beta0)
     else {
         stat.name <- "X2.stat"

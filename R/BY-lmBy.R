@@ -9,13 +9,13 @@
 #'     residuals.lmBy getBy
 #' @param formula A linear model formula object of the form y ~ x1 +
 #'     ... + xn | g1 + ... + gm.  In the formula object, y represents
-#'     the response, x1,...,xn the covariates, and the grouping
+#'     the response, x1, ... ,xn the covariates, and the grouping
 #'     factors specifying the partitioning of the data according to
 #'     which different lm fits should be performed.
 #' @param data A dataframe
 #' @param id A formula describing variables from data which are to be
 #'     available also in the output.
-#' @param \dots Additional arguments passed on to \code{lm()}.
+#' @param ... Additional arguments passed on to \code{lm()}.
 #' @return A list of lm fits.
 #'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
@@ -51,8 +51,8 @@ lmBy <- function(formula, data, id=NULL, ...){
 
   mmm <- mff$model
   mm  <- lapply(groupData, function(wd) {
-    zzz<-lm(mmm, data=wd, ...)
-    zzz$call[[2]]<- mmm
+    zzz <- lm(mmm, data=wd, ...)
+    zzz$call[[2]] <- mmm
     zzz
   })
 
@@ -136,7 +136,7 @@ coef.lmBy <- function(object, augment=FALSE, ...){
 }
 
 #' @export
-fitted.lmBy <- function(object, augment=FALSE,...){
+fitted.lmBy <- function(object, augment=FALSE, ...){
   ans <- lapply(object, fitted)
   if (augment) {
     ans <- mapply(function(a,b){data.frame(.fit=a,b)}, ans, getBy(object, "dataList"),
@@ -146,7 +146,7 @@ fitted.lmBy <- function(object, augment=FALSE,...){
 }
 
 #' @export
-residuals.lmBy <- function(object, augment=FALSE,...){
+residuals.lmBy <- function(object, augment=FALSE, ...){
   ans <- lapply(object, residuals)
   if (augment) {
     ans <- mapply(function(a,b){data.frame(.fit=a,b)}, ans, getBy(object, "dataList"),

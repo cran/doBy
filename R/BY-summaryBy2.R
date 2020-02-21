@@ -1,9 +1,12 @@
 ###############################################################################
+##
 #' @title Function to calculate groupwise summary statistics
 #' @description Function to calculate groupwise summary statistics,
 #'     much like the summary procedure of SAS
 #' @name by-summary
+##
 ###############################################################################
+#'
 #' @details Extra arguments ('...') are passed onto the functions in
 #'     FUN. Hence care must be taken that all functions in FUN accept
 #'     these arguments - OR one can explicitly write a functions which
@@ -84,11 +87,11 @@
 
 #' @export
 #' @rdname by-summary
-summaryBy <-
-  function (formula, data=parent.frame(), id=NULL, FUN=mean, keep.names=FALSE,
-            p2d=FALSE, order=TRUE, full.dimension=FALSE,
-            var.names=NULL, fun.names=NULL,
-            ...)
+summaryBy <- function (formula, data=parent.frame(), id=NULL, FUN=mean,
+                       keep.names=FALSE,
+                       p2d=FALSE, order=TRUE, full.dimension=FALSE,
+                       var.names=NULL, fun.names=NULL,
+                       ...)
   {
     debug.info <- 0
 
@@ -163,7 +166,7 @@ summaryBy <-
             currVAR <- lh.data[,lhs.num[vv]]
 
             zzz <- tapply(currVAR, rh.string.factor,
-                          function(x){ currFUN(x,...) }, simplify=FALSE)
+                          function(x){ currFUN(x, ...) }, simplify=FALSE)
             zzz  <- do.call(rbind, zzz)
             ans  <- cbind(ans, zzz)
         }

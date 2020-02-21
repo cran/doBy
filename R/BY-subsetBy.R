@@ -1,10 +1,12 @@
 ###############################################################################
+#'
 #' @title Finds subsets of a dataframe which is split by variables in
 #'     a formula.
 #' @description A data frame is split by a formula into groups. Then
 #'     subsets are found within each group, and the result is
 #'     collected into a data frame.
 #' @name by-subset
+#' 
 ###############################################################################
 #' @param formula A right hand sided formula or a character vector of
 #'     variables to split by.
@@ -55,42 +57,3 @@ subsetBy <- function(formula, subset, data=parent.frame(), select, drop=FALSE, j
                 )
   if (join) do.call("rbind", ddd) else ddd
 }
-
-
-## #' @rdname by-subset
-## subset_by <- function(data, formula, subset, select, drop=FALSE, join=TRUE,...){
-##     ddd <- splitBy(formula, data=data)
-##     subsetMissing <- missing(subset)
-##     selectMissing <- missing(select)  
-##     e <- substitute(subset)
-##     ddd <-
-##         lapply(ddd, 
-##                function(x){
-##                    if (subsetMissing) 
-##                        r <- TRUE
-##                    else {
-##                        r <- eval(e, x, parent.frame())
-##                        if (!is.logical(r)) 
-##                            stop("'subset' must evaluate to logical")
-##                        r <- r & !is.na(r)
-##                    }
-##                    if (selectMissing) 
-##                        vars <- TRUE
-##                    else {
-##                        nl <- as.list(1:ncol(x))
-##                        names(nl) <- names(x)
-##                        vars <- eval(substitute(select), nl, parent.frame())
-##                    }
-##                    x[r, vars, drop = drop]
-##                }
-##                )
-##     if (join)
-##         do.call("rbind", ddd)
-##     else
-##         ddd
-## }
-
-
-
-
-

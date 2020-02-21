@@ -131,13 +131,13 @@
 
 #' @export
 #' @rdname ls-means
-LSmeans <- function(object, effect=NULL, at=NULL, level=0.95,...){
+LSmeans <- function(object, effect=NULL, at=NULL, level=0.95, ...){
     UseMethod("LSmeans")
 }
 
 #' @export
 #' @rdname ls-means
-LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95,...){
+LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95, ...){
     K   <- LE_matrix(object, effect=effect, at=at)
     out <- linest(object, K, level=level, ...)
     out
