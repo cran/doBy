@@ -4,7 +4,8 @@
 \name{crimeRate}
 \alias{crimeRate}
 \title{crimeRate}
-\format{This data frame contains:
+\format{
+This data frame contains:
 \describe{
 \item{State:}{State of the USA}
 \item{Murder:}{crime of murder}
@@ -14,7 +15,8 @@
 \item{Burglary:}{residential theft}
 \item{Larceny:}{unlawful taking of personal property (pocket picking)}
 \item{AutoTheft:}{}
-}}
+}
+}
 \usage{
 crimeRate
 }

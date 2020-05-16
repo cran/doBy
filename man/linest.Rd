@@ -8,15 +8,12 @@
 \alias{linest.lmerMod}
 \alias{linest.merMod}
 \alias{linest.default}
-\alias{tidy.linest_class}
 \alias{confint.linest_class}
 \alias{coef.linest_class}
 \alias{summary.linest_class}
 \title{Compute linear estimates}
 \usage{
 linest(object, L = NULL, ...)
-
-\method{tidy}{linest_class}(x, conf.int = FALSE, conf.level = 0.95, ...)
 
 \method{confint}{linest_class}(object, parm, level = 0.95, ...)
 
@@ -34,12 +31,6 @@ p identity matrix}
 
 \item{...}{Additional arguments; currently not used.}
 
-\item{x}{A 'linest_class' object (produced by \code{linest} methods).}
-
-\item{conf.int}{Should confidence intervals be added.}
-
-\item{conf.level}{Desired confidence level.}
-
 \item{parm}{Specification of the parameters estimates for which
 confidence inctervals are to be calculated.}
 
@@ -51,11 +42,10 @@ confidence inctervals are to be calculated.}
 A dataframe with results from computing the contrasts.
 }
 \description{
-Compute linear estimates for a range of models. One example of
+Compute linear estimates, i.e. `L %*% beta` for a range of models. One example of
     linear estimates is population means (also known as LSMEANS).
 }
 \examples{
-
 
 ## Make balanced dataset
 dat.bal <- expand.grid(list(AA=factor(1:2), BB=factor(1:3), CC=factor(1:3)))

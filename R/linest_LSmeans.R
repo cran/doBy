@@ -1,39 +1,43 @@
 ## #############################################################################
+#'
 #' @title Compute  LS-means (aka population means or
 #'     marginal means)
 #' @description LS-means (least squares means, also known as
 #'     population means and as marginal means) for a range of model types.
 #' @name ls-means
+#' 
 ## #############################################################################
 #' 
 #' @details There are restrictions on the formulas allowed in the model object.
 #'     For example having \code{y ~ log(x)} will cause an error. Instead one
-#'     must define the variable \code{logx = log(x)} and do \code{y~logx}.
+#'     must define the variable \code{logx = log(x)} and do \code{y ~ logx}.
 #' 
 #' @aliases LSmeans LSmeans.default LSmeans.lmerMod popMeans
 #'     popMeans.default popMeans.lmerMod
+#' 
 #' @param object Model object
 #' @param effect A vector of variables. For each configuration of
 #'     these the estimate will be calculated.
 #' @param at A list of values of covariates (including levels of some
 #'     factors) to be used in the calculations
 #' @param level The level of the (asymptotic) confidence interval.
+#' @param adjust.df Should denominator degrees of freedom be adjusted?
 #' @param ...  Additional arguments; currently not used.
-#' @return A dataframe with results from computing the contrasts.
-#' @note The \code{LSmeans} method is a recent addition to the
-#'     package, and it will eventually replace the \code{popMeans}
-#'     method.
 #' 
-#' Some of the code has been inspired by the \bold{lsmeans} package.
+#' @return A dataframe with results from computing the contrasts.
+#'
+#' @note \code{LSmeans} and \code{popMeans} are synonymous. Some of
+#'     the code has been inspired by the \bold{lsmeans} package.
+#' 
 #' @section Warning: Notice that \code{LSmeans} and \code{LE_matrix}
 #'     fails if the model formula contains an offset (as one would
 #'     have in connection with e.g. Poisson regression. It is on the
 #'     todo-list to fix this
+#' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{LE_matrix}}, \code{\link{linest}}
 #' @keywords utilities
 #' @examples
-#' 
 #' 
 #' ## Two way anova:
 #' 
@@ -123,12 +127,6 @@
 #'
 
 
-
-
-## --------------------------------------------------------------------
-## HERE goes the LSmeans stuff
-## --------------------------------------------------------------------
-
 #' @export
 #' @rdname ls-means
 LSmeans <- function(object, effect=NULL, at=NULL, level=0.95, ...){
@@ -145,7 +143,6 @@ LSmeans.default <- function(object, effect=NULL, at=NULL, level=0.95, ...){
 
 #' @export
 #' @rdname ls-means
-#' @param adjust.df Should denominator degrees of freedom be adjusted?
 LSmeans.lmerMod <- function(object, effect=NULL, at=NULL, level=0.95, adjust.df=TRUE, ...){
     K   <- LE_matrix(object, effect=effect, at=at)
     out <- linest(object, K, level=level, adjust.df=adjust.df, ...)

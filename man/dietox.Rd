@@ -4,7 +4,8 @@
 \name{dietox}
 \alias{dietox}
 \title{Growth curves of pigs in a 3x3 factorial experiment}
-\format{This data frame contains the following columns:
+\format{
+This data frame contains the following columns:
 
 \describe{
 \item{Weight}{Weight in Kg}
@@ -15,7 +16,8 @@
 \item{Cu}{Factor, copper dose; see 'details'}
 \item{Start}{Start weight in experiment, i.e. weight at week 1.}
 \item{Litter}{Factor, id of litter of each pig}
-}}
+}
+}
 \source{
 Lauridsen, C., Højsgaard, S.,Sørensen, M.T. C. (1999) Influence of
     Dietary Rapeseed Oli, Vitamin E, and Copper on Performance and

@@ -7,6 +7,9 @@
 #' @name esticon
 ##
 ###############################################################################
+#'
+## #' @aliases esticon.lm esticon.gls
+#' 
 #' @details Let the estimated parameters of the model be
 #' \deqn{\beta_1, \beta_2, \dots, \beta_p}
 #'
@@ -33,11 +36,8 @@
 #' For computing contrasts among levels of a single factor, 'contrast.lm' may
 #' be more convenient.
 #' 
-#' @aliases esticon esticon.geeglm esticon.glm esticon.gls esticon.lm
-#'     esticon.lme esticon.mer esticon.merMod esticon.coxph
-#' 
 #' @param obj Regression object (of type lm, glm, lme, geeglm).
-#' @param x A linear contrast object (as returned by \code{esticon()}. 
+## #' @param x A linear contrast object (as returned by \code{esticon()}. 
 #' @param L Matrix (or vector) specifying linear functions of the regresson
 #'     parameters (one
 #'     linear function per row).  The number of columns must match the number of
@@ -47,7 +47,7 @@
 #'         of names.  If missing, all parameters are considered.
 #' @param beta0 A vector of numbers
 #' @param conf.int TRUE
-#' @param conf.level The desired confidence level.
+## #' @param conf.level The desired confidence level.
 #' @param level The confidence level
 #' @param joint.test Logical value. If TRUE a 'joint' Wald test for the
 #'     hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
@@ -110,13 +110,13 @@
 #' est
 #' ##exp(est[, c(2, 7, 8)])
 #' }
-#' 
-#' 
-#' @export esticon
+
+
+#' @export 
 esticon <- function(obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...)
   UseMethod("esticon")
 
-#' @rdname esticon
+#' @export 
 esticon.gls <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
     else {
@@ -129,9 +129,7 @@ esticon.gls <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=
     }
 }
 
-
-#' @export
-#' @rdname esticon
+#' @export 
 esticon.geeglm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
     else {
@@ -143,8 +141,7 @@ esticon.geeglm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.te
     }
 }
 
-#' @export
-#' @rdname esticon
+#' @export 
 esticon.lm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
     else {
@@ -157,8 +154,7 @@ esticon.lm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=F
   }
 }
 
-#' @export
-#' @rdname esticon
+#' @export 
 esticon.glm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE,...){
     if (joint.test) .wald(obj, L, beta0)
     else {
@@ -175,9 +171,8 @@ esticon.glm <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=
     }
 }
 
-#' @export
-#' @rdname esticon
-esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE, ...){
+#' @export 
+esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level=0.95, joint.test=FALSE, ...){ 
     if (joint.test) .wald(obj, L, beta0)
     else {
         stat.name <- "X2.stat"
@@ -191,8 +186,7 @@ esticon.mer <- esticon.merMod <- function (obj, L, beta0, conf.int = TRUE, level
     }
 }
 
-#' @export
-#' @rdname esticon
+#' @export 
 esticon.coxph <-
     function (obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...){
         if (joint.test == TRUE) .wald(obj, L, beta0)
@@ -213,8 +207,7 @@ esticon.coxph <-
 ###
 ### ######################################################
 
-#' @export
-#' @rdname esticon
+#' @export 
 esticon.lme <- function (obj, L, beta0, conf.int = NULL, level=0.95, joint.test=FALSE,...){
   warning("The esticon function has not been thoroughly teste on 'lme' objects")
   if (joint.test) .wald(obj, L, beta0)
@@ -409,19 +402,6 @@ print.esticon_class <- function(x, ...){
 }
 
 
-#' @export
-#' @rdname esticon
-tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
-    co <- x[,1:6]
-    rownames(co) <- NULL
-
-    if (conf.int){
-        ci <- confint(x, level=conf.level)
-        colnames(ci) <- c("conf.low", "conf.high")    
-        co <- cbind(co, ci)
-    }
-    as_tibble(co)
-}
 
 
 #' @export

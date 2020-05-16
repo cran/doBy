@@ -28,32 +28,48 @@
 #' data(dietox)
 #' subsetBy(~Evit, Weight < mean(Weight), data=dietox)
 
+
+#' @export
+#' @rdname by-subset
+subset_by <- function(data, formula, subset, select, drop=FALSE, join=TRUE, ...){
+    cl <- match.call(expand.dots = TRUE)
+    cl[[2]] <- formula
+    cl[[3]] <- cl[[4]] # writing 'subset' fails because evaluation is tried
+    cl[[4]] <- data
+
+    names(cl)[2:4] <- c("formula", "subset", "data")
+    cl[[1]] <- as.name("subsetBy")
+    eval(cl)
+}
+
+
 #' @export
 #' @rdname by-subset
 subsetBy <- function(formula, subset, data=parent.frame(), select, drop=FALSE, join=TRUE, ...){
-  ddd <- splitBy(formula, data=data)
-  subsetMissing <- missing(subset)
-  selectMissing <- missing(select)  
-  e <- substitute(subset)
-  ddd <- lapply(ddd, 
-                function(x){
-                    if (subsetMissing) 
-                        r <- TRUE
-                    else {
-                        r <- eval(e, x, parent.frame())
-                        if (!is.logical(r)) 
-                            stop("'subset' must evaluate to logical")
-                        r <- r & !is.na(r)
-                    }
-                    if (selectMissing) 
-                        vars <- TRUE
-                    else {
-                        nl <- as.list(1:ncol(x))
-                        names(nl) <- names(x)
-                        vars <- eval(substitute(select), nl, parent.frame())
-                    }
-                    x[r, vars, drop = drop]
-                }
-                )
-  if (join) do.call("rbind", ddd) else ddd
+
+    out <- splitBy(formula, data=data)
+    subsetMissing <- missing(subset)
+    selectMissing <- missing(select)  
+    e <- substitute(subset)
+    out <- lapply(out, 
+                  function(x){
+                      if (subsetMissing) 
+                          r <- TRUE
+                      else {
+                          r <- eval(e, x, parent.frame())
+                          if (!is.logical(r)) 
+                              stop("'subset' must evaluate to logical")
+                          r <- r & !is.na(r)
+                      }
+                      if (selectMissing) 
+                          vars <- TRUE
+                      else {
+                          nl <- as.list(1:ncol(x))
+                          names(nl) <- names(x)
+                          vars <- eval(substitute(select), nl, parent.frame())
+                      }
+                      x[r, vars, drop = drop]
+                  }
+                  )
+    if (join) do.call("rbind", out) else out
 }

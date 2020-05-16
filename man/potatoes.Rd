@@ -4,12 +4,14 @@
 \name{potatoes}
 \alias{potatoes}
 \title{Weight and size of 20 potatoes}
-\format{A data frame with 20 observations on the following 3 variables.
+\format{
+A data frame with 20 observations on the following 3 variables.
   \describe{
     \item{\code{weight}}{a numeric vector}
     \item{\code{length}}{a numeric vector}
     \item{\code{width}}{a numeric vector}
-  }}
+  }
+}
 \source{
 My own garden; autumn 2015.
 }

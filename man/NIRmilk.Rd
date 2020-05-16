@@ -4,10 +4,12 @@
 \name{NIRmilk}
 \alias{NIRmilk}
 \title{NIRmilk}
-\format{This data frame contains 18 rows and 158 columns.  The first column
+\format{
+This data frame contains 18 rows and 158 columns.  The first column
     is the sample number.  The columns Xwww contains the infra red light
     amount at wavelength www.  The response variables are fat, protein,
-    lactose and dm (drymatter).}
+    lactose and dm (drymatter).
+}
 \usage{
 NIRmilk
 }

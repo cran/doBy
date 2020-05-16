@@ -4,7 +4,8 @@
 \name{haldCement}
 \alias{haldCement}
 \title{Heat development in cement under hardening.}
-\format{A data frame with 13 observations on the following 5 variables.
+\format{
+A data frame with 13 observations on the following 5 variables.
   \describe{
     \item{\code{x1}}{Percentage (weight) of [3Ca0][Al2O3]}
     \item{\code{x2}}{Percentage (weight) of [3Cao][SiO2]}
@@ -12,7 +13,8 @@
     \item{\code{x4}}{Percentage (weight) of [2Cao][SiO2]}
     \item{\code{y}}{Heat development measured in calories per
       gram cement after 180 days}
-  }}
+  }
+}
 \usage{
 haldCement
 }
@@ -32,7 +34,7 @@ summary( m )
 
 # Notice: The model explains practically all variation in data;
 # yet none of the explanatory variables appear to be statistically
-# significant...
+# significant.
 
 }
 \references{

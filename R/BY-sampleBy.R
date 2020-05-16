@@ -22,24 +22,37 @@
 #' 
 #' @examples
 #' data(dietox)
-#' sampleBy(formula = ~Evit+Cu, frac=.1, data = dietox)
+#' sampleBy(formula = ~ Evit + Cu, frac=.1, data = dietox)
+
+
+#' @export
+#' @rdname by-sample
+sample_by <- function(data, formula,
+                      frac=0.1, replace=FALSE, systematic=FALSE){
+    arg <- list(formula=formula, frac=frac, replace=replace, data=data,
+                systematic=systematic) 
+    do.call(sampleBy, arg)
+}
+
 
 #' @export
 #' @rdname by-sample
 sampleBy <- function(formula, frac=0.1, replace=FALSE, data=parent.frame(),
-                     systematic=FALSE
-                     ){
-  ddd<-splitBy(formula, data=data)
+                     systematic=FALSE){
 
-  ddd<- lapply(ddd, function(dat){
-    if (systematic==TRUE){
-      idx <- seq(1,nrow(dat),1/frac)
-    } else {  
-      idx <- sort(sample(1:nrow(dat), size=round(frac*nrow(dat)), replace=replace))
-    }
-    dat[idx,]
-  }) 
-  ddd <-do.call("rbind",ddd)
-  return(ddd)
+    out <- splitBy(formula, data=data)
+
+    out <- lapply(out, function(dat){
+        if (systematic){
+            idx <- seq(1, nrow(dat), 1 / frac)
+        } else {  
+            idx <- sort(sample(1:nrow(dat), size=round(frac * nrow(dat)),
+                               replace=replace))
+        }
+        dat[idx, ]
+    }) 
+    out <- do.call("rbind", out)
+    out
 }
+
 

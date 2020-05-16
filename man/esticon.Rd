@@ -2,42 +2,17 @@
 % Please edit documentation in R/esticon.R
 \name{esticon}
 \alias{esticon}
-\alias{esticon.geeglm}
-\alias{esticon.glm}
-\alias{esticon.gls}
-\alias{esticon.lm}
-\alias{esticon.lme}
-\alias{esticon.mer}
-\alias{esticon.merMod}
-\alias{esticon.coxph}
 \alias{coef.esticon_class}
 \alias{summary.esticon_class}
-\alias{tidy.esticon_class}
 \alias{confint.esticon_class}
 \alias{vcov.esticon_class}
 \title{Contrasts for lm, glm, lme, and geeglm objects}
 \usage{
 esticon(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 
-\method{esticon}{gls}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{geeglm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{lm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{glm}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{mer}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{coxph}(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
-
-\method{esticon}{lme}(obj, L, beta0, conf.int = NULL, level = 0.95, joint.test = FALSE, ...)
-
 \method{coef}{esticon_class}(object, ...)
 
 \method{summary}{esticon_class}(object, ...)
-
-\method{tidy}{esticon_class}(x, conf.int = FALSE, conf.level = 0.95, ...)
 
 \method{confint}{esticon_class}(object, parm, level = 0.95, ...)
 
@@ -65,10 +40,6 @@ inteval etc. is calculated.}
 \item{...}{Additional arguments; currently not used.}
 
 \item{object}{An \code{esticon_class} object.}
-
-\item{x}{A linear contrast object (as returned by \code{esticon()}.}
-
-\item{conf.level}{The desired confidence level.}
 
 \item{parm}{a specification of which parameters are to be given
  confidence intervals, either a vector of numbers or a vector
@@ -162,8 +133,6 @@ est <- esticon(coxmod, L=rbind(AvB, CvB))
 est
 ##exp(est[, c(2, 7, 8)])
 }
-
-
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

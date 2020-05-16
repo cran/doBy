@@ -1,3 +1,15 @@
+doBy v4.6.6 (Release date: 2020-06-16)
+========================================
+
+Bug fixes:
+
+  * esticon.gls is now exported
+
+  * xxx_by functions matching xxxBy introduced. xxx_by functions take
+    data as first argument and work therefore well with the pipe.
+
+
+
 doBy v4.6.5 (Release date: 2020-02-21)
 ========================================
 

@@ -4,14 +4,16 @@
 \name{fev}
 \alias{fev}
 \title{Forced expiratory volume in children}
-\format{A data frame with 654 observations on the following 5 variables.
+\format{
+A data frame with 654 observations on the following 5 variables.
 \describe{
   \item{\code{Age}}{Age in years.}
   \item{\code{FEV}}{Forced expiratory volume in liters per second.}
   \item{\code{Ht}}{Height in centimeters.}
   \item{\code{Gender}}{Gender.}
   \item{\code{Smoke}}{Smoking status.}
-}}
+}
+}
 \usage{
 fev
 }

@@ -84,6 +84,21 @@
 #' summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
 #' 
 
+#' @export
+#' @rdname by-summary
+summary_by <- function(data, formula, id=NULL, FUN=mean,
+                       keep.names=FALSE,
+                       p2d=FALSE, order=TRUE, full.dimension=FALSE,
+                       var.names=NULL, fun.names=NULL,
+                       ...){
+    cl   <- match.call(expand.dots = TRUE)
+    cl[[2]] <- formula
+    cl[[3]] <- data
+    names(cl)[2:3] <- c("formula", "data")
+    cl[[1]] <- as.name("summaryBy")
+    eval(cl)
+}
+
 
 #' @export
 #' @rdname by-summary
@@ -91,8 +106,11 @@ summaryBy <- function (formula, data=parent.frame(), id=NULL, FUN=mean,
                        keep.names=FALSE,
                        p2d=FALSE, order=TRUE, full.dimension=FALSE,
                        var.names=NULL, fun.names=NULL,
-                       ...)
-  {
+                       ...){
+
+    if (!inherits(data, "tbl_df")) is.tib = FALSE
+    else {is.tib = TRUE; data = as.data.frame(data)}
+      
     debug.info <- 0
 
     zzz <- .get_variables(formula, data, id, debug.info) ## ; str(zzz)
@@ -157,73 +175,77 @@ summaryBy <- function (formula, data=parent.frame(), id=NULL, FUN=mean,
 ### Calculate groupwise statistics
     if (!is.list(FUN))
         FUN <- list(FUN)
-    ans <- NULL
-    for (ff in 1:length(FUN)) {  ## loop over functions
-        ##currFUN <- FUN[[ff]]
-        currFUN <- match.fun( FUN[[ff]] )
-        for (vv in 1:length(lhs.num)) {  ## loop over variables
 
-            currVAR <- lh.data[,lhs.num[vv]]
-
-            zzz <- tapply(currVAR, rh.string.factor,
-                          function(x){ currFUN(x, ...) }, simplify=FALSE)
-            zzz  <- do.call(rbind, zzz)
-            ans  <- cbind(ans, zzz)
-        }
-    }
-
-
-
-    if (!is.null(var.names) && length(var.names)==length(lhs.num))
-      lhs.names <- var.names
-    else
-      lhs.names <- lhs.num
-
+      out <- NULL
+      for (ff in 1:length(FUN)) {  ## loop over functions
+          ##currFUN <- FUN[[ff]]
+          currFUN <- match.fun( FUN[[ff]] )
+          for (vv in 1:length(lhs.num)) {  ## loop over variables
+              
+              currVAR <- lh.data[,lhs.num[vv]]
+              
+              zzz <- tapply(currVAR, rh.string.factor,
+                            function(x){ currFUN(x, ...) }, simplify=FALSE)
+              zzz  <- do.call(rbind, zzz)
+              out  <- cbind(out, zzz)
+          }
+      }
+      
+      
+      
+      if (!is.null(var.names) && length(var.names)==length(lhs.num))
+          lhs.names <- var.names
+      else
+          lhs.names <- lhs.num
+      
 ### Set names for columns
-
-    #print(funNames)
-    if (!is.null(fun.names) ) ##&& length(fun.names)==length(funNames))
-      funNames <- fun.names
-
-    newnames <- .get_col_names(ncol(ans), colnames(ans), funNames, lhs.names, keep.names)
-    ##cat(sprintf("newnames    = %s\n", toString( newnames )))
-    colnames(ans) <- newnames
-    ans <- as.data.frame(ans)
-
-
+      
+      ##print(funNames)
+      if (!is.null(fun.names) ) ##&& length(fun.names)==length(funNames))
+          funNames <- fun.names
+      
+      newnames <- .get_col_names(ncol(out), colnames(out), funNames,
+                                 lhs.names, keep.names)
+      ##cat(sprintf("newnames    = %s\n", toString( newnames )))
+      colnames(out) <- newnames
+      out <- as.data.frame(out)
+      
+      
 ### Pad the rhs data to the result
-    if ( !rh.trivial ){
-      ans <- cbind(data[rh.idx, rhs.grp, drop=FALSE], ans)
-    }
-
+      if (!rh.trivial){
+          out <- cbind(data[rh.idx, rhs.grp, drop=FALSE], out)
+      }
+      
 ### Pad id.data to result
-    ##print(id.data)
-    if (length(ids.var)>0){
-      ans <- cbind(ans, id.data)
-    }
-
+      ##print(id.data)
+      if (length(ids.var)>0){
+          out <- cbind(out, id.data)
+      }
+      
 ### Must the result have full dimension?
-    if (full.dimension){
-      rrr <-as.numeric(rh.string.factor)
-      ans <- ans[rrr,,drop=FALSE]
-    }
-
+      if (full.dimension){
+          rrr <- as.numeric(rh.string.factor)
+          out <- out[rrr,, drop=FALSE]
+      }
+      
 ### Order the result by the rhs
-    if (order==TRUE && !rh.trivial){
-      rhs.string  <- paste (rhs.grp, collapse='+')
-      ans <- orderBy(as.formula(paste("~", rhs.string)), data=ans)
-    }
-
+      if (order && !rh.trivial){
+          rhs.string <- paste (rhs.grp, collapse='+')
+          out <- orderBy(as.formula(paste("~", rhs.string)), data=out)
+      }
+      
 ### Replace '('s and ')'s with '.'s
-    if (p2d)
-      names(ans) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(ans)))
-
+      if (p2d)
+          names(out) <-  gsub("\\)","\\.", gsub("\\(","\\.",names(out)))
+      
 ### Finalize
-    rownames(ans) <- 1:nrow(ans)
-    if (length(unique(names(ans))) != length(names(ans)))
-      warning("dataframe contains replicate names \n", call.=FALSE)
-    ans
-  }
+      rownames(out) <- 1:nrow(out)
+      if (length(unique(names(out))) != length(names(out)))
+          warning("dataframe contains replicate names \n", call.=FALSE)
+      
+      if (is.tib) as_tibble(out) else out      
+      ## out      
+}
 
 
 
@@ -255,9 +277,6 @@ summaryBy <- function (formula, data=parent.frame(), id=NULL, FUN=mean,
     ##cat(sprintf("funNames   = %s\n", toString(funNames)))
     funNames
 }
-
-
-
 
 .get_col_names <- function(ncol.ans, colNames, funNames, lhs.num, keep.names){
 ### Names for new variables
@@ -417,33 +436,3 @@ summaryBy <- function (formula, data=parent.frame(), id=NULL, FUN=mean,
 
 
 
-
-
-## #' @rdname by-summary
-## summary_by <- function(data, formula, FUN){
-##     summaryBy(formula=formula, data=data, FUN=FUN)
-## }
-
-## #' @rdname by-summary
-## .summaryBy <- function(formula, data, FUN){
-##     if (!inherits(formula, c("formula", "list")))
-##         stop("formula must be a formula or a list")
-    
-##     if (inherits(formula, "list")){
-##         f <- formula
-##         if ((length(f) == 2) &&
-##             all(sapply(f, function(z) inherits(z, what="character")))){
-##             formula <- paste("cbind(", toString(f[[1]]), ") ~ ", paste(f[[2]], collapse= " + "))   
-##             formula <- as.formula(formula)
-##         } else {
-##             stop("Can not create formula")
-##         }
-##     }
-##     ## if (inherits(FUN, "list") && 
-##     ##     all(sapply(FUN, inherits, "function"))) {
-##     ##     FUN <- function(x){lapply(FUN, function(f) do.call(f, list(x), quote=T))}
-##     ##     fun<<-FUN
-##     ## }
-##     ## print(FUN)
-##     aggregate(formula, data, FUN)
-## }

@@ -245,7 +245,7 @@ timeSinceEvent <- function(yvar, tvar=seq_along(yvar)){
 
   ans <- cbind(data.frame(yvar=yvar, tvar=tvar), abs.tse, sign.tse, ewin=ewin,
                run, tae=tae, tbe=tbe)
-  return(ans)
+  ans
 }
 
 

@@ -4,7 +4,8 @@
 \name{milkman}
 \alias{milkman}
 \title{Milk yield data for manually milked cows.}
-\format{A data frame with 161836 observations on the following 12 variables.
+\format{
+A data frame with 161836 observations on the following 12 variables.
 \describe{
   \item{\code{cowno}}{a numeric vector; cow identification}
   \item{\code{lactno}}{a numeric vector; lactation number}
@@ -20,7 +21,8 @@
   \item{\code{cowlact}}{Combination of cowno and lactno; necessary
     because the same cow may appear more than once in the dataset (in
     different lactations)}
-}}
+}
+}
 \usage{
 milkman
 }

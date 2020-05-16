@@ -1,9 +1,10 @@
-
 #######################################################################
+#'
 #' @title Formula based version of lapply.
 #' @description This function is a wrapper for calling lapply on the
 #'     list resulting from first calling splitBy.
 #' @name by-lapply
+#' 
 #######################################################################
 #' @param formula A formula describing how data should be split.
 #' @param data A dataframe.
@@ -34,15 +35,28 @@
 #' dietox$FE <- unlist(v)
 #' 
 
+
 #' @export
+#' @rdname by-lapply
+lapply_by <- function(data, formula, FUN=mean){
+    cl   <- match.call(expand.dots = TRUE)
+    cl[[2]] <- formula
+    cl[[3]] <- data
+    names(cl)[2:3] <- c("formula", "data")
+    cl[[1]] <- as.name("lapplyBy")
+    eval(cl)
+}
+
+#' @export
+#' @rdname by-lapply
 lapplyBy <- function (formula, data = parent.frame(), FUN) 
 {
-    ddd <- splitBy(formula, data = data)
-
-    gr  <- unique(attr(ddd,"grps"))
+    out <- splitBy(formula, data = data)
+    gr  <- unique(attr(out, "grps"))
     ##print(gr)    
-    ddd <- lapply(ddd, FUN)
-    ddd <- ddd[gr]
-
-    return(ddd)
+    out <- lapply(out, FUN)
+    out <- out[gr]
+    out
 }
+
+

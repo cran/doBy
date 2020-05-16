@@ -4,7 +4,9 @@
 \name{beets}
 \alias{beets}
 \title{beets data}
-\format{The format is: chr "beets"}
+\format{
+The format is: chr "beets"
+}
 \usage{
 beets
 }

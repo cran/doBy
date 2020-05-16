@@ -4,7 +4,8 @@
 \name{codstom}
 \alias{codstom}
 \title{Diet of Atlantic cod in the Gulf of St. Lawrence (Canada)}
-\format{A data frame with 10000 observations on the following 10 variables.
+\format{
+A data frame with 10000 observations on the following 10 variables.
 \describe{
   \item{\code{region}}{a factor with levels \code{SGSL} \code{NGSL} 
         representing the southern and northern Gulf of St. Lawrence, respectively}
@@ -33,7 +34,8 @@
     \code{Pandal_bor} \code{Pandal_mon} \code{Pasiph_mult}
     \code{Sabin_sept}
     \code{Sebastes_sp} \code{Them_abys} \code{Them_comp} \code{Them_lib}}    
-}}
+}
+}
 \source{
 Small subset from a larger dataset (more stomachs, more variables,
     more \code{prey.types}) collected by D. Chabot and M. Hanson, Fisheries &

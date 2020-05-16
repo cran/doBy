@@ -48,14 +48,11 @@ LS-means (least squares means, also known as
 \details{
 There are restrictions on the formulas allowed in the model object.
     For example having \code{y ~ log(x)} will cause an error. Instead one
-    must define the variable \code{logx = log(x)} and do \code{y~logx}.
+    must define the variable \code{logx = log(x)} and do \code{y ~ logx}.
 }
 \note{
-The \code{LSmeans} method is a recent addition to the
-    package, and it will eventually replace the \code{popMeans}
-    method.
-
-Some of the code has been inspired by the \bold{lsmeans} package.
+\code{LSmeans} and \code{popMeans} are synonymous. Some of
+    the code has been inspired by the \bold{lsmeans} package.
 }
 \section{Warning}{
  Notice that \code{LSmeans} and \code{LE_matrix}
@@ -65,7 +62,6 @@ Some of the code has been inspired by the \bold{lsmeans} package.
 }
 
 \examples{
-
 
 ## Two way anova:
 

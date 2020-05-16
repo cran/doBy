@@ -4,12 +4,14 @@
 \name{fatacid}
 \alias{fatacid}
 \title{Fish oil in pig food}
-\format{...}
+\format{
+A dataframe.
+}
 \usage{
 fatacid
 }
 \description{
-...
+Fish oil in pig food
 }
 \details{
 A fish oil fatty acid \code{X14} has been added in

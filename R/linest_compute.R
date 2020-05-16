@@ -1,19 +1,13 @@
-## #################################################################
-##
-## Calculates L %*% beta and related quantities for various
-## type of model objects.
-##
-## #################################################################
-
 #' @title Compute linear estimates
 #' 
-#' @description Compute linear estimates for a range of models. One example of
+#' @description Compute linear estimates, i.e. `L %*% beta` for a range of models. One example of
 #'     linear estimates is population means (also known as LSMEANS).
 #'
 #' @name linest
 #' 
 #' @aliases linest linest.lm linest.glm linest.geeglm linest.lmerMod
 #'     linest.merMod linest.default
+#' 
 #' @param object Model object
 #' @param L Either \code{NULL} or a matrix with p columns where p is
 #'     the number of parameters in the systematic effects in the
@@ -26,8 +20,8 @@
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{LSmeans}}, \code{\link{LE_matrix}}
 #' @keywords utilities
+#'
 #' @examples
-#' 
 #' 
 #' ## Make balanced dataset
 #' dat.bal <- expand.grid(list(AA=factor(1:2), BB=factor(1:3), CC=factor(1:3)))
@@ -54,13 +48,12 @@ linest <- function(object, L=NULL, ...){
 
 #' @export
 linest.lm <- function(object, L=NULL, ...){
-    bhat <- coef(object)
-    L  <- .constructL(L, bhat)    
+    bhat   <- coef(object)
+    L      <- .constructL(L, bhat)    
     is.est <- is_estimable(L, null_basis( object ))
-    VV0  <- vcov(object, complete=FALSE)
-
+    VV0    <- vcov(object, complete=FALSE)
     ddf.vec <- rep(object$df.residual, nrow( L ))
-    res    <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
+    res     <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
     
     p.value <- 2 * pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
     res <- as.data.frame(cbind(res, p.value))
@@ -72,11 +65,10 @@ linest.lm <- function(object, L=NULL, ...){
 #' @export
 linest.glm <- function(object, L=NULL, ...){
 
-
-    bhat <- coef(object)
-    L  <- .constructL(L, bhat)        
-    is.est <- is_estimable(L, null_basis( object ))
-    VV0  <- vcov(object, complete=FALSE)
+    bhat    <- coef(object)
+    L       <- .constructL(L, bhat)        
+    is.est  <- is_estimable(L, null_basis( object ))
+    VV0     <- vcov(object, complete=FALSE)
     ddf.vec <- rep(object$df.residual, nrow( L ))
     res     <- .getLb2(L, bhat, VV0, ddf.vec, is.est)
 
@@ -96,14 +88,14 @@ linest.glm <- function(object, L=NULL, ...){
 linest.geeglm <- function(object, L=NULL, ...){
 
     bhat <- coef(object)
-    L  <- .constructL(L, bhat)    
-    is.est <- is_estimable(L, null_basis( object ))
-    VV0  <- summary(object)$cov.scaled
+    L    <- .constructL(L, bhat)    
+    is.est  <- is_estimable(L, null_basis( object ))
+    VV0     <- summary(object)$cov.scaled
     ddf.vec <- rep(1, nrow(L))
     res     <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
 
     res <- res[, 1:3]
-    p.value <- 2*pnorm(abs(res[,"statistic"]), lower.tail=FALSE)
+    p.value <- 2 * pnorm(abs(res[,"statistic"]), lower.tail=FALSE)
     res <- as.data.frame(cbind(res, p.value))
     .finalize_linest(res, L)
 }
@@ -132,7 +124,7 @@ linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
     }
 
     res     <- .getLb2( L, bhat, VV, ddf.vec, is.est)
-    p.value <- 2*pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
+    p.value <- 2 * pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
 
     res <- as.data.frame(cbind(res, p.value))
     .finalize_linest(res, L)
@@ -181,8 +173,6 @@ linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
 
     if (!is.null(off))
         res[,1] <- res[,1] + off[[1]]
-
-
     
     colnames(res) <- c("estimate","std.error","df") 
     statistic        <- res[,"estimate"] / res[,"std.error"]
@@ -192,33 +182,6 @@ linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
     ##print(res)
     res
 }
-
-
-#' @export
-#' @rdname linest
-#' @param x A 'linest_class' object (produced by \code{linest} methods).
-#' @param conf.int Should confidence intervals be added.
-#' @param conf.level Desired confidence level.
-tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
-    co <- stats::coef(x)
-    rownames(co) <- NULL
-    
-    if (ncol(co)==5){ ## There are degreeso of freedom in the output.
-        co <- co[,c(1,2,3,5,4)]
-        nn <- c("estimate", "std.error", "statistic", "p.value", "df")
-    } else
-        nn <- c("estimate", "std.error", "statistic", "p.value")
-
-    names(co) <- nn
-
-    if (conf.int){
-        ci <- .ci_fun(co, level=conf.level)
-        colnames(ci) <- c("conf.low", "conf.high")    
-        co <- cbind(co, ci)
-    }
-    as_tibble(co)
-}
-
 
 .ci_fun <- function (object, parm, level = 0.95, ...) 
 {
@@ -319,16 +282,3 @@ setAs("linest_class", "data.frame",   function(from)
 
 
 
-
-
-## .finalize_linest <- function(.coef, L, lwr, upr, confint){
-##     if (!is.null(rownames(L)))
-##         rownames(.coef) <- rownames(L)
-##     .coef <- as.data.frame(.coef)
-##     if (confint)
-##         .coef <- cbind(.coef, lwr, upr)
-    
-##     res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
-##     class(res) <- "linest_class"
-##     res
-## }

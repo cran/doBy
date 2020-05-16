@@ -1,4 +1,5 @@
 #########################################################################
+#'
 #' @title Ordering (sorting) rows of a data frame
 #' @description Ordering (sorting) rows of a data frame by the certain
 #'     variables in the data frame. This function is essentially a
@@ -6,7 +7,9 @@
 #'     difference being that variables to order by can be given by a
 #'     model formula.
 #' @name by-order
+#' 
 #########################################################################
+#'
 #' @details The sign of the terms in the formula determines whether
 #'     sorting should be ascending or decreasing; see examples below
 #' 
@@ -27,14 +30,29 @@
 ## #' order_by(CO2, c("conc", "Treatment"))
 ## #' order_by(CO2, c("-conc", "Treatment"))
 
+
+#' @export
+#' @rdname by-order
+order_by <- function(data, formula){
+    cl   <- match.call(expand.dots = TRUE)
+    cl[[2]] <- formula
+    cl[[3]] <- data
+    names(cl)[2:3] <- c("formula", "data")
+    cl[[1]] <- as.name("orderBy")
+    eval(cl)
+}
+
 #' @export
 #' @rdname by-order
 orderBy <- function (formula, data){
 
+    if (!inherits(data, "tbl_df")) is.tib = FALSE
+    else {is.tib = TRUE; data = as.data.frame(data)}
+    
     myrank <- function(x){
         rv  <- rep(NA, length(x))
-        r   <- rank(cdat[!is.na(cdat)])
-        rv[!is.na(cdat)]  <- r
+        r   <- rank(cout[!is.na(cout)])
+        rv[!is.na(cout)]  <- r
         rv[is.na(rv)]     <- max(r) + 1
         rv
     }
@@ -42,10 +60,11 @@ orderBy <- function (formula, data){
 
     if (is.vector(formula)) ## E.g. c("Temp", "Month")
         formula <- as.formula(paste0("~ ", paste(formula, collapse=" + ")))
-
     
     form <- formula
-    dat  <- data
+    out  <- data
+
+    
     
     if(form[[1]] != "~")
         stop("Error: Formula must be one-sided.")
@@ -68,51 +87,27 @@ orderBy <- function (formula, data){
     for(i in 1:length(vars)){
         csign <- signs[i]
         cvar  <- vars[i]
-        cdat  <- dat[, cvar]
-        if (is.factor(cdat)){
+        cout  <- out[, cvar]
+        if (is.factor(cout)){
             orderlist[[i]] <-
-                if (csign == "-") -myrank(cdat) else myrank(cdat) 
+                if (csign == "-") -myrank(cout) else myrank(cout) 
         } else {
             orderlist[[i]] <-
-                if (csign == "-") -cdat else cdat            
+                if (csign == "-") -cout else cout            
         }
     }
     
-    dat[do.call("order",orderlist),,drop=FALSE]
+    out <- out[do.call("order", orderlist),, drop=FALSE]
+
+    if (is.tib) as_tibble(out) else out
+    ##out
 }
 
 
 
-## #' @rdname by-order
-## order_by <- function(data, formula){
-
-##     if (!(is.data.frame(data) | is.matrix(data)))
-##         stop("'data' must be dataframe or matrix")
-    
-##     formula <- unlist(.rhsf2list(formula))    
-##     cls <- class(data)
-    
-##     if (cls == "matrix")
-##         data <- as.data.frame(data)
-##     out <- dplyr::arrange_(data, .dots=formula)
-##     if (cls == "matrix") as.matrix(out) else out
-## }
 
 
 
-## orderBy <- function(formula, data){
-
-##     if (!(is.data.frame(data) | is.matrix(data)))
-##         stop("'data' must be dataframe or matrix")
-    
-##     formula <- unlist(.rhsf2list(formula))    
-##     cls <- class(data)
-    
-##     if (cls == "matrix")
-##         data <- as.data.frame(data)
-##     out <- dplyr::arrange_(data, .dots=formula)
-##     if (cls == "matrix") as.matrix(out) else out
-## }
 
 
 
