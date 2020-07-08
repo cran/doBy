@@ -33,7 +33,7 @@
 #'     left hand side.
 #' @param fun.names Option for user to specify function names to apply to the
 #'     variables on the left hand side.
-#' @param ... Additional arguments to FUN. This could for example be NA actions.
+#' @param \dots Additional arguments to FUN. This could for example be NA actions.
 
 #' @return A dataframe.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}

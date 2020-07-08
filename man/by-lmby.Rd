@@ -28,7 +28,7 @@ which different lm fits should be performed.}
 \item{id}{A formula describing variables from data which are to be
 available also in the output.}
 
-\item{...}{Additional arguments passed on to \code{lm()}.}
+\item{\dots}{Additional arguments passed on to \code{lm()}.}
 }
 \value{
 A list of lm fits.

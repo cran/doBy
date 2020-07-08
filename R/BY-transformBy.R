@@ -14,7 +14,7 @@
 #' 
 #' @param formula A formula with only a right hand side, see examples below
 #' @param data A data frame
-#' @param ... Further arguments of the form tag=value
+#' @param \dots Further arguments of the form tag=value
 #' @return The modified value of the dataframe data.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' 

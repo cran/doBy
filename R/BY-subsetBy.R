@@ -18,7 +18,7 @@
 #' @param drop passed on to \code{[} indexing operator.
 #' @param join If FALSE the result is a list of data frames (as
 #'     defined by 'formula'); if TRUE one data frame is returned.
-#' @param ... further arguments to be passed to or from other methods.
+#' @param \dots further arguments to be passed to or from other methods.
 #' @return A data frame.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{splitBy}}

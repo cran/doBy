@@ -63,7 +63,7 @@ left hand side.}
 \item{fun.names}{Option for user to specify function names to apply to the
 variables on the left hand side.}
 
-\item{...}{Additional arguments to FUN. This could for example be NA actions.}
+\item{\dots}{Additional arguments to FUN. This could for example be NA actions.}
 }
 \value{
 A dataframe.

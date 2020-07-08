@@ -15,7 +15,7 @@
 #'     p identity matrix
 #' @param level The level of the (asymptotic) confidence interval.
 #' @param confint Should confidence interval appear in output.
-#' @param ...  Additional arguments; currently not used.
+#' @param \dots  Additional arguments; currently not used.
 #' @return A dataframe with results from computing the contrasts.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{LSmeans}}, \code{\link{LE_matrix}}

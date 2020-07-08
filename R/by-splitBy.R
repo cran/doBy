@@ -13,7 +13,7 @@
 #' @param data A data frame
 #' @param drop Logical indicating if levels that do not occur should be
 #'     dropped. Deprecated; levels that do not occur are ignored.
-## #' @param ... Additional arguments, currently not used.
+#' 
 #' @return A list of dataframes.
 #' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}

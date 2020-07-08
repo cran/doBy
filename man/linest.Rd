@@ -29,7 +29,7 @@ the number of parameters in the systematic effects in the
 model. If \code{NULL} then \code{L} is taken to be the p times
 p identity matrix}
 
-\item{...}{Additional arguments; currently not used.}
+\item{\dots}{Additional arguments; currently not used.}
 
 \item{parm}{Specification of the parameters estimates for which
 confidence inctervals are to be calculated.}

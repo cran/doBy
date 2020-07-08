@@ -11,7 +11,7 @@
 #' @param x A 'linest_class' object (produced by \code{linest} methods).
 #' @param conf.int Should confidence intervals be added.
 #' @param conf.level Desired confidence level.
-#' @param ... Additional arguments; currently not used.
+#' @param \dots Additional arguments; currently not used.
 #' @export
 tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
     co <- stats::coef(x)
@@ -40,7 +40,7 @@ tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
 #' @param x A 'esticon_class' object (produced by \code{esticon} methods).
 #' @param conf.int Should confidence intervals be added.
 #' @param conf.level Desired confidence level.
-#' @param ... Additional arguments; currently not used.
+#' @param \dots Additional arguments; currently not used.
 #' @export
 tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
     co <- x[,1:6]

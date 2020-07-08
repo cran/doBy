@@ -14,7 +14,7 @@
 
 \item{conf.level}{Desired confidence level.}
 
-\item{...}{Additional arguments; currently not used.}
+\item{\dots}{Additional arguments; currently not used.}
 }
 \description{
 Tidy summarizes information about the components of the object.

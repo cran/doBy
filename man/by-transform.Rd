@@ -15,7 +15,7 @@ transformBy(formula, data, ...)
 
 \item{formula}{A formula with only a right hand side, see examples below}
 
-\item{...}{Further arguments of the form tag=value}
+\item{\dots}{Further arguments of the form tag=value}
 }
 \value{
 The modified value of the dataframe data.

@@ -25,7 +25,7 @@ firstobs(x, ...)
 \arguments{
 \item{x}{A vector}
 
-\item{...}{Currently not used}
+\item{\dots}{Currently not used}
 
 \item{formula}{A formula (only the first term is used, see 'details').}
 

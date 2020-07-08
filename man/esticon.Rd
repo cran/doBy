@@ -37,7 +37,7 @@ hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
 made, i.e. (L beta)i=beta0i.  If joint.test is TRUE, then no confidence
 inteval etc. is calculated.}
 
-\item{...}{Additional arguments; currently not used.}
+\item{\dots}{Additional arguments; currently not used.}
 
 \item{object}{An \code{esticon_class} object.}
 

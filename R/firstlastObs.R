@@ -11,7 +11,7 @@
 #' @param x A vector
 #' @param formula A formula (only the first term is used, see 'details').
 #' @param data A data frame
-#' @param ... Currently not used
+#' @param \dots Currently not used
 #' @return A vector.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @keywords utilities

@@ -53,11 +53,13 @@
 #'     hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
 #'     made, i.e. (L beta)i=beta0i.  If joint.test is TRUE, then no confidence
 #'     inteval etc. is calculated.
-#' @param ... Additional arguments; currently not used.
+#' @param \dots Additional arguments; currently not used.
+#' 
 #' @return Returns a matrix with one row per linear function.  Columns contain
 #'     estimated coefficients, standard errors, t values, degrees of freedom,
 #'     two-sided p-values, and the lower and upper endpoints of the 1-alpha
 #'     confidence intervals.
+#' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @keywords utilities
 #' @examples

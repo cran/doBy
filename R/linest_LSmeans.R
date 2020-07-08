@@ -22,7 +22,7 @@
 #'     factors) to be used in the calculations
 #' @param level The level of the (asymptotic) confidence interval.
 #' @param adjust.df Should denominator degrees of freedom be adjusted?
-#' @param ...  Additional arguments; currently not used.
+#' @param \dots  Additional arguments; currently not used.
 #' 
 #' @return A dataframe with results from computing the contrasts.
 #'

@@ -34,7 +34,7 @@ factors) to be used in the calculations}
 
 \item{level}{The level of the (asymptotic) confidence interval.}
 
-\item{...}{Additional arguments; currently not used.}
+\item{\dots}{Additional arguments; currently not used.}
 
 \item{adjust.df}{Should denominator degrees of freedom be adjusted?}
 }

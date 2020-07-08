@@ -18,7 +18,7 @@
 #' @param data A dataframe
 #' @param id A formula describing variables from data which are to be
 #'     available also in the output.
-#' @param ... Additional arguments passed on to \code{lm()}.
+#' @param \dots Additional arguments passed on to \code{lm()}.
 #' @return A list of lm fits.
 #'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}

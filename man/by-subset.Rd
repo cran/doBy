@@ -36,7 +36,7 @@ frame.}
 \item{join}{If FALSE the result is a list of data frames (as
 defined by 'formula'); if TRUE one data frame is returned.}
 
-\item{...}{further arguments to be passed to or from other methods.}
+\item{\dots}{further arguments to be passed to or from other methods.}
 }
 \value{
 A data frame.
