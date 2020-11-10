@@ -39,8 +39,8 @@
 #' @references Ulrich Halekoh, Søren Højsgaard (2014)., A Kenward-Roger
 #'     Approximation and Parametric Bootstrap Methods for Tests in Linear Mixed
 #'     Models - The R Package pbkrtest., Journal of Statistical Software,
-#'     58(10), 1-30., \url{http://www.jstatsoft.org/v59/i09/}
-#' 
+#'     58(10), 1-30., \url{https://www.jstatsoft.org/v59/i09/}
+#'
 #' @keywords datasets
 #'
 #' @examples
@@ -536,6 +536,8 @@
 #' 
 #' There are data for 222 cows. Some cows appear more than once in the dataset
 #' (in different lactations) and there are 288 different lactations.
+#'
+#' @aliases milkman_rdm1
 #' 
 #' @name milkman
 #' @docType data
@@ -575,6 +577,7 @@
 #' data(milkman)
 #' 
 "milkman"
+"milkman_rdm1"
 
 
 #' NIRmilk
@@ -628,3 +631,24 @@
 "potatoes"
 
 
+#' Mathematics marks for students
+#' 
+#' The \code{mathmark} data frame has 88 rows and 5 columns.
+#'
+#' @name data-mathmark
+#' 
+#' @aliases mathmark math
+#' @format This data frame contains the following columns: mechanics, vectors,
+#' algebra, analysis, statistics.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#' @references David Edwards, An Introduction to Graphical Modelling, Second
+#' Edition, Springer Verlag, 2000
+#' @keywords datasets
+#' @usage data(mathmark)
+#' 
+#' @examples
+#' 
+#' data(mathmark)
+#' 
+"mathmark"
+"math"

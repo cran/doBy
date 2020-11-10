@@ -4,11 +4,24 @@
 \alias{by-lapply}
 \alias{lapply_by}
 \alias{lapplyBy}
-\title{Formula based version of lapply.}
+\alias{sapply_by}
+\alias{sapplyBy}
+\title{Formula based version of lapply and sapply}
 \usage{
-lapply_by(data, formula, FUN = mean)
+lapply_by(data, formula, FUN, ...)
 
-lapplyBy(formula, data = parent.frame(), FUN)
+lapplyBy(formula, data = parent.frame(), FUN, ...)
+
+sapply_by(data, formula, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
+
+sapplyBy(
+  formula,
+  data = parent.frame(),
+  FUN,
+  ...,
+  simplify = TRUE,
+  USE.NAMES = TRUE
+)
 }
 \arguments{
 \item{data}{A dataframe.}
@@ -17,6 +30,12 @@ lapplyBy(formula, data = parent.frame(), FUN)
 
 \item{FUN}{A function to be applied to each element in the splitted
 list, see 'Examples' below.}
+
+\item{...}{optional arguments to FUN.}
+
+\item{simplify}{Same as for `sapply`}
+
+\item{USE.NAMES}{Same as for `sapply`}
 }
 \value{
 A list.
@@ -26,20 +45,12 @@ This function is a wrapper for calling lapply on the
     list resulting from first calling splitBy.
 }
 \examples{
-data(dietox)
+fun <- function(x) range(x$uptake)
+lapplyBy(~Treatment + Type, data=CO2, FUN=fun)
+sapplyBy(~Treatment + Type, data=CO2, FUN=fun)
 
-## Calculate weekwise feed efficiency = weight gain / feed intake
-dietox <- orderBy(~Pig + Time, data=dietox)
-v <- lapplyBy(~Pig, data=dietox,
-              function(d) c(NA, diff(d$Weight) / diff(d$Feed)))
-dietox$FE <- unlist(v)
-
-## Technically this is the same as 
-dietox <- orderBy(~Pig + Time, data=dietox)
-wdata <- splitBy(~Pig, data=dietox)
-v <- lapply(wdata, function(d) c(NA, diff(d$Weight)/diff(d$Feed)))
-dietox$FE <- unlist(v)
-
+# Same as
+lapply(splitBy(~Treatment + Type, data=CO2), FUN=fun)
 }
 \seealso{
 \code{\link{lapplyBy}}

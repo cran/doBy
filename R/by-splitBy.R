@@ -8,11 +8,19 @@
 #' 
 ###########################################################################
 #'
-#' @param formula Variables to split data frame by, as ‘as.quoted’ variables,
-#'     a formula or character vector.
+#' @param formula Variables to split data frame by, as ‘as.quoted’
+#'     variables, a formula or character vector.
 #' @param data A data frame
-#' @param drop Logical indicating if levels that do not occur should be
-#'     dropped. Deprecated; levels that do not occur are ignored.
+#' @param drop Logical indicating if levels that do not occur should
+#'     be dropped. Deprecated; levels that do not occur are ignored.
+#' @param x An object.
+#' @param n A single integer.  If positive or zero, size for the
+#'     resulting object: number of elements for a vector (including
+#'     lists), rows for a matrix or data frame or lines for a
+#'     function.  If negative, all but the ‘n’ last/first number of
+#'     elements of ‘x’.
+#'
+#' @param ... Arguments to be passed to or from other methods.
 #' 
 #' @return A list of dataframes.
 #' 
@@ -26,8 +34,12 @@
 #' splitBy(formula = ~Evit + Cu, data = dietox)
 #' splitBy(formula = c("Evit", "Cu"), data = dietox)
 #' 
-#' splitBy(~Month, data=airquality)
-#' splitBy("Month", data=airquality)
+#' splitBy(~Treatment + Type, data=CO2)
+#' splitBy(c("Treatment", "Type"), data=CO2)
+#'
+#' x <- splitBy(~Treatment, data=CO2)
+#' head(x)
+#' tail(x)
 
 
 #' @export 
@@ -125,4 +137,17 @@ print.splitByData <- function(x, ...){
     return(invisible(x))
 }
 
+#' @importFrom utils head
+#' @export
+#' @rdname by-split
+head.splitByData  <- function(x, n=6L, ...){
+    lapply(x, head, n=n, ...)
+}
+
+#' @importFrom utils tail
+#' @export
+#' @rdname by-split
+tail.splitByData  <- function(x, n=6L, ...){
+    lapply(x, tail, n=n, ...)
+}
 

@@ -4,20 +4,36 @@
 \alias{by-split}
 \alias{split_by}
 \alias{splitBy}
+\alias{head.splitByData}
+\alias{tail.splitByData}
 \title{Split a data frame}
 \usage{
 split_by(data, formula, drop = TRUE)
 
 splitBy(formula, data = parent.frame(), drop = TRUE)
+
+\method{head}{splitByData}(x, n = 6L, ...)
+
+\method{tail}{splitByData}(x, n = 6L, ...)
 }
 \arguments{
 \item{data}{A data frame}
 
-\item{formula}{Variables to split data frame by, as ‘as.quoted’ variables,
-a formula or character vector.}
+\item{formula}{Variables to split data frame by, as ‘as.quoted’
+variables, a formula or character vector.}
 
-\item{drop}{Logical indicating if levels that do not occur should be
-dropped. Deprecated; levels that do not occur are ignored.}
+\item{drop}{Logical indicating if levels that do not occur should
+be dropped. Deprecated; levels that do not occur are ignored.}
+
+\item{x}{An object.}
+
+\item{n}{A single integer.  If positive or zero, size for the
+resulting object: number of elements for a vector (including
+lists), rows for a matrix or data frame or lines for a
+function.  If negative, all but the ‘n’ last/first number of
+elements of ‘x’.}
+
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
 A list of dataframes.
@@ -33,8 +49,12 @@ data(dietox, package="doBy")
 splitBy(formula = ~Evit + Cu, data = dietox)
 splitBy(formula = c("Evit", "Cu"), data = dietox)
 
-splitBy(~Month, data=airquality)
-splitBy("Month", data=airquality)
+splitBy(~Treatment + Type, data=CO2)
+splitBy(c("Treatment", "Type"), data=CO2)
+
+x <- splitBy(~Treatment, data=CO2)
+head(x)
+tail(x)
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{summaryBy}},

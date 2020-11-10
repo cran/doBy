@@ -1,3 +1,22 @@
+doBy v4.6.8 (Release date: 2020-11-10)
+========================================
+
+* head / tail added for splitByData (a list resulting from calling
+  splitBy)
+
+* sapplyBy / sapply_by added
+
+* subSeq works on factors now (coerces to character)
+
+* sub_seq added; synonymous to subSeq
+
+* rle2 added; similar to rle but works also on factors
+
+* is_grouped added
+
+* math / mathmark dataset added.
+
+
 doBy v4.6.7 (Release date: 2020-07-07)
 ========================================
 
