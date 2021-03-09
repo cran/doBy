@@ -57,8 +57,9 @@ head(x)
 tail(x)
 }
 \seealso{
-\code{\link{orderBy}}, \code{\link{summaryBy}},
-    \code{\link{transformBy}}
+\code{\link{orderBy}}, \code{\link{order_by}},
+    \code{\link{summaryBy}}, \code{\link{summary_by}},
+    \code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

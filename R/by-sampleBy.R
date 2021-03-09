@@ -15,8 +15,10 @@
 #' @param systematic Should sampling be systematic.
 #'
 #' @return A dataframe.
-#' @seealso \code{\link{summaryBy}}, \code{\link{orderBy}},
-#'     \code{\link{splitBy}}, \code{\link{transformBy}}
+#' @seealso \code{\link{orderBy}}, \code{\link{order_by}},
+#'    \code{\link{splitBy}}, \code{\link{split_by}}, 
+#'    \code{\link{summaryBy}}, \code{\link{summary_by}}, 
+#'    \code{\link{transformBy}}, \code{\link{transform_by}}
 #'
 #' @keywords utilities
 #' 

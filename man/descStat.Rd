@@ -25,7 +25,7 @@ descStat(x)
 
 }
 \seealso{
-\code{\link{summaryBy}}
+\code{\link{summaryBy}}, \code{\link{summary_by}}
 }
 \author{
 Gregor Gorjanc; gregor.gorjanc <at> bf.uni-lj.si

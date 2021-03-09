@@ -18,7 +18,7 @@
 #' @return The ordered data frame
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk} and Kevin
 #'     Wright
-#' @seealso \code{\link{transformBy}}, \code{\link{splitBy}}
+#' @seealso \code{\link{transformBy}}, \code{\link{transform_by}}, \code{\link{splitBy}}, \code{\link{split_by}}
 #' @keywords utilities
 #' @examples
 #'

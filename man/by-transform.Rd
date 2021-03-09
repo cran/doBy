@@ -38,8 +38,8 @@ transformBy(~Pig, data=dietox, minW=min(Weight), maxW=max(Weight),
 
 }
 \seealso{
-\code{\link{orderBy}}, \code{\link{summaryBy}},
-    \code{\link{splitBy}}
+\code{\link{orderBy}}, \code{\link{order_by}}, \code{\link{summaryBy}}, \code{\link{summary_by}},
+    \code{\link{splitBy}}, \code{\link{split_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

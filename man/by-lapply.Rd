@@ -53,7 +53,7 @@ sapplyBy(~Treatment + Type, data=CO2, FUN=fun)
 lapply(splitBy(~Treatment + Type, data=CO2), FUN=fun)
 }
 \seealso{
-\code{\link{lapplyBy}}
+\code{\link{splitBy}}, \code{\link{split_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

@@ -37,8 +37,8 @@
 
 #' @return A dataframe.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}},
-#'     \code{\link{splitBy}}, \code{\link{transformBy}}
+#' @seealso \code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}}, \code{\link{order_by}},
+#'     \code{\link{splitBy}}, \code{\link{split_by}}, \code{\link{transformBy}}, \code{\link{transform_by}}
 #' @keywords univar
 #' @examples
 #' 

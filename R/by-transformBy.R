@@ -18,8 +18,8 @@
 #' @return The modified value of the dataframe data.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' 
-#' @seealso \code{\link{orderBy}}, \code{\link{summaryBy}},
-#'     \code{\link{splitBy}}
+#' @seealso \code{\link{orderBy}}, \code{\link{order_by}}, \code{\link{summaryBy}}, \code{\link{summary_by}},
+#'     \code{\link{splitBy}}, \code{\link{split_by}}
 #' @keywords univar
 #' @examples
 #'  

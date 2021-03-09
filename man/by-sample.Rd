@@ -44,7 +44,9 @@ data(dietox)
 sampleBy(formula = ~ Evit + Cu, frac=.1, data = dietox)
 }
 \seealso{
-\code{\link{summaryBy}}, \code{\link{orderBy}},
-    \code{\link{splitBy}}, \code{\link{transformBy}}
+\code{\link{orderBy}}, \code{\link{order_by}},
+   \code{\link{splitBy}}, \code{\link{split_by}}, 
+   \code{\link{summaryBy}}, \code{\link{summary_by}}, 
+   \code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \keyword{utilities}

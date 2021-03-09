@@ -36,7 +36,7 @@ orderBy(~ conc + Treatment, CO2)
 orderBy(~ - conc + Treatment, CO2)
 }
 \seealso{
-\code{\link{transformBy}}, \code{\link{splitBy}}
+\code{\link{transformBy}}, \code{\link{transform_by}}, \code{\link{splitBy}}, \code{\link{split_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk} and Kevin

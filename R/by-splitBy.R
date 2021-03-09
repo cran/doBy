@@ -25,8 +25,9 @@
 #' @return A list of dataframes.
 #' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{orderBy}}, \code{\link{summaryBy}},
-#'     \code{\link{transformBy}}
+#' @seealso \code{\link{orderBy}}, \code{\link{order_by}},
+#'     \code{\link{summaryBy}}, \code{\link{summary_by}},
+#'     \code{\link{transformBy}}, \code{\link{transform_by}} 
 #' @keywords utilities
 #' @examples
 #' 

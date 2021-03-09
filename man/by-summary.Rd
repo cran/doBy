@@ -126,8 +126,8 @@ summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
 
 }
 \seealso{
-\code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}},
-    \code{\link{splitBy}}, \code{\link{transformBy}}
+\code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}}, \code{\link{order_by}},
+    \code{\link{splitBy}}, \code{\link{split_by}}, \code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

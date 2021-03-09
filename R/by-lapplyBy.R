@@ -18,7 +18,7 @@
 #'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #'
-#' @seealso \code{\link{lapplyBy}}
+#' @seealso \code{\link{splitBy}}, \code{\link{split_by}}
 #'
 #' @keywords utilities
 #'
@@ -29,8 +29,6 @@
 #'
 #' # Same as
 #' lapply(splitBy(~Treatment + Type, data=CO2), FUN=fun)
-
-
 
 #' @export
 #' @rdname by-lapply

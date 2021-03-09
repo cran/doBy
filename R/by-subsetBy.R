@@ -21,7 +21,7 @@
 #' @param \dots further arguments to be passed to or from other methods.
 #' @return A data frame.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{splitBy}}
+#' @seealso \code{\link{splitBy}}, \code{\link{split_by}}
 #' @keywords utilities
 #' @examples
 #' 

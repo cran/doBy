@@ -52,7 +52,7 @@ data(dietox)
 subsetBy(~Evit, Weight < mean(Weight), data=dietox)
 }
 \seealso{
-\code{\link{splitBy}}
+\code{\link{splitBy}}, \code{\link{split_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}
