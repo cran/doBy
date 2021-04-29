@@ -10,11 +10,25 @@
 #'     pt qnorm qt residuals sd summary.lm terms vcov aggregate
 #'     printCoefmat confint
 
+#' @importFrom microbenchmark microbenchmark
+#' @importFrom curry partial
 #' @importFrom Deriv Deriv
 #' @importFrom magrittr "%>%"
 #' @export  "%>%"
 #' @importFrom utils str
 #' @importFrom methods setOldClass
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

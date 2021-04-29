@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.6.9
+Version: 4.6.10
 Title: Groupwise Statistics, LSmeans, Linear Contrasts, Utilities
 Author: Søren Højsgaard <sorenh@math.aau.dk> and Ulrich Halekoh
     <uhalekoh@health.sdu.dk>
@@ -15,11 +15,11 @@ ZipData: no
 LazyData: true
 License: GPL (>= 2)
 Depends: R (>= 3.6.0), methods
-Imports: pbkrtest (>= 0.4-8.1), MASS, Matrix, magrittr, Deriv, tibble,
-        broom, ggplot2, dplyr
-Suggests: multcomp, geepack, lme4, survival, knitr
+Imports: broom, curry, Deriv, dplyr, ggplot2, MASS, Matrix, magrittr,
+        microbenchmark, pbkrtest (>= 0.4-8.1), tibble
+Suggests: multcomp, geepack, lme4, survival, testthat (>= 2.1.0), knitr
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-03-09 10:01:51 UTC; sorenh
+Packaged: 2021-04-29 10:28:33 UTC; sorenh
 Repository: CRAN
-Date/Publication: 2021-03-09 11:30:02 UTC
+Date/Publication: 2021-04-29 11:10:02 UTC

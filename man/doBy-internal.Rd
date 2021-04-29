@@ -19,7 +19,6 @@
 
 \alias{print.lmBy}
 \alias{print.summary_lmBy}
-\alias{specialize}
 \alias{print.splitByData}
 
 \alias{linest_class-class}

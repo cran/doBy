@@ -1,42 +1,42 @@
 \documentclass[12pt]{article}
 %\VignetteEngine{knitr::knitr} 
 %\VignettePackage{doBy}
-%\VignetteIndexEntry{doby: Groupwise computations and other utilities}
+%\VignetteIndexEntry{doby: Groupwise computations and miscellaneous utilities}
 
-\usepackage{hyperref,color,boxedminipage,Sweave}
+\usepackage{hyperref,color,boxedminipage,Sweave,a4wide}
 \usepackage[utf8]{inputenc}
 
 \def\textasciigrave{'}
 
 \def\proglang#1{{#1}}
+\def\R{\proglang{R}}
+
 \def\pkg#1{{\bf #1}}
 \def\doby{\pkg{doBy}}
+
 \def\code#1{\texttt{#1}}
-\def\shd#1{\footnote{SHD: #1}}
+% \def\shd#1{\footnote{SHD: #1}}
+
 \def\summaryby{\code{summaryBy}}
-\def\R{\proglang{R}}
+
 
 %\special{html:
 %  <link title="main" media="all" rel="stylesheet" href="../../../shdcss.css"
 % type="text/css" />
 %}
 
-
 % \renewenvironment{Schunk}{\begin{center}
 %     \scriptsize
 %     \begin{boxedminipage}{1.0\textwidth}}{
 %     \end{boxedminipage}\end{center}}
 
-
 %\SweaveInput{Rmarkup.STY}
-
 
 <<echo=FALSE>>=
 #require( doBy )
 prettyVersion <- packageDescription("doBy")$Version
 prettyDate <- format(Sys.Date())
 @
-
 
 
 <<include=FALSE>>=
@@ -48,47 +48,57 @@ tidy=FALSE,fig.path='figures/doBy'
 
 %\setkeys{Gin}{height=3in}
 
-\title{Groupwise computations and other utilities in the  \texttt{doBy} package}
+\title{Groupwise computations and other utilities in the \texttt{doBy} package}
 \author{S{\o}ren H{\o}jsgaard}
 \date{\pkg{doBy} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+
+
+\let\oldknitrout\knitrout
+\renewenvironment{knitrout}{
+  \begin{oldknitrout}
+    \topsep=0pt
+}{
+  \end{oldknitrout}
+}
 
 \begin{document}
 \maketitle
 
 
+
 \definecolor{darkred}{rgb}{.7,0,0}
 \definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
 
-\DefineVerbatimEnvironment{Sinput}{Verbatim}{
-  fontfamily=tt,
-  %%fontseries=b,
-  %% xleftmargin=2em,
-  formatcom={\color{midnightblue}}
-}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{
-  fontfamily=tt,
-  %%fontseries=b,
-  %% xleftmargin=2em,
-  formatcom={\color{darkred}}
-}
-\DefineVerbatimEnvironment{Scode}{Verbatim}{
-  fontfamily=tt,
-  %%fontseries=b,
-  %% xleftmargin=2em,
-  formatcom={\color{blue}}
-}
+% \DefineVerbatimEnvironment{Sinput}{Verbatim}{
+%   fontfamily=tt,
+%   %%fontseries=b,
+%   %% xleftmargin=2em,
+%   formatcom={\color{midnightblue}}
+% }
+% \DefineVerbatimEnvironment{Soutput}{Verbatim}{
+%   fontfamily=tt,
+%   %%fontseries=b,
+%   %% xleftmargin=2em,
+%   formatcom={\color{darkred}}
+% }
+% \DefineVerbatimEnvironment{Scode}{Verbatim}{
+%   fontfamily=tt,
+%   %%fontseries=b,
+%   %% xleftmargin=2em,
+%   formatcom={\color{blue}}
+% }
 
-\fvset{listparameters={\setlength{\topsep}{-2pt}}}
-\renewenvironment{Schunk}{\linespread{.90}}{}
+% \fvset{listparameters={\setlength{\topsep}{-2pt}}}
+% \renewenvironment{Schunk}{\linespread{.90}}{}
+%  \RecustomVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\scriptsize,xleftmargin=5mm,formatcom=\color{blue},frame=single,framerule=0.1pt}
+%  \RecustomVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\scriptsize,xleftmargin=5mm,formatcom=\color{violet},frame=single,framerule=0.1pt}
 
 
 \tableofcontents
 
-
-@
 <<echo=FALSE>>=
 library(doBy)
-dir.create("figures")
+if (!dir.exists("figures")) dir.create("figures")
 oopt <- options()
 options("digits"=4, "width"=80, "prompt"=" ", "continue"="  ")
 options(useFancyQuotes="UTF-8")
@@ -99,9 +109,10 @@ options(useFancyQuotes="UTF-8")
 \section{Introduction}
 \label{sec:introduction}
 
+
 The \doby{} package contains a variety of utility functions. This
-working document describes some of these functions. The
-package originally grew out of a need to calculate groupwise summary
+working document describes some of these functions. The package
+originally grew out of a need to calculate groupwise summary
 statistics (much in the spirit of \code{PROC SUMMARY} of the
 \proglang{SAS} system), but today the package contains many different
 utilities.
@@ -156,8 +167,7 @@ result from a study of the effect of adding vitamin E and/or copper to
 the feed of slaughter pigs.
 
 
-\section{Working with groupwise data}
-
+\section{Groupwise computations}
 
 \subsection{The \texttt{summaryBy} function} %% and \texttt{summary\_by} functions}
 
@@ -443,30 +453,143 @@ x <- transformBy("Month", data=airquality,
 %%
 
 
+\section{Miscellaneous utilities}
+% \label{sec:xxx}
 
+\subsection{\code{restrict()}: Restrict a functions domain}
+\label{sec:restrict}
 
-\section{Miscellaneous}
-\label{sec:xxx}
+The \code{restrict} function can restrict the domain of a
+function. There are two approaches: 1) Store the restricted arguments
+in an auxillary environment and 2) substitute the restricted arguments
+into the function.
 
+\subsubsection{Using an auxillary environment}
+\label{sec:using-an-auxillary}
 
-\subsection{Specialize}
-\label{sec:specialize}
 
 <<>>=
-ff  <- function(a, b=2, c=4){a + b + c}
-ff1 <- specialize(ff, arglist=list(a=1, b=7, yy=123))
-ff1
-gg  <- rnorm
-gg1 <- specialize(gg, list(n=10))
-gg1
+f1  <- function(a, b=2, c=4){a + b + c}
+f1_ <- restrict(f1, list(a=1, b=7))
+class(f1_)
+f1_
+f1_()
+@
+
+The restrictions are stored in an extra environment in the scaffold function:
+<<>>=
+restrictions(f1_) 
+## attr(f1_, "arg_env")$args ## Same result
+@
+
+The original function is stored in the scaffold functions environment:
+<<>>=
+original_fun(f1_) 
+## environment(f1_)$fun ## Same result
+@ 
+
+Similarly
+<<>>=
+rnorm5 <- restrict(rnorm, list(n=5))
+rnorm5()
 @ %def
 
-Notice that this result is absurd:
+
+\subsubsection{Substitute restricted values into function}
+\label{sec:subst-restr-valu}
+
+With substitution, it is clear what is happening:
 <<>>=
-f  <- function(a) {a <- a + 1; a}
-f1 <- specialize(f, list(a = 10))
-f1
+f1s_ <- restrict_sub(f1, list(a=1, b=7))
+f1s_
+f1s_()
+@ 
+
+However, absurdities can arise:
+<<>>=
+f2  <- function(a) {a <- a + 1; a}
+## Notice that the following is absurd
+f2s_ <- restrict_sub(f2, list(a = 10))
+f2s_
+# do not run: f2s_()
+try(f2s_())
+## Using the environment approch, the result makes sense
+f2_ <- restrict(f2, list(a = 10))
+f2_
+f2_()
 @ %def
+
+\subsubsection{Example: Benchmarking}
+\label{sec:exampl-benchm}
+
+Consider a simple task: Adding integers from $1$ to $n$. A naive implementation is
+<<>>=
+sum2n <- function(n) {
+  s <- 0
+  for (i in 1:n) s <- s + i
+  s
+}
+sum2n(10)
+@ 
+
+We can benchmark timing for different values of $n$ as
+<<>>=
+library(microbenchmark)
+microbenchmark(
+  sum2n(10), sum2n(100), sum2n(1000), sum2n(10000),
+  times=5
+)
+@ 
+
+It is tedious (and hence error prone) to write these function calls. Instead we can do:
+<<>>=
+n.vec  <- c(10, 100, 1000, 10000)
+fn.list <- lapply(n.vec, function(a.) restrict(sum2n, list(n=a.)))
+fn.list %>% length
+@ 
+
+Each element is a function (a scaffold object, to be precise) and we can evaluate all functions as:
+<<>>=
+fn.list[[1]]
+sapply(fn.list, function(f) do.call(f, list()))
+@ 
+
+To use the list of functions in connection with microbenchmark, we can do the following (which is eqully tedious):
+<<eval=FALSE>>=
+microbenchmark(
+  fn.list[[1]](), fn.list[[2]](), fn.list[[3]](), fn.list[[4]](),
+  times=5
+)
+@ 
+
+This can be automatized as follows: We bquote all functions
+<<>>=
+dobq <- function(fnlist){
+   lapply(fnlist, function(g) bquote(.(g)()))
+}
+cl.list <- dobq(fn.list)
+cl.list[[1]]
+@ 
+
+All calls can be evaluated as
+<<>>=
+sapply(cl.list, eval)
+@ 
+
+To use microbenchmark we must name the elements of the list:
+<<>>=
+names(cl.list) <- n.vec
+microbenchmark(
+  list=cl.list,
+  times=5
+)
+@ 
+
+
+
+
+
+
 
 
 \subsection{The \code{firstobs()} / \code{lastobs()} function}
@@ -492,61 +615,61 @@ lastobs(~Plant, data=CO2)
 The location of the $n$ largest / smallest entries in a numeric vector
 can be obtained with
 <<>>=
-x <- c(1:4,0:5,11,NA,NA)
+x <- c(1:4, 0:5, 11, NA, NA)
 which.maxn(x,3)
 which.minn(x,5)
 @ %def
 
 \subsection{Subsequences - \code{subSeq()}}
-\label{sec:xxx}
+% \label{sec:xxx}
 
 Find (sub) sequences in a vector:
 
 <<>>=
-x <- c(1,1,2,2,2,1,1,3,3,3,3,1,1,1)
+x <- c(1, 1, 2, 2, 2, 1, 1, 3, 3, 3, 3, 1, 1, 1)
 subSeq(x)
 subSeq(x, item=1)
 subSeq(letters[x])
-subSeq(letters[x],item="a")
+subSeq(letters[x], item="a")
 @ %def
 
 
 \subsection{Recoding values of a vector - \code{recodeVar()}}
-\label{sec:xxx}
+% \label{sec:xxx}
 
 <<>>=
-x <- c("dec","jan","feb","mar","apr","may")
-src1 <- list(c("dec","jan","feb"), c("mar","apr","may"))
-tgt1 <- list("winter","spring")
-recodeVar(x,src=src1,tgt=tgt1)
+x <- c("dec", "jan", "feb", "mar", "apr", "may")
+src1 <- list(c("dec", "jan", "feb"), c("mar", "apr", "may"))
+tgt1 <- list("winter", "spring")
+recodeVar(x, src=src1, tgt=tgt1)
 @ %def
 
 \subsection{Renaming columns of a dataframe or matrix --  \code{renameCol()}}
-\label{sec:xxx}
+% \label{sec:xxx}
 
 <<>>=
-head(renameCol(CO2, 1:2, c("kk","ll")))
-head(renameCol(CO2, c("Plant","Type"), c("kk","ll")))
+head(renameCol(CO2, 1:2, c("plant_", "type_")))
+head(renameCol(CO2, c("Plant", "Type"), c("plant_", "type_")))
 @ %def
 
 \subsection{Time since an event - \code{timeSinceEvent()}}
-\label{sec:xxx}
+% \label{sec:xxx}
 
 Consider the vector
 <<>>=
-yvar <- c(0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0)
+yvar <- c(0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)
 @ %def
 
 Imagine that "1" indicates an event of some kind which takes place
 at a certain time point. By default time points are assumed
 equidistant but for illustration we define time time variable
 <<>>=
-tvar <- seq_along(yvar) + c(0.1,0.2)
+tvar <- seq_along(yvar) + c(0.1, 0.2)
 @ %def
 
 Now we find time since event as
 <<>>=
-tse<- timeSinceEvent(yvar,tvar)
+tse<- timeSinceEvent(yvar, tvar)
 @ %def
 
 The output reads as follows:
@@ -561,32 +684,32 @@ The output reads as follows:
 \end{itemize}
 
 <<>>=
-plot(sign.tse~tvar, data=tse, type="b")
+plot(sign.tse ~ tvar, data=tse, type="b")
 grid()
-rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
+rug(tse$tvar[tse$yvar == 1], col="blue",lwd=4)
 points(scale(tse$run), col=tse$run, lwd=2)
-lines(abs.tse+.2~tvar, data=tse, type="b",col=3)
+lines(abs.tse + .2 ~ tvar, data=tse, type="b",col=3)
 @ %def
 
 <<>>=
-plot(tae~tvar, data=tse, ylim=c(-6,6),type="b")
+plot(tae ~ tvar, data=tse, ylim=c(-6,6), type="b")
 grid()
-lines(tbe~tvar, data=tse, type="b", col="red")
-rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
-lines(run~tvar, data=tse, col="cyan",lwd=2)
+lines(tbe ~ tvar, data=tse, type="b", col="red")
+rug(tse$tvar[tse$yvar==1], col="blue", lwd=4)
+lines(run ~ tvar, data=tse, col="cyan", lwd=2)
 @ %def
 
 <<>>=
-plot(ewin~tvar, data=tse,ylim=c(1,4))
-rug(tse$tvar[tse$yvar==1], col="blue",lwd=4)
+plot(ewin ~ tvar, data=tse, ylim=c(1, 4))
+rug(tse$tvar[tse$yvar==1], col="blue", lwd=4)
 grid()
-lines(run~tvar, data=tse,col="red")
+lines(run ~ tvar, data=tse, col="red")
 @ %def
 
 
 We may now find times for which time since an event is at most 1 as
 <<>>=
-tse$tvar[tse$abs<=1]
+tse$tvar[tse$abs <= 1]
 @ %def
 
 \subsection{Example: Using \code{subSeq()} and \code{timeSinceEvent()}}
@@ -595,33 +718,33 @@ Consider the \verb|lynx| data:
 <<>>=
 lynx <- as.numeric(lynx)
 tvar <- 1821:1934
-plot(tvar,lynx,type="l")
+plot(tvar, lynx, type="l")
 @ %def
 
 Suppose we want to estimate the cycle lengths. One way of doing this
 is as follows:
 <<>>=
-yyy <- lynx>mean(lynx)
+yyy <- lynx > mean(lynx)
 head(yyy)
-sss <- subSeq(yyy,TRUE)
+sss <- subSeq(yyy, TRUE)
 sss
 @ %def
 
 <<>>=
-plot(tvar,lynx,type="l")
-rug(tvar[sss$midpoint],col="blue",lwd=4)
+plot(tvar, lynx, type="l")
+rug(tvar[sss$midpoint], col="blue", lwd=4)
 @ %def
 
 Create the "event vector"
 <<>>=
-yvar <- rep(0,length(lynx))
+yvar <- rep(0, length(lynx))
 yvar[sss$midpoint] <- 1
 str(yvar)
 @ %def
 
 <<>>=
 tse <- timeSinceEvent(yvar,tvar)
-head(tse,20)
+head(tse, 20)
 @ %def
 
 We get two different (not that different) estimates of period

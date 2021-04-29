@@ -63,6 +63,6 @@ taylor <- function(fn, x0, ord=1){
         colSums(dd) + fn(x0)
     }
     
-    out2 <- specialize(out, list(bb=bb))
+    out2 <- restrict_sub(out, list(bb=bb))
     out2
 }

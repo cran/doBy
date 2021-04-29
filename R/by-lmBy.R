@@ -80,9 +80,6 @@ lmBy <- function(formula, data, id=NULL, ...){
   mm
 }
 
-
-
-
 #' @export
 print.lmBy <- function(x, ...){
   ##lapply(c(x), print)
