@@ -81,37 +81,37 @@ x <- transformBy("Month", data=airquality,
 
 ## -----------------------------------------------------------------------------
 f1  <- function(a, b=2, c=4){a + b + c}
-f1_ <- restrict(f1, list(a=1, b=7))
+f1_ <- restrict_fun(f1, list(a=1, b=7))
 class(f1_)
 f1_
 f1_()
 
 ## -----------------------------------------------------------------------------
-restrictions(f1_) 
+get_restrictions(f1_) 
 ## attr(f1_, "arg_env")$args ## Same result
 
 ## -----------------------------------------------------------------------------
-original_fun(f1_) 
+get_fun(f1_) 
 ## environment(f1_)$fun ## Same result
 
 ## -----------------------------------------------------------------------------
-rnorm5 <- restrict(rnorm, list(n=5))
+rnorm5 <- restrict_fun(rnorm, list(n=5))
 rnorm5()
 
 ## -----------------------------------------------------------------------------
-f1s_ <- restrict_sub(f1, list(a=1, b=7))
+f1s_ <- restrict_fun_sub(f1, list(a=1, b=7))
 f1s_
 f1s_()
 
 ## -----------------------------------------------------------------------------
 f2  <- function(a) {a <- a + 1; a}
 ## Notice that the following is absurd
-f2s_ <- restrict_sub(f2, list(a = 10))
+f2s_ <- restrict_fun_sub(f2, list(a = 10))
 f2s_
 # do not run: f2s_()
 try(f2s_())
 ## Using the environment approch, the result makes sense
-f2_ <- restrict(f2, list(a = 10))
+f2_ <- restrict_fun(f2, list(a = 10))
 f2_
 f2_()
 
@@ -132,7 +132,7 @@ microbenchmark(
 
 ## -----------------------------------------------------------------------------
 n.vec  <- c(10, 100, 1000, 10000)
-fn.list <- lapply(n.vec, function(a.) restrict(sum2n, list(n=a.)))
+fn.list <- lapply(n.vec, function(a.) restrict_fun(sum2n, list(n=a.)))
 fn.list %>% length
 
 ## -----------------------------------------------------------------------------

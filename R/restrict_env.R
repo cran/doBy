@@ -1,58 +1,71 @@
 #' @title restrict
 #' @description Restrict a functions domain by fixing certain
-#'   arguments of a function call.
-#' @name restrict
+#'     arguments of a function call.
+#' @name restrict_fun
 #'
 #' @param fun Function to be restricted
 #' @param args List of the form name=value
-#' @param method Either "env" (default, using an auxillary argument
-#'   for storing restricted values) or "sub" (based on substituting
-#'   fixed values into the function).
+#' @param method Either "env" (for environment; the default, using an
+#'     auxillary argument for storing restricted values) or "sub" (for
+#'     substitute; based on substituting fixed values into the
+#'     function).
 #'
 #' @param envir Environment
-#' @param object An object from restrict (a scaffold object).
+#' @param object An object from restrict_fun (a scaffold object).
 #'
-#' @details `restrict` is a wrapper for calling `restrict_env` (default) or `restrict_sub`.
+#' @details `restrict_fun` is a wrapper for calling `restrict_fun_env`
+#'     (default) or `restrict_fun_sub`.
+#'
+#' @return A new function: The input function `fun` but with certain
+#'     arguments fixed at specific values.
 #' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk} based on code
 #'   adapted from the curry package.
+#' 
 #' @examples
 #'
 #' f1  <- function(x, y){x + y}
-#' f1_ <- restrict(f1, list(y=10))
+#' f1_ <- restrict_fun(f1, list(y=10))
 #' f1_
 #' f1_(x=1)
-#' restrictions(f1_)
-#' original_fun(f1_)
+#' get_restrictions(f1_)
+#' get_fun(f1_)
 #' 
 #' f2 <- function(x){
 #'   x <- x + 2
 #'   x
 #' }
-#' f2_ <- restrict(f2, list(x=1)) 
+#' f2_ <- restrict_fun(f2, list(x=1)) 
 #' f2_()
 #'
-#' # Notice that this is absurd:
-#' restrict(f2, list(x=10), method="sub")
+#' # Notice that this is absurd, because arguments are modified in the
+#' # body
+#' restrict_fun(f2, list(x=10), method="sub")
+#'
+#' # A safe(r) alternative is:
+#' f3 <- function(x){
+#'   x_ <- x + 2
+#'   x_
+#' }
+#' restrict_fun(f3, list(x=10), method="sub")
 #' 
-#' rnorm10 <- restrict(rnorm, list(n=10)) 
+#' rnorm10 <- restrict_fun(rnorm, list(n=10)) 
 #' rnorm(10)
 NULL
 
-
-#' @rdname restrict
+#' @rdname restrict_fun
 #' @export
-restrict <- function(fun, args, method="env") {
+restrict_fun <- function(fun, args, method="env") {
   method <- match.arg(method, c("env", "sub"))
   if (identical(method, "env"))
-    restrict_env(fun, args)
+    restrict_fun_env(fun, args)
   else
-    restrict_sub(fun, args)
+    restrict_fun_sub(fun, args)
 }
 
-#' @rdname restrict
+#' @rdname restrict_fun
 #' @export
-restrict_sub <- function(fun, args, envir=parent.frame()){
+restrict_fun_sub <- function(fun, args, envir=parent.frame()){
   body1 <- as.expression(body(fun))
   body2 <- do.call("substitute", list(body1[[1]], args))
 
@@ -68,12 +81,9 @@ restrict_sub <- function(fun, args, envir=parent.frame()){
   out
 }
 
-
-
-
-#' @rdname restrict
+#' @rdname restrict_fun
 #' @export
-restrict_env <- function(fun, args) {
+restrict_fun_env <- function(fun, args) {
     fun <- as.scaffold(fun)
     .apply_args(fun, args)
     ##.partial(fun, args)
@@ -91,7 +101,6 @@ as.scaffold <- function(fun) {
   }
 }
 
-
 scaffold_create <- function(fun, from = parent.frame()) {
 
   arg_env <- new.env(parent = emptyenv())
@@ -104,14 +113,13 @@ scaffold_create <- function(fun, from = parent.frame()) {
 }
 
 
-
 scaffold_update <- function(fun, from = parent.frame()) {
   #cat("scaffold_update\n")
   arg_env <- clone_environment(attr(fun, "arg_env"))
   fmls <- get_formals(fun)
   #cat("formals:\n"); print(fmls)
 
-  fmls[names(restrictions(fun))] <- NULL
+  fmls[names(get_restrictions(fun))] <- NULL
   
   fun_orig <- environment(fun)$fun
   arg_getter <- getArgs(arg_env)
@@ -141,51 +149,48 @@ get_formals <- function(fun){
   fmls
 }
 
-
-
-
 ## SOME UTILITIES
 
-
-#' @rdname restrict
+#' @rdname restrict_fun
 #' @export
-restrictions <- function(object){
-  if (!inherits(object, "scaffold")) stop("'object' must be scaffold object\n")
-  attr(object, "arg_env")$args
+get_restrictions <- function(object){
+    if (!inherits(object, "scaffold"))
+        stop("'object' must be scaffold object\n")
+    attr(object, "arg_env")$args
 }
 
-#' @rdname restrict
+#' @rdname restrict_fun
 #' @export
-original_fun <- function(object){
-  if (!inherits(object, "scaffold")) stop("'object' must be scaffold object\n")
-  environment(object)$fun
+get_fun <- function(object){
+    if (!inherits(object, "scaffold"))
+        stop("'object' must be scaffold object\n")
+    environment(object)$fun
 }
 
 #' @export
 print.scaffold <- function(x, ...){
-
   x2 <- x
   attributes(x2) <- NULL
   print.default(x2)
-  ## cat("args:\n ")
-  ## print(names(formals(x)))
-  ## cat("function: \n")
-  ## print(environment(x)$fun)
-  ## cat("restrictions: \n")
-  ## print(attr(x, "arg_env")$args)
-  invisible(x)
+  return(invisible(x))
 }
 
 
 #' @export
 summary.scaffold <- function(object, ...){
 
-  cat("function: \n")
-  print(environment(object)$fun)
-  cat("restrictions: \n")
-  print(attr(object, "arg_env")$args)
-  invisible(object)  
+    cat("Original function: \n")
+    print(get_fun(object))
+
+    cat("Restrictions: \n")
+    str(get_restrictions(object))
+
+    return(invisible(object))
 }
+
+
+
+
 
 getArgs <- function(added_env) {
   function() {

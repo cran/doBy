@@ -1,3 +1,11 @@
+doBy v4.6.11 (Release date: 2021-07-13)
+=======================================
+
+* `restrict` has been renamed to `restrict_fun`
+
+* `summary_mb` (mb for microbenchmark) added. Faster than `summary`
+  from microbenchmark package.
+
 doBy v4.6.10 (Release date: 2021-04-29)
 =======================================
 
