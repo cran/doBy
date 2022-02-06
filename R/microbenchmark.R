@@ -5,7 +5,7 @@
 #'     in producing a summary (due to a call to a function from the
 #'     multcomp package.)
 #' 
-#' @name summary_mb
+#' @name mb_summary
 #'
 #' @param object A microbenchmark object
 #' @param unit The time unit to be used
@@ -14,9 +14,9 @@
 #' @param ... Additional arguments; currently not used.
 NULL
 
-#' @rdname summary_mb
+#' @rdname mb_summary
 #' @export
-summary_mb <- function (object, unit, add.unit=TRUE, ...) 
+mb_summary <- function (object, unit, add.unit=TRUE, ...) 
 {
     if (missing(unit)) {
         unit <- if (!is.null(attr(object, "unit"))) 
@@ -109,3 +109,8 @@ function (x, f = min, minexp = -Inf, maxexp = Inf, mu = TRUE)
     e3 <- min(e3, maxexp, 8)
     prefixes[e3 + 9]
 }
+
+
+#' @rdname mb_summary
+#' @export
+summary_mb <- mb_summary

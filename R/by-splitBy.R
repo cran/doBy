@@ -17,8 +17,8 @@
 #' @param n A single integer.  If positive or zero, size for the
 #'     resulting object: number of elements for a vector (including
 #'     lists), rows for a matrix or data frame or lines for a
-#'     function.  If negative, all but the ‘n’ last/first number of
-#'     elements of ‘x’.
+#'     function.  If negative, all but the "n" last/first number of
+#'     elements of "x".
 #'
 #' @param ... Arguments to be passed to or from other methods.
 #' 

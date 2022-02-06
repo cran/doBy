@@ -1,0 +1,279 @@
+%\VignetteEngine{knitr::knitr} 
+%\VignettePackage{doBy}
+%\VignetteIndexEntry{Restrict functions to a smaller domain}
+
+
+\documentclass[11pt]{article}
+
+\usepackage{hyperref,url,color,Sweave,a4wide}
+\usepackage[utf8]{inputenc}
+
+
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+
+\RequirePackage{color,fancyvrb,amsmath,amsfonts}
+
+%\def\textasciigrave{'}
+\def\proglang#1{{#1}}
+\def\R{\proglang{R}}
+\def\pkg#1{{\bf #1}}
+\def\doby{\pkg{doBy}}
+\def\code#1{\texttt{#1}}
+\def\summaryby{\code{summaryBy}}
+
+% reduce whitespace between R code and R output
+\let\oldknitrout\knitrout
+\renewenvironment{knitrout}{
+  \begin{oldknitrout}
+    \footnotesize
+    \topsep=0pt
+}{
+  \end{oldknitrout}
+}
+
+<<echo=FALSE>>=
+require( doBy )
+prettyVersion <- packageDescription("doBy")$Version
+prettyDate <- format(Sys.Date())
+@
+
+\title{Restrict functions to a smaller domain with \texttt{restrict\_fun()} in the \texttt{doBy} package}
+\author{S{\o}ren H{\o}jsgaard}
+\date{\pkg{doBy} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+
+
+<<include=FALSE>>=
+library(knitr)
+@
+
+% show R> prompt before R commands
+<<r setup, echo=FALSE>>=
+knitr::opts_chunk$set(prompt=TRUE) 
+library(doBy)
+if (!dir.exists("figures")) dir.create("figures")
+opts_chunk$set(
+               tidy=FALSE,fig.path='figures/doBy'
+           )
+
+oopt <- options()
+options("digits"=4, "width"=90, "prompt"="> ", "continue"="  ")
+options(useFancyQuotes="UTF-8")
+@ %def
+
+
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
+
+
+
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\parindent0pt
+\parskip5pt
+
+\section{Introduction}
+\label{sec:introduction}
+
+
+The \doby{} package contains a variety of utility functions. This
+working document describes some of these functions. The package
+originally grew out of a need to calculate groupwise summary
+statistics (much in the spirit of \code{PROC SUMMARY} of the
+\proglang{SAS} system), but today the package contains many different
+utilities.
+
+<<echo=F>>=
+library(doBy)
+@ %def
+
+
+\section{Restrict a functions domain: \code{restrict\_fun()}}
+\label{sec:restrict}
+
+The \code{restrict\_fun} function can restrict the domain of a
+function. For example, if $f(x,y)=x+y$ then $g(x)=f(x, 10)$ is a
+restriction of $f$ to be a function of $x$ alone.
+
+There are two approaches: 1) Store the restricted arguments
+in an auxillary environment and 2) substitute the restricted arguments
+into the function.
+
+\subsection{Using an auxillary environment}
+\label{sec:using-an-auxillary}
+
+
+<<>>=
+f1  <- function(a, b, c=4, d=9){
+    a + b + c + d
+}
+f1_ <- restrict_fun(f1, list(b=7, d=10))
+class(f1_)
+@
+
+We see the new function is a function of $a$ and $c$ with $c$ being
+given a default value, but what the function does is not
+clear. However, it does evaluate correctly:
+
+<<>>=
+f1_
+f1_(100)
+@
+
+The restricted values are stored in an extra environment in the \code{scaffold} object and
+the original function is stored in the scaffold functions environment:
+
+<<>>=
+get_restrictions(f1_) 
+## attr(f1_, "arg_env")$args ## Same result
+get_fun(f1_) 
+## environment(f1_)$fun ## Same result
+@ 
+
+Similarly
+<<>>=
+rnorm5 <- restrict_fun(rnorm, list(n=5))
+rnorm5()
+@
+
+\subsection{Substitute restricted values into function}
+\label{sec:subst-restr-valu}
+
+With substitution, it is clear what is happening:
+<<>>=
+f1s_ <- restrict_fun_sub(f1, list(b=7, d=10))
+f1s_
+f1s_(100)
+@ 
+
+However, absurdities can arise:
+<<>>=
+f2  <- function(a) {
+    a <- a + 1
+    a
+}
+## Notice that the following is absurd
+f2s_ <- restrict_fun_sub(f2, list(a = 10))
+f2s_
+# do not run: f2s_()
+try(f2s_())
+
+## Using the environment approch, the result makes sense
+f2_ <- restrict_fun(f2, list(a = 10))
+f2_
+f2_()
+@ %def
+
+\section{Example: Benchmarking}
+\label{sec:exampl-benchm}
+
+
+Consider a simple task: Creating and inverting Toeplitz matrices for increasing dimensions: 
+
+<<>>=
+n <- 4
+toeplitz(1:n)
+@ 
+
+A naive implementation is
+<<>>=
+inv_toeplitz <- function(n) {
+    solve(toeplitz(1:n))
+}
+inv_toeplitz(4)
+@ 
+
+We can benchmark timing for different values of $n$ as
+<<>>=
+library(microbenchmark)
+microbenchmark(
+    inv_toeplitz(4), inv_toeplitz(8), inv_toeplitz(16),
+    inv_toeplitz(32), inv_toeplitz(64),
+    times=5
+)
+@ 
+
+However, it is tedious (and hence error prone) to write these function calls. 
+
+A programmatic approach using \code{restrict\_fun} is as follows: First create list of scaffold objects:
+<<>>=
+n.vec  <- c(4, 8, 16, 32, 64)
+scaf.list <- lapply(n.vec,
+                  function(ni){
+                      restrict_fun(inv_toeplitz, list(n=ni))}
+                  )
+@ 
+
+Each element is a function (a scaffold object, to be precise) and we can evaluate each / all functions as:
+<<>>=
+scaf.list[[1]]
+scaf.list[[1]]()
+@ 
+
+To use the list of functions in connection with microbenchmark we bquote all functions using
+
+<<>>=
+bquote_list <- function(fnlist){
+    lapply(fnlist, function(g) {
+        bquote(.(g)())
+    }
+    )
+}
+@ 
+
+We get:
+<<>>=
+bq.list <- bquote_list(scaf.list)
+bq.list[[1]]
+## Evaluate one:
+eval(bq.list[[1]])
+## Evaluate all:
+## sapply(bq.list, eval)
+@ 
+
+To use microbenchmark we must name the elements of the list:
+<<>>=
+names(bq.list) <- n.vec
+microbenchmark(
+  list  = bq.list,
+  times = 5
+)
+@ 
+
+To summarize: to experiment with many difference values of $n$ we can do
+<<>>=
+n.vec <- seq(50, 700, by=50)
+scaf.list <- lapply(n.vec,
+                  function(ni){
+                      restrict_fun(inv_toeplitz, list(n=ni))}
+                  )
+bq.list <- bquote_list(scaf.list)
+names(bq.list) <- n.vec
+mb <- microbenchmark(
+  list  = bq.list,
+  times = 5
+)
+doBy::mb_summary(mb)  %>% head(4)
+@ 
+
+Notice: Above, \code{doBy::mb\_summary} is a faster version of the
+\code{summary} method for \code{microbenchmark} objects than the
+method provided by the \code{microbenchmark} package.
+
+<<fig.height=3>>=
+par(mfrow=c(1,2))
+y <- mb_summary(mb)$mean
+plot(n.vec, y)
+plot(log(n.vec), log(y))
+mm <- lm(log(y) ~ log(n.vec))
+broom::tidy(mm)
+abline(mm)
+@ 
+
+
+\end{document}
+
