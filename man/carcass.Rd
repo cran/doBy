@@ -22,10 +22,11 @@ variables.
   \item{\code{Meat11, Meat12, Meat13}}{Thickness of meat layer at different
     locations on the back of the carcass, see description above}
   \item{\code{LeanMeat}}{Lean meat percentage determined by dissection}
-  \item{\code{slhouse}}{Slaughter house; a factor with levels \code{a} \code{b} \code{c}}
-  \item{\code{sex}}{Sex of the pig; a factor with \code{a} \code{b}
-    \code{c}. Notice that it is no an error to have three levels; the
-    third level refers to castrates}
+  \item{\code{slhouse}}{Slaughter house; a factor with levels \code{slh1} and  \code{slh2}.}
+  \item{\code{sex}}{Sex of the pig; a factor with levels \code{castrate} and \code{female}.}
+  \item{\code{size}}{Size of the carcass; a factor with levels \code{normal} and \code{large}.
+      Here, `normal` refers to carcass weight under 80 kg; `large` refers to carcass weights between 80 and 110 kg.}
+  
 }
 }
 \source{
@@ -39,6 +40,9 @@ carcass
 \description{
 Measurement of lean meat percentage of 344 pig carcasses together with
 auxillary information collected at three Danish slaughter houses
+}
+\details{
+: Notice that there were slaughtered large pigs only at one slaughter house.
 }
 \note{
 carcass: Contains only the variables Fat11, Fat12, Fat13,

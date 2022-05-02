@@ -1,3 +1,10 @@
+doBy v4.6.13 (Release date: 2022-05-02)
+=======================================
+
+* carcassall data: definition of factors corrected.
+* cad dataset included
+
+
 doBy v4.6.11 (Release date: 2021-07-13)
 =======================================
 
