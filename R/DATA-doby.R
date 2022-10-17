@@ -92,13 +92,14 @@
 #'
 #' train <- sample(1:nrow(bc), 50)
 #' table(bc$code[train])
+#' \dontrun{
 #' library(MASS)
 #' z <- lda(code ~ ., data=bc, prior = c(1,1)/2, subset = train)
 #' pc <- predict(z, bc[-train, ])$class
 #' pc
 #' bc[-train, "code"]
 #' table(pc, bc[-train, "code"])
-#' 
+#' }
 "breastcancer"
 
 
@@ -332,7 +333,7 @@
 #' crimeRate
 #' 
 #' Crime rates per 100,000 inhabitants in states of the USA for different crime
-#' types.
+#' types in 1977.
 #' 
 #' @name crimeRate
 #' 
@@ -354,6 +355,31 @@
 #' data(crimeRate)
 #' 
 "crimeRate"
+
+#' crime_rate
+#' 
+#' Crime rates per 100,000 inhabitants in states of the USA for different crime
+#' types in 1977.
+#' 
+#' @name crime_rate
+#' 
+#' @docType data
+#' @format This data frame contains:
+#' \describe{
+#' \item{Murder:}{crime of murder}
+#' \item{Rape:}{}
+#' \item{Robbery:}{}
+#' \item{Assault:}{}
+#' \item{Burglary:}{residential theft}
+#' \item{Larceny:}{unlawful taking of personal property (pocket picking)}
+#' \item{AutoTheft:}{}
+#' }
+#' @keywords datasets
+#' @examples
+#' 	
+#' data(crime_rate)
+#' 
+"crime_rate"
 
 
 ##
@@ -590,8 +616,6 @@
 #' at different wavelengths.  Each milk sample was additionally analysed for
 #' fat, lactose, protein and drymatter.
 #' 
-#' PCA regression
-#' 
 #' @name NIRmilk
 #' @docType data
 #' @format This data frame contains 18 rows and 158 columns.  The first column
@@ -604,6 +628,31 @@
 #' data(NIRmilk)
 #' 
 "NIRmilk"
+
+## #' nir_milk
+## #' 
+## #' Near infra red light (NIR) measurments are made at 152 wavelengths on 17
+## #' milk samples.  While milk runs through a glass tube, infra red light is sent
+## #' through the tube and the amount of light passing though the tube is measured
+## #' at different wavelengths.  Each milk sample was additionally analysed for
+## #' fat, lactose, protein and drymatter.
+## #' 
+## #' @name nir_milk
+## #' @docType data
+## #' @format A list with two components
+## #'  x Datafrane with infra red light amount at different wavelengths (column names are the wavelengths; just remove the leading X).
+## #'  y Datafrane with response variables fat, protein,
+## #'     lactose and dm (drymatter)
+## #'
+## #' @keywords datasets
+## #' @examples
+## #' 	
+## #' data(nir_milk)
+## #' 
+## "nir_milk"
+
+
+
 
 
 #' Weight and size of 20 potatoes

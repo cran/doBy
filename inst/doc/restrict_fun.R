@@ -3,7 +3,7 @@ require( doBy )
 prettyVersion <- packageDescription("doBy")$Version
 prettyDate <- format(Sys.Date())
 
-## ----include=FALSE----------------------------------------------------------------------
+## ----include=FALSE,echo=FALSE-----------------------------------------------------------
 library(knitr)
 
 ## ----r setup, echo=FALSE----------------------------------------------------------------
@@ -114,27 +114,4 @@ microbenchmark(
   list  = bq.list,
   times = 5
 )
-
-## ---------------------------------------------------------------------------------------
-n.vec <- seq(50, 700, by=50)
-scaf.list <- lapply(n.vec,
-                  function(ni){
-                      restrict_fun(inv_toeplitz, list(n=ni))}
-                  )
-bq.list <- bquote_list(scaf.list)
-names(bq.list) <- n.vec
-mb <- microbenchmark(
-  list  = bq.list,
-  times = 5
-)
-doBy::mb_summary(mb)  %>% head(4)
-
-## ----fig.height=3-----------------------------------------------------------------------
-par(mfrow=c(1,2))
-y <- mb_summary(mb)$mean
-plot(n.vec, y)
-plot(log(n.vec), log(y))
-mm <- lm(log(y) ~ log(n.vec))
-broom::tidy(mm)
-abline(mm)
 

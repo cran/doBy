@@ -10,8 +10,6 @@
 
 \usepackage{hyperref,url,color,Sweave,a4wide}
 \usepackage[utf8]{inputenc}
-
-
 \usepackage[authoryear,round]{natbib}
 \bibliographystyle{plainnat}
 
@@ -32,14 +30,14 @@
 \def\linest{\code{linest()}}
 
 % reduce whitespace between R code and R output
-\let\oldknitrout\knitrout
-\renewenvironment{knitrout}{
-  \begin{oldknitrout}
-    \footnotesize
-    \topsep=0pt
-}{
-  \end{oldknitrout}
-}
+% \let\oldknitrout\knitrout
+% \renewenvironment{knitrout}{
+%   \begin{oldknitrout}
+%     \footnotesize
+%     \topsep=0pt
+% }{
+%   \end{oldknitrout}
+% }
 
 
 \DeclareMathOperator{\EE}{\mathbb{E}}
@@ -87,6 +85,7 @@ library(ggplot2)
 
 
 \begin{document}
+% \SweaveOpts{concordance=TRUE}
 
 \maketitle
 \tableofcontents

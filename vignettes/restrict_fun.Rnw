@@ -2,13 +2,10 @@
 %\VignettePackage{doBy}
 %\VignetteIndexEntry{Restrict functions to a smaller domain}
 
-
 \documentclass[11pt]{article}
 
 \usepackage{hyperref,url,color,Sweave,a4wide}
 \usepackage[utf8]{inputenc}
-
-
 \usepackage[authoryear,round]{natbib}
 \bibliographystyle{plainnat}
 
@@ -23,14 +20,14 @@
 \def\summaryby{\code{summaryBy}}
 
 % reduce whitespace between R code and R output
-\let\oldknitrout\knitrout
-\renewenvironment{knitrout}{
-  \begin{oldknitrout}
-    \footnotesize
-    \topsep=0pt
-}{
-  \end{oldknitrout}
-}
+% \let\oldknitrout\knitrout
+% \renewenvironment{knitrout}{
+%   \begin{oldknitrout}
+%     \footnotesize
+%     \topsep=0pt
+% }{
+%   \end{oldknitrout}
+% }
 
 <<echo=FALSE>>=
 require( doBy )
@@ -42,8 +39,16 @@ prettyDate <- format(Sys.Date())
 \author{S{\o}ren H{\o}jsgaard}
 \date{\pkg{doBy} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
 
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
 
-<<include=FALSE>>=
+
+\maketitle
+\tableofcontents
+\parindent0pt
+\parskip5pt
+
+<<include=FALSE,echo=FALSE>>=
 library(knitr)
 @
 
@@ -62,19 +67,10 @@ options(useFancyQuotes="UTF-8")
 @ %def
 
 
+
 \definecolor{darkred}{rgb}{.7,0,0}
 \definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
 
-
-
-
-
-\begin{document}
-
-\maketitle
-\tableofcontents
-\parindent0pt
-\parskip5pt
 
 \section{Introduction}
 \label{sec:introduction}
@@ -244,35 +240,36 @@ microbenchmark(
 )
 @ 
 
+
 To summarize: to experiment with many difference values of $n$ we can do
-<<>>=
-n.vec <- seq(50, 700, by=50)
-scaf.list <- lapply(n.vec,
-                  function(ni){
-                      restrict_fun(inv_toeplitz, list(n=ni))}
-                  )
-bq.list <- bquote_list(scaf.list)
-names(bq.list) <- n.vec
-mb <- microbenchmark(
-  list  = bq.list,
-  times = 5
-)
-doBy::mb_summary(mb)  %>% head(4)
-@ 
+% <<>>=
+% n.vec <- seq(50, 700, by=50)
+% scaf.list <- lapply(n.vec,
+%                   function(ni){
+%                       restrict_fun(inv_toeplitz, list(n=ni))}
+%                   )
+% bq.list <- bquote_list(scaf.list)
+% names(bq.list) <- n.vec
+% mb <- microbenchmark(
+%   list  = bq.list,
+%   times = 5
+% )
+% doBy::mb_summary(mb)  %>% head(4)
+% @ 
 
 Notice: Above, \code{doBy::mb\_summary} is a faster version of the
 \code{summary} method for \code{microbenchmark} objects than the
 method provided by the \code{microbenchmark} package.
 
-<<fig.height=3>>=
-par(mfrow=c(1,2))
-y <- mb_summary(mb)$mean
-plot(n.vec, y)
-plot(log(n.vec), log(y))
-mm <- lm(log(y) ~ log(n.vec))
-broom::tidy(mm)
-abline(mm)
-@ 
+% <<fig.height=3>>=
+% par(mfrow=c(1,2))
+% y <- mb_summary(mb)$mean
+% plot(n.vec, y)
+% plot(log(n.vec), log(y))
+% mm <- lm(log(y) ~ log(n.vec))
+% broom::tidy(mm)
+% abline(mm)
+% @ 
 
 
 \end{document}

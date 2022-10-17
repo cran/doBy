@@ -20,9 +20,6 @@ through the tube and the amount of light passing though the tube is measured
 at different wavelengths.  Each milk sample was additionally analysed for
 fat, lactose, protein and drymatter.
 }
-\details{
-PCA regression
-}
 \examples{
 	
 data(NIRmilk)
