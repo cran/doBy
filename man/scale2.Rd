@@ -14,7 +14,7 @@ scale2(x, center = TRUE, scale = TRUE)
 \item{scale}{Logical, should data be scaled.}
 }
 \value{
-An object of same class as `x`
+An object of same class as \code{x}
 }
 \description{
 Similar to 'base::scale' but scales / centers only numeric values

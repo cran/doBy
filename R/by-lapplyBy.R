@@ -8,9 +8,9 @@
 #######################################################################
 #' @param formula A formula describing how data should be split.
 #' @param data A dataframe.
-#' @param FUN A function to be applied to each element in the splitted
+#' @param FUN A function to be applied to each element in the split
 #'    list, see 'Examples' below.
-#' @param ... optional arguments to FUN.
+#' @param \dots optional arguments to FUN.
 #' @param USE.NAMES Same as for `sapply`
 #' @param simplify Same as for `sapply`
 #'

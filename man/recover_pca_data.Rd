@@ -7,9 +7,9 @@
 recover_pca_data(object, comp = 1)
 }
 \arguments{
-\item{object}{An object of class 'prcomp.}
+\item{object}{An object of class \code{prcomp}.}
 
-\item{comp}{The number of compoents to be used. Must be smaller
+\item{comp}{The number of components to be used. Must be smaller
 than the number of variables.}
 }
 \value{

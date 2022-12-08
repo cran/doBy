@@ -21,7 +21,7 @@ esticon(obj, L, beta0, conf.int = TRUE, level = 0.95, joint.test = FALSE, ...)
 \arguments{
 \item{obj}{Regression object (of type lm, glm, lme, geeglm).}
 
-\item{L}{Matrix (or vector) specifying linear functions of the regresson
+\item{L}{Matrix (or vector) specifying linear functions of the regression
 parameters (one
 linear function per row).  The number of columns must match the number of
 fitted regression parameters in the model. See 'details' below.}
@@ -35,26 +35,26 @@ fitted regression parameters in the model. See 'details' below.}
 \item{joint.test}{Logical value. If TRUE a 'joint' Wald test for the
 hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
 made, i.e. (L beta)i=beta0i.  If joint.test is TRUE, then no confidence
-inteval etc. is calculated.}
+interval etc. is calculated.}
 
 \item{\dots}{Additional arguments; currently not used.}
 
 \item{object}{An \code{esticon_class} object.}
 
 \item{parm}{a specification of which parameters are to be given
- confidence intervals, either a vector of numbers or a vector
+confidence intervals, either a vector of numbers or a vector
 of names.  If missing, all parameters are considered.}
 }
 \value{
 Returns a matrix with one row per linear function.  Columns contain
-    estimated coefficients, standard errors, t values, degrees of freedom,
-    two-sided p-values, and the lower and upper endpoints of the 1-alpha
-    confidence intervals.
+estimated coefficients, standard errors, t values, degrees of freedom,
+two-sided p-values, and the lower and upper endpoints of the 1-alpha
+confidence intervals.
 }
 \description{
 Computes linear functions (i.e. weighted sums) of the
-    estimated regression parameters. Can also test the hypothesis,
-    that such a function is equal to a specific value.
+estimated regression parameters. Can also test the hypothesis,
+that such a function is equal to a specific value.
 }
 \details{
 Let the estimated parameters of the model be
@@ -62,8 +62,8 @@ Let the estimated parameters of the model be
 
 A linear function of the estimates is of the form \deqn{l=\lambda_1
     \beta_1+\lambda_2 \beta_2+ \dots+\lambda_p \beta_p} where
-    \eqn{\lambda_1, \lambda_2, \dots,\lambda_p} is specified by the
-    user.
+\eqn{\lambda_1, \lambda_2, \dots,\lambda_p} is specified by the
+user.
 
 The esticon function calculates l, its standard error and by default also a
 95 pct confidence interval.  It is sometimes of interest to test the
@@ -72,12 +72,12 @@ given by the user. A test is provided for the hypothesis \eqn{H_0:
 l=0} but other values of \eqn{\beta_0} can be specified.
 
 In general, one can specify r such linear functions at one time by
-speficying L to be an \eqn{r\times p} matrix where each row consists
+specifying L to be an \eqn{r\times p} matrix where each row consists
 of p numbers \eqn{\lambda_1,\lambda_2,\dots, \lambda_p}. Default is
 then that \eqn{\beta_0} is a p vector of 0s but other values can be
 given.
 
-It is possible to test simulatneously that all speficied linear functions
+It is possible to test simultaneously that all specified linear functions
 are equal to the corresponding values in \eqn{\beta_0}.
 
 For computing contrasts among levels of a single factor, 'contrast.lm' may

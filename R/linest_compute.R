@@ -286,7 +286,7 @@ linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
 #' @export
 #' @rdname linest
 #' @param parm Specification of the parameters estimates for which
-#'     confidence inctervals are to be calculated.
+#'     confidence intervals are to be calculated.
 confint.linest_class <- function (object, parm, level = 0.95, ...) 
 {
     co <- coef(object) 

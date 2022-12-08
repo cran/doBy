@@ -22,13 +22,13 @@ The modified value of the dataframe data.
 }
 \description{
 Function to make groupwise transformations of data by applying
-    the transform function to subsets of data.
+the transform function to subsets of data.
 }
 \details{
 The ... arguments are tagged vector expressions, which are evaluated
-    in the data frame data. The tags are matched against names(data), and for
-    those that match, the value replace the corresponding variable in data,
-    and the others are appended to data.
+in the data frame data. The tags are matched against names(data), and for
+those that match, the value replace the corresponding variable in data,
+and the others are appended to data.
 }
 \examples{
  
@@ -39,7 +39,7 @@ transformBy(~Pig, data=dietox, minW=min(Weight), maxW=max(Weight),
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{order_by}}, \code{\link{summaryBy}}, \code{\link{summary_by}},
-    \code{\link{splitBy}}, \code{\link{split_by}}
+\code{\link{splitBy}}, \code{\link{split_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

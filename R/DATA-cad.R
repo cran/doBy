@@ -63,13 +63,14 @@
 #' }
 #'
 #' 
-#' @references Hansen, J. F. (1980). The clinical diagnoisis of ichaeme heart disease du to
-#' coronary artery disease. Danish Medical Bulletin
+#' @references Hansen, J. F. (1980). The clinical diagnosis of
+#'     ischaemic heart disease due to coronary artery disease. Danish
+#'     Medical Bulletin
 #'
-#' Højsgaard, Søren and Thiesson, Bo (1995). BIFROST - Block
-#' recursive models Induced From Relevant knowledge, Observations and
-#' Statistical Techniques. Computational Statistics and Data Analysis, vol. 19,
-#' p. 155-175
+#' Højsgaard, Søren and Thiesson, Bo (1995). BIFROST - Block recursive
+#' models Induced From Relevant knowledge, Observations and
+#' Statistical Techniques. Computational Statistics and Data Analysis,
+#' vol. 19, p. 155-175
 #' 
 #' 
 #'

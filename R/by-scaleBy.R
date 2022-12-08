@@ -52,7 +52,7 @@ scale2 <- function(x, center = TRUE, scale = TRUE){
 #' 
 ###########################################################################
 #'
-#' @param formula Variables to split data frame by, as ‘as.quoted’
+#' @param formula Variables to split data frame by, as `as.quoted`
 #'     variables, a formula or character vector.
 #' @param data A dataframe or matrix
 ##' @param center Logical, should data be centered.

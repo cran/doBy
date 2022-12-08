@@ -20,14 +20,14 @@ The ordered data frame
 }
 \description{
 Ordering (sorting) rows of a data frame by the certain
-    variables in the data frame. This function is essentially a
-    wrapper for the \code{order()} function - the important
-    difference being that variables to order by can be given by a
-    model formula.
+variables in the data frame. This function is essentially a
+wrapper for the \code{order()} function - the important
+difference being that variables to order by can be given by a
+model formula.
 }
 \details{
 The sign of the terms in the formula determines whether
-    sorting should be ascending or decreasing; see examples below
+sorting should be ascending or decreasing; see examples below
 }
 \examples{
 
@@ -40,6 +40,6 @@ orderBy(~ - conc + Treatment, CO2)
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk} and Kevin
-    Wright
+Wright
 }
 \keyword{utilities}

@@ -10,14 +10,14 @@ interaction_plot(.data, .formula, interval = "conf.int")
 \arguments{
 \item{.data}{A data frame}
 
-\item{.formula}{A formula of the form `y ~ x1 + x2`}
+\item{.formula}{A formula of the form \code{y ~ x1 + x2}}
 
-\item{interval}{Either `conf.int`, `boxplot` or `none`}
+\item{interval}{Either \code{conf.int}, \code{boxplot} or \code{none}}
 }
 \description{
 Plots the mean of the response for
-    two-way combinations of factors, thereby illustrating possible
-    interactions.
+two-way combinations of factors, thereby illustrating possible
+interactions.
 }
 \note{
 This is a recent addition to the package and is subject to change.

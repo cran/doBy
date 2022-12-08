@@ -32,16 +32,20 @@
 #' lines(xv, taylor(fn, x0=x0, ord=ord)(xv), lty=2)
 #' abline(v=x0)
 #'
-#' 
+#'
+#'
 
 #' @export
 taylor <- function(fn, x0, ord=1){
 
-    if (!is.function(fn)) stop("'fn' is not a function")
+    if (!is.function(fn))
+        stop("'fn' is not a function")
 
     aname <- names(formals(fn))
-    if (length(aname) != 1) stop("'fn' must take a single argument")
-    if (!identical(aname, "x")) stop("argument to 'fn' must be called 'x'")
+    if (length(aname) != 1)
+        stop("'fn' must take a single argument")
+    if (!identical(aname, "x"))
+        stop("argument to 'fn' must be called 'x'")
     
     df <- Deriv(fn, nderiv=1:ord)
 
@@ -54,15 +58,10 @@ taylor <- function(fn, x0, ord=1){
     ff  <- unlist(df(x0)) / fac
     bb  <- paste0(ff, "*", bb)
     bb
+
+    expr <- parse(text=(paste0(bb, collapse="+")))
+    fun <- expr_to_fun(expr)
+
+    fun
     
-    out <- function(x, bb){
-        tf <- bb
-        ps <- lapply(tf, function(s)parse(text=s))
-        cc <- lapply(ps, eval, list(x=x))
-        dd <- do.call(rbind, cc)
-        colSums(dd) + fn(x0)
-    }
-    
-    out2 <- restrict_fun_sub(out, list(bb=bb))
-    out2
 }

@@ -18,16 +18,16 @@ A logical vector.
 }
 \description{
 Determines if contrasts are estimable, that is, if the contrasts
-    can be written as a linear function of the data.
+can be written as a linear function of the data.
 }
 \details{
 Consider the setting \eqn{E(Y)=Xb}. A linear function of \eqn{b},
-    say \eqn{l'b} is estimable if and only if there exists an \eqn{r} such
-    that \eqn{r'X=l'} or equivalently \eqn{l=X'r}. Hence \eqn{l} must be in
-    the column space of \eqn{X'}, i.e. in the orthogonal complement of the
-    null space of \eqn{X}. Hence, with a basis \eqn{B} for the null space,
-    \code{is_estimable()} checks if each row \eqn{l} of the matrix \eqn{K} is
-    perpendicular to each column basis vector in \eqn{B}.
+say \eqn{l'b} is estimable if and only if there exists an \eqn{r} such
+that \eqn{r'X=l'} or equivalently \eqn{l=X'r}. Hence \eqn{l} must be in
+the column space of \eqn{X'}, i.e. in the orthogonal complement of the
+null space of \eqn{X}. Hence, with a basis \eqn{B} for the null space,
+\code{is_estimable()} checks if each row \eqn{l} of the matrix \eqn{K} is
+perpendicular to each column basis vector in \eqn{B}.
 }
 \examples{
 

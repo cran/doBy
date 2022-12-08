@@ -38,6 +38,7 @@ lines(xv, taylor(fn, x0=x0, ord=ord)(xv), lty=2)
 abline(v=x0)
 
 
+
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

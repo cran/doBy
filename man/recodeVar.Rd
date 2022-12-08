@@ -7,14 +7,14 @@
 recodeVar(x, src, tgt, default = NULL, keep.na = TRUE)
 }
 \arguments{
-\item{x}{A vector; the variable to be recoded}
+\item{x}{A vector; the variable to be recoded.}
 
 \item{src}{The source values: a subset of the present values of x}
 
 \item{tgt}{The target values: the corresponding new values of x}
 
 \item{default}{Default target value for those values of x not listed in
-'src'. When default=NULL, values of x which are not given in 'src' will
+\code{src}. When default=NULL, values of x which are not given in \code{src} will
 be kept in the output.}
 
 \item{keep.na}{If TRUE then NA's in x will be retained in the output}
@@ -28,7 +28,7 @@ Recodes a vector with values, say 1,2 to a variable with values, say 'a',
 }
 \section{Warning }{
  Care should be taken if x is a factor. A safe approach may
-    be to convert x to a character vector using as.character.
+be to convert x to a character vector using as.character.
 }
 
 \examples{
@@ -71,7 +71,7 @@ recodeVar(x, src = c("no", "yes"), tgt = c("0", "1"), default = NA)
 }
 \seealso{
 \code{\link[base]{cut}}, \code{\link[base]{factor}},
-    \code{\link[doBy]{recodeVar}}
+\code{\link[doBy]{recodeVar}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

@@ -9,7 +9,7 @@
 \alias{popMeans.default}
 \alias{popMeans.lmerMod}
 \title{Compute  LS-means (aka population means or
-    marginal means)}
+marginal means)}
 \usage{
 LSmeans(object, effect = NULL, at = NULL, level = 0.95, ...)
 
@@ -43,22 +43,21 @@ A dataframe with results from computing the contrasts.
 }
 \description{
 LS-means (least squares means, also known as
-    population means and as marginal means) for a range of model types.
+population means and as marginal means) for a range of model types.
 }
 \details{
 There are restrictions on the formulas allowed in the model object.
-    For example having \code{y ~ log(x)} will cause an error. Instead one
-    must define the variable \code{logx = log(x)} and do \code{y ~ logx}.
+For example having \code{y ~ log(x)} will cause an error. Instead one
+must define the variable \code{logx = log(x)} and do \code{y ~ logx}.
 }
 \note{
 \code{LSmeans} and \code{popMeans} are synonymous. Some of
-    the code has been inspired by the \bold{lsmeans} package.
+the code has been inspired by the \bold{lsmeans} package.
 }
 \section{Warning}{
  Notice that \code{LSmeans} and \code{LE_matrix}
-    fails if the model formula contains an offset (as one would
-    have in connection with e.g. Poisson regression. It is on the
-    todo-list to fix this
+fails if the model formula contains an offset (as one would
+have in connection with e.g. Poisson regression.
 }
 
 \examples{

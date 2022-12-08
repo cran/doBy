@@ -5,7 +5,7 @@
 \alias{subset_by}
 \alias{subsetBy}
 \title{Finds subsets of a dataframe which is split by variables in
-    a formula.}
+a formula.}
 \usage{
 subset_by(data, formula, subset, select, drop = FALSE, join = TRUE, ...)
 
@@ -43,8 +43,8 @@ A data frame.
 }
 \description{
 A data frame is split by a formula into groups. Then
-    subsets are found within each group, and the result is
-    collected into a data frame.
+subsets are found within each group, and the result is
+collected into a data frame.
 }
 \examples{
 

@@ -4,17 +4,15 @@
 #' 
 #' 
 #' @param indata A dataframe or a matrix
-#' @param src Source: Vector of names of columns in 'indata' to be renamed. Can
-#' also be a vector of column numbers.
-#' @param tgt Target: Vector with corresponding new names in the output.
-#' @return A dataframe if 'indata' is a dataframe; a matrix in 'indata' is a
-#' matrix.
+#' @param src Source: Vector of names of columns in `indata` to be
+#'     renamed. Can also be a vector of column numbers.
+#' @param tgt Target: Vector with corresponding new names in the
+#'     output.
+#' @return A dataframe if `indata` is a dataframe; a matrix in
+#'     `indata` is a matrix.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-
 #' @keywords utitlities
 #' @examples
-#' 
-#' 
 #' renameCol(CO2, 1:2, c("kk", "ll"))
 #' renameCol(CO2, c("Plant", "Type"), c("kk", "ll"))
 #' 

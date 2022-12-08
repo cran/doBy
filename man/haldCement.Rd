@@ -6,14 +6,14 @@
 \title{Heat development in cement under hardening.}
 \format{
 A data frame with 13 observations on the following 5 variables.
-  \describe{
-    \item{\code{x1}}{Percentage (weight) of [3Ca0][Al2O3]}
-    \item{\code{x2}}{Percentage (weight) of [3Cao][SiO2]}
-    \item{\code{x3}}{Percentage (weight) of [4Ca0][Al2O3][Fe03]}
-    \item{\code{x4}}{Percentage (weight) of [2Cao][SiO2]}
-    \item{\code{y}}{Heat development measured in calories per
-      gram cement after 180 days}
-  }
+\describe{
+\item{\code{x1}}{Percentage (weight) of \verb{[3Ca0][Al2O3]}}
+\item{\code{x2}}{Percentage (weight) of \verb{[3Cao][SiO2]}}
+\item{\code{x3}}{Percentage (weight) of \verb{[4Ca0][Al2O3][Fe03]}}
+\item{\code{x4}}{Percentage (weight) of \verb{[2Cao][SiO2]}}
+\item{\code{y}}{Heat development measured in calories per
+gram cement after 180 days}
+}
 }
 \usage{
 haldCement
@@ -29,8 +29,8 @@ data(haldCement)
 if( interactive() ){
 pairs( haldCement )
 }
-m <- lm( y ~ x1 + x2 + x3 + x4, data=haldCement )
-summary( m )
+m <- lm(y ~ x1 + x2 + x3 + x4, data=haldCement)
+summary(m)
 
 # Notice: The model explains practically all variation in data;
 # yet none of the explanatory variables appear to be statistically

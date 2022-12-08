@@ -16,7 +16,7 @@ A vector with named elements.
 }
 \description{
 Computing simple descriptive statistics of a numeric
-    vector - not unlike what proc means of SAS does
+vector - not unlike what proc means of SAS does
 }
 \examples{
 
@@ -28,6 +28,6 @@ descStat(x)
 \code{\link{summaryBy}}, \code{\link{summary_by}}
 }
 \author{
-Gregor Gorjanc; gregor.gorjanc <at> bf.uni-lj.si
+Gregor Gorjanc; \email{gregor.gorjanc@bf.uni-lj.si}
 }
 \keyword{utilities}

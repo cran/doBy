@@ -31,8 +31,7 @@
 #' 
 #' @section Warning: Notice that \code{LSmeans} and \code{LE_matrix}
 #'     fails if the model formula contains an offset (as one would
-#'     have in connection with e.g. Poisson regression. It is on the
-#'     todo-list to fix this
+#'     have in connection with e.g. Poisson regression. 
 #' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{LE_matrix}}, \code{\link{linest}}

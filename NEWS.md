@@ -1,3 +1,10 @@
+doBy v4.6.15 (Release date: 2022-12-08)
+=======================================
+
+Changes
+
+* `restrict_fun` renamed to `section_fun` and takes different arguments (`nms`, `vls`)
+
 doBy v4.6.14 (Release date: 2022-10-16)
 =======================================
 
@@ -27,10 +34,9 @@ doBy v4.6.11 (Release date: 2021-07-13)
 doBy v4.6.10 (Release date: 2021-04-29)
 =======================================
 
-## CHANGES
+Changes
 
 * `specialize` function removed. 
-
 * `restrict` function replaces `specialize`.
 
 
@@ -42,10 +48,10 @@ doBy v4.6.10 (Release date: 2021-04-29)
 # doBy v4.6.8 (Release date: 2020-11-10)
 =========================================
 
-* head / tail added for splitByData (a list resulting from
+* head / tail added for `splitByData` (a list resulting from
   calling splitBy)
 
-* sapplyBy / sapply_by added
+* `sapplyBy` / `sapply_by` added
 
 * subSeq works on factors now (coerces to character)
 
@@ -55,7 +61,7 @@ doBy v4.6.10 (Release date: 2021-04-29)
 
 * is_grouped added
 
-* math / mathmark dataset added.
+* `math` / `mathmark` dataset added.
 
 
 doBy v4.6.7 (Release date: 2020-07-07)
@@ -202,7 +208,7 @@ Changes:
 ===============================================
 
 * linest now accepts K=NULL, in which case K is taken to be the
-	diagonal materix
+	diagonal matrix
 * No longer Depend(s) on MASS
 * Some datasets added
 * Version 4.5-12 uploaded.
@@ -229,7 +235,7 @@ Changes:
 ===============================================
 
 * LSmeans, LSmatrix and linest functions added. (There are not yet
-	methods for nlme and survival objects but they will be added).
+	methods for `nlme` and `survival` objects but they will be added).
 * popMeans and popMatrix functions removed
 * Vignette on LSmeans added.
 * Version 4.5-10 uploaded
@@ -335,8 +341,8 @@ Changes:
 * funBy function added (documentation to be done)
 * scaleBy function added
 * Minor bug fixed in summaryBy
-* popMeans extended to mer objects
-* KRmodcomp, PBmodcomp and friends moved to the pbkrtest
+* popMeans extended to `mer` objects
+* KRmodcomp, PBmodcomp etc moved to the pbkrtest
 	package
 * Version 4.4.1 uploaded.
 
@@ -442,7 +448,7 @@ Changes:
 ===============================================
 
 * Bug in summaryBy fixed: Strata did not match their values (as
-	defined by the rh.variables). Thanks to Pascal Hirsch for pointing
+	defined by the `rh.variables`). Thanks to Pascal Hirsch for pointing
 	this out.
 * Version 4.0.2 uploaded
 
@@ -463,7 +469,7 @@ Changes:
 	the levels of the factors (it used to be that the names matched
 	the levels of the factors in reverse order).
 * The formula in splitBy can now also be a character vector.
-* which.maxn and which.minn functions added
+* `which.maxn` and `which.minn` functions added
 * Version 4.0.0 uploaded
 
 
@@ -535,7 +541,7 @@ Changes:
 2008-02-13 Søren Højsgaard <sorenh@agrsci.dk>
 ===============================================
 
-* firstobs and lastobs functions added
+* `firstobs` and `lastobs` functions added
 * Version 2.2 uploaded
 
 
@@ -543,7 +549,7 @@ Changes:
 2007-12-05 Søren Højsgaard <sorenh@agrsci.dk>
 ===============================================
 
-* splitBy: Results becomes a splitByData object. Two attributes
+* splitBy: Results becomes a `splitByData` object. Two attributes
 	are added: 1) grps, which is the grouping factors coded into a
 	single variable. 2) idxvec, (a list) which holds the position of
 	each row in the original data set.
@@ -557,8 +563,6 @@ Changes:
 ===============================================
 
 * DESCRIPTION file change from Depends: Hmisc to Imports: Hmisc;
-* importFrom(Hmisc,mApply) added so that not all of Hmisc is
-	loaded.
 
 
 
@@ -629,7 +633,7 @@ Changes:
 
 * Version 1.2 built and uploaded
 * Description of codstom data updated.
-* matrix2dataFrame2 and subsAttr2 added
+* `matrix2dataFrame2` and `subsAttr2` added
 * postfix argument in summaryBy can be a list
 
 
@@ -716,8 +720,6 @@ Changes:
 2006-01-17 Søren Højsgaard <sorenh@agrsci.dk>
 ===============================================
 
-* Function summaryBy modified to take . as lhs in formula and to
-	take idvar = ~formula
-* Functions powerBy, histBy, qqnormBy have been removed (figure
-	out how to do histBy and qqnormBy using xyplot() in lattice).
+* Function summaryBy modified to take dot (.) as lhs in formula and to
+	take `idvar = ~formula`
 

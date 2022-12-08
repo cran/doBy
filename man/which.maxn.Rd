@@ -14,8 +14,8 @@ which.maxn(x, n = 1)
 }
 \value{
 A vector of length at most n with the indices of the n largest /
-    smaller elements. NAs are discared and that can cause the vector to be
-    smaller than n.
+smaller elements. NAs are discarded and that can cause the vector to be
+smaller than n.
 }
 \description{
 Determines the locations, i.e., indices of the n largest or n smallest

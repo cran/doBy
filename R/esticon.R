@@ -25,12 +25,12 @@
 #' l=0} but other values of \eqn{\beta_0} can be specified.
 #' 
 #' In general, one can specify r such linear functions at one time by
-#' speficying L to be an \eqn{r\times p} matrix where each row consists
+#' specifying L to be an \eqn{r\times p} matrix where each row consists
 #' of p numbers \eqn{\lambda_1,\lambda_2,\dots, \lambda_p}. Default is
 #' then that \eqn{\beta_0} is a p vector of 0s but other values can be
 #' given.
 #' 
-#' It is possible to test simulatneously that all speficied linear functions
+#' It is possible to test simultaneously that all specified linear functions
 #' are equal to the corresponding values in \eqn{\beta_0}.
 #' 
 #' For computing contrasts among levels of a single factor, 'contrast.lm' may
@@ -38,7 +38,7 @@
 #' 
 #' @param obj Regression object (of type lm, glm, lme, geeglm).
 ## #' @param x A linear contrast object (as returned by \code{esticon()}. 
-#' @param L Matrix (or vector) specifying linear functions of the regresson
+#' @param L Matrix (or vector) specifying linear functions of the regression
 #'     parameters (one
 #'     linear function per row).  The number of columns must match the number of
 #'     fitted regression parameters in the model. See 'details' below.
@@ -52,7 +52,7 @@
 #' @param joint.test Logical value. If TRUE a 'joint' Wald test for the
 #'     hypothesis L beta = beta0 is made. Default is that the 'row-wise' tests are
 #'     made, i.e. (L beta)i=beta0i.  If joint.test is TRUE, then no confidence
-#'     inteval etc. is calculated.
+#'     interval etc. is calculated.
 #' @param \dots Additional arguments; currently not used.
 #' 
 #' @return Returns a matrix with one row per linear function.  Columns contain

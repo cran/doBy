@@ -6,11 +6,11 @@
 \title{Weight and size of 20 potatoes}
 \format{
 A data frame with 20 observations on the following 3 variables.
-  \describe{
-    \item{\code{weight}}{a numeric vector}
-    \item{\code{length}}{a numeric vector}
-    \item{\code{width}}{a numeric vector}
-  }
+\describe{
+\item{\code{weight}}{a numeric vector}
+\item{\code{length}}{a numeric vector}
+\item{\code{width}}{a numeric vector}
+}
 }
 \source{
 My own garden; autumn 2015.
@@ -19,9 +19,9 @@ My own garden; autumn 2015.
 potatoes
 }
 \description{
-Weight and size of 20 potatoes. Weight in grams; size in milimeter. There
+Weight and size of 20 potatoes. Weight in grams; size in millimeter. There
 are two sizes: \code{length} is the longest length and \code{width} is the
-shortest length across a potato. #'
+shortest length across a potato.
 }
 \examples{
 

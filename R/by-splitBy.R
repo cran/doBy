@@ -8,7 +8,7 @@
 #' 
 ###########################################################################
 #'
-#' @param formula Variables to split data frame by, as ‘as.quoted’
+#' @param formula Variables to split data frame by, as `as.quoted`
 #'     variables, a formula or character vector.
 #' @param data A data frame
 #' @param drop Logical indicating if levels that do not occur should

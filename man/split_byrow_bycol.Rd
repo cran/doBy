@@ -11,7 +11,7 @@ split_bycol(x)
 split_byrow(x)
 }
 \arguments{
-\item{x}{Matrix or dataframex}
+\item{x}{Matrix or dataframe.}
 }
 \description{
 Split matrix or dataframe into list by columns or by rows

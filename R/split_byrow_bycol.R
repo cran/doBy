@@ -3,7 +3,7 @@
 #' Split matrix or dataframe into list by columns or by rows
 #'
 #' @name split_byrow_bycol
-#' @param x Matrix or dataframex
+#' @param x Matrix or dataframe.
 #'
 #' @export
 #' @rdname split_byrow_bycol

@@ -7,11 +7,11 @@
 \format{
 A data frame with 654 observations on the following 5 variables.
 \describe{
-  \item{\code{Age}}{Age in years.}
-  \item{\code{FEV}}{Forced expiratory volume in liters per second.}
-  \item{\code{Ht}}{Height in centimeters.}
-  \item{\code{Gender}}{Gender.}
-  \item{\code{Smoke}}{Smoking status.}
+\item{\code{Age}}{Age in years.}
+\item{\code{FEV}}{Forced expiratory volume in liters per second.}
+\item{\code{Ht}}{Height in centimeters.}
+\item{\code{Gender}}{Gender.}
+\item{\code{Smoke}}{Smoking status.}
 }
 }
 \usage{
@@ -19,7 +19,7 @@ fev
 }
 \description{
 Dataset to examine if respiratory function in children
-  was influenced by smoking.
+was influenced by smoking.
 }
 \examples{
 

@@ -70,16 +70,16 @@ A dataframe.
 }
 \description{
 Function to calculate groupwise summary statistics,
-    much like the summary procedure of SAS
+much like the summary procedure of SAS
 }
 \details{
-Extra arguments ('...') are passed onto the functions in
-    FUN. Hence care must be taken that all functions in FUN accept
-    these arguments - OR one can explicitly write a functions which
-    get around this.  This can particularly be an issue in
-    connection with handling NAs. See examples below.  Some code
-    for this function has been suggested by Jim
-    Robison-Cox. Thanks.
+Extra arguments (...) are passed onto the functions in
+FUN. Hence care must be taken that all functions in FUN accept
+these arguments - OR one can explicitly write a functions which
+get around this.  This can particularly be an issue in
+connection with handling NAs. See examples below.  Some code
+for this function has been suggested by Jim
+Robison-Cox. Thanks.
 }
 \examples{
 
@@ -127,7 +127,7 @@ summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
 }
 \seealso{
 \code{\link{ave}}, \code{\link{descStat}}, \code{\link{orderBy}}, \code{\link{order_by}},
-    \code{\link{splitBy}}, \code{\link{split_by}}, \code{\link{transformBy}}, \code{\link{transform_by}}
+\code{\link{splitBy}}, \code{\link{split_by}}, \code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

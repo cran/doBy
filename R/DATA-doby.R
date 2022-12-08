@@ -7,7 +7,7 @@
 #' @description Yield and sugar percentage in sugar beets from a split plot
 #'     experiment.  Data is obtained from a split plot experiment. There are 3
 #'     blocks and in each of these the harvest time defines the "whole plot" and
-#'     the sowing time defines the "split plot". Each plot was \eqn{25 m^2} and
+#'     the sowing time defines the "split plot". Each plot was 25 square meters and
 #'     the yield is recorded in kg. See 'details' for the experimental layout.
 #'
 #' @name beets
@@ -61,7 +61,7 @@
 #' therapeutically refractory tumours. We preprocessed the data using Robust
 #' Multichip Analysis (RMA). Dataset has been truncated to the 1000 most
 #' informative genes (as selected by Wilcoxon test statistics) to simplify
-#' computation. The genes have been standardised to have zero mean and unit
+#' computation. The genes have been standardized to have zero mean and unit
 #' variance (i.e. z-scored).
 #' 
 #' The factor \code{code} defines whether there was a mutation in the p53
@@ -79,8 +79,7 @@
 #' @references Miller et al (2005, PubMed
 #'     ID:16141321)
 #'
-#' @source Dr. Chris Holmes, c.holmes at stats
-#'     dot. ox . ac .uk
+#' @source Chris Holmes, \email{c.holmes@@stats.ox.ac.uk}
 #'
 #' @keywords datasets
 #'
@@ -100,67 +99,9 @@
 #' bc[-train, "code"]
 #' table(pc, bc[-train, "code"])
 #' }
+#' 
 "breastcancer"
 
-
-#' budworm data
-#' 
-#' Effect of Insecticide on survivial of tobacco budworms
-#' number of killed budworms exposed to an insecticidepp
-#' mortality of the moth tobacco budworm 'Heliothis virescens' for 6 doses of
-#' the pyrethroid trans-cypermethrin differentiated with respect to sex
-#'
-#' @name budworm
-#' @docType data
-#' 
-#' @format This data frame contains 12 rows and 4 columns:
-#' \describe{
-#' \item{sex:}{sex of the budworm}
-#' \item{dose:}{dose of the insecticide trans-cypermethrin in [\eqn{\mu}{mu}g]}
-#' \item{ndead:}{budworms killed in a trial}
-#' \item{ntotal:}{total number of budworms exposed per trial }
-#' }
-#'
-#' @references Venables, W.N; Ripley, B.D.(1999) Modern Applied Statistics with
-#' S-Plus, Heidelberg, Springer, 3rd edition, chapter 7.2
-#'
-#' @source Collet, D. (1991) Modelling Binary Data, Chapman & Hall, London,
-#' Example 3.7
-#'
-#' @keywords datasets
-#' @examples
-#' 
-#' data(budworm)
-#' 
-#' ## function to caclulate the empirical logits
-#' empirical.logit<- function(y, n) {
-#'    el <- log((y + 0.5) / (n - y + 0.5))
-#'    el
-#' }
-#' 
-#' 
-#' # plot the empirical logits against log-dose
-#' 
-#' log.dose <- log(budworm$dose)
-#' emp.logit <- empirical.logit(budworm$ndead, budworm$ntotal)
-#' plot(log.dose, emp.logit, type='n', xlab='log-dose', ylab='emprirical logit')
-#' title('budworm: emprirical logits of probability to die ')
-#' male <- budworm$sex=='male'
-#' female <- budworm$sex=='female'
-#' lines(log.dose[male], emp.logit[male], type='b', lty=1, col=1)
-#' lines(log.dose[female], emp.logit[female], type='b', lty=2, col=2)
-#' legend(0.5, 2, legend=c('male', 'female'), lty=c(1, 2), col=c(1, 2))
-#' 
-#' \dontrun{
-#' * SAS example;
-#' data budworm;
-#' infile 'budworm.txt' firstobs=2;
-#' input sex dose ndead ntotal;
-#' run;
-#' }
-#' 
-#' 
-"budworm"
 
 
 ##
@@ -170,7 +111,7 @@
 #' Lean meat contents of 344 pig carcasses
 #' 
 #' Measurement of lean meat percentage of 344 pig carcasses together with
-#' auxillary information collected at three Danish slaughter houses
+#' auxiliary information collected at three Danish slaughter houses
 #' 
 #' @name carcass
 #' 
@@ -215,7 +156,7 @@
 
 #' Diet of Atlantic cod in the Gulf of St. Lawrence (Canada)
 #' 
-#' Stomach content data for Atlantic cod (Gadus morhua) in the Gulf of
+#' Stomach content data for Atlantic cod (\emph{Gadus morhua}) in the Gulf of
 #' St.Lawrence, Eastern Canada.  Note: many prey items were of no interest for
 #' this analysis and were regrouped into the "Other" category.
 #' 
@@ -289,7 +230,7 @@
 #' }
 #' @source Small subset from a larger dataset (more stomachs, more variables,
 #'     more \code{prey.types}) collected by D. Chabot and M. Hanson, Fisheries &
-#'     Oceans Canada (chabotd@dfo-mpo.gc.ca).
+#'     Oceans Canada \email{chabotd@@dfo-mpo.gc.ca}.
 #'
 #' @keywords datasets
 #' @examples
@@ -392,11 +333,11 @@
 #' The \code{dietox} data frame has 861 rows and 7 columns.
 #'
 #' @details Data contains weight of slaughter pigs measured weekly for 12
-#'     weeks. Data also contains the startweight (i.e. the weight at week
+#'     weeks. Data also contains the start weight (i.e. the weight at week
 #'     1). The treatments are 3 different levels of Evit = vitamin E (dose: 0,
 #'     100, 200 mg dl-alpha-tocopheryl acetat /kg feed) in combination with 3
 #'     different levels of Cu=copper (dose: 0, 35, 175 mg/kg feed) in the feed.
-#'     The cumulated feed intake is also recorded. The pigs are littermates.
+#'     The cumulated feed intake is also recorded. The pigs are litter mates.
 #' 
 #' 
 #' @format This data frame contains the following columns:
@@ -502,16 +443,15 @@
 #' Heat development in cement under hardening related to the chemical
 #' composition.
 #' 
-#' 
 #' @name haldCement
 #' @docType data
 #'
 #' @format A data frame with 13 observations on the following 5 variables.
 #'   \describe{
-#'     \item{\code{x1}}{Percentage (weight) of [3Ca0][Al2O3]}
-#'     \item{\code{x2}}{Percentage (weight) of [3Cao][SiO2]}
-#'     \item{\code{x3}}{Percentage (weight) of [4Ca0][Al2O3][Fe03]}
-#'     \item{\code{x4}}{Percentage (weight) of [2Cao][SiO2]}
+#'     \item{\code{x1}}{Percentage (weight) of `[3Ca0][Al2O3]`}
+#'     \item{\code{x2}}{Percentage (weight) of `[3Cao][SiO2]`}
+#'     \item{\code{x3}}{Percentage (weight) of `[4Ca0][Al2O3][Fe03]`}
+#'     \item{\code{x4}}{Percentage (weight) of `[2Cao][SiO2]`}
 #'     \item{\code{y}}{Heat development measured in calories per
 #'       gram cement after 180 days}
 #'   }
@@ -526,8 +466,8 @@
 #' if( interactive() ){
 #' pairs( haldCement )
 #' }
-#' m <- lm( y ~ x1 + x2 + x3 + x4, data=haldCement )
-#' summary( m )
+#' m <- lm(y ~ x1 + x2 + x3 + x4, data=haldCement)
+#' summary(m)
 #' 
 #' # Notice: The model explains practically all variation in data;
 #' # yet none of the explanatory variables appear to be statistically
@@ -544,7 +484,7 @@
 #'   \describe{
 #'     \item{\code{year}}{From 1901 to 1997.}
 #'     \item{\code{precip}}{Milimeter precipitation.}
-#'     \item{\code{yield}}{Million feed units (se details).}
+#'     \item{\code{yield}}{Million feed units (see details).}
 #'     \item{\code{area}}{Area in 1000 ha for grains and root crop.}
 #'     \item{\code{fertil}}{1000 tons fertilizer.}
 #'     \item{\code{avgtmp1}}{Average temperature April-June (3 months).}
@@ -596,7 +536,7 @@
 #' J. Dairy Sci. 90:5453–5467 doi:10.3168/jds.2006-821.
 #'
 #' This study was part of the Biosens project used data from the
-#' “Mælkekoens energibalance og mobilisering” project; both were
+#' “Malkekoens energibalance og mobilisering” project; both were
 #' funded by the Danish Ministry of Food, Agriculture and Fisheries
 #' and the Danish Cattle Association.
 #' 
@@ -610,18 +550,18 @@
 
 #' NIRmilk
 #' 
-#' Near infra red light (NIR) measurments are made at 152 wavelengths on 17
+#' Near infra red light (NIR) measurements are made at 152 wavelengths on 17
 #' milk samples.  While milk runs through a glass tube, infra red light is sent
 #' through the tube and the amount of light passing though the tube is measured
 #' at different wavelengths.  Each milk sample was additionally analysed for
-#' fat, lactose, protein and drymatter.
+#' fat, lactose, protein and dry matter.
 #' 
 #' @name NIRmilk
 #' @docType data
 #' @format This data frame contains 18 rows and 158 columns.  The first column
-#'     is the sample number.  The columns Xwww contains the infra red light
-#'     amount at wavelength www.  The response variables are fat, protein,
-#'     lactose and dm (drymatter).
+#'     is the sample number.  The columns `Xwww` contains the infra red light
+#'     amount at wavelength `www`.  The response variables are fat, protein,
+#'     lactose and dm (dry matter).
 #' @keywords datasets
 #' @examples
 #' 	
@@ -657,9 +597,9 @@
 
 #' Weight and size of 20 potatoes
 #' 
-#' Weight and size of 20 potatoes. Weight in grams; size in milimeter. There
+#' Weight and size of 20 potatoes. Weight in grams; size in millimeter. There
 #' are two sizes: \code{length} is the longest length and \code{width} is the
-#' shortest length across a potato. #' 
+#' shortest length across a potato.  
 #' 
 #' @name potatoes
 #' @docType data

@@ -21,7 +21,7 @@ dataframe.}
 }
 \description{
 Fast summary of microbenchmark object. The default
-    summary method from the microbenchmark package is fairly slow
-    in producing a summary (due to a call to a function from the
-    multcomp package.)
+summary method from the microbenchmark package is fairly slow
+in producing a summary (due to a call to a function from the
+multcomp package.)
 }

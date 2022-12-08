@@ -4,10 +4,14 @@
 \alias{expr_to_fun}
 \title{Convert expression into function object.}
 \usage{
-expr_to_fun(e)
+expr_to_fun(expr_, order = NULL, vec_arg = FALSE)
 }
 \arguments{
-\item{e}{expression}
+\item{expr_}{R expression.}
+
+\item{order}{desired order of function argument.}
+
+\item{vec_arg}{should the function take vector valued argument.}
 }
 \description{
 Convert expression into function object.
@@ -16,4 +20,21 @@ Convert expression into function object.
 
 ee <- expression(b1 + (b0 - b1)*exp(-k*x) + b2*x)
 ff <- expr_to_fun(ee)
+
+ee <- expression(matrix(c(x1+x2, x1-x2, x1^2+x2^2, x1^3+x2^3), nrow=2))
+ff <- expr_to_fun(ee)
+
+ee <- expression(
+  matrix(
+    c(8 * x1 * (4 * x1^2 - 625 * x2^2 - 2 * x2
+    - 1) + 9 * x1 - 20 * x2 * (x3 + 0.473809523809524 + exp(-x1 *
+    x2)/20) * exp(-x1 * x2) - 3 * cos(x2 * x3) - 4.5,
+    -20 * x1 * (x3 + 0.473809523809524 + exp(-x1 * x2)/20) * exp(-x1 * x2) + 3 * x3 *
+    (x1 - cos(x2 * x3)/3 - 0.5) * sin(x2 * x3) + (-1250 * x2 - 2) * (4
+    * x1^2 - 625 * x2^2 - 2 * x2 - 1),
+    3 * x2 * (x1 - cos(x2 * x3)/3 -
+    0.5) * sin(x2 * x3) + 400 * x3 + 189.52380952381 + 20 * exp(-x1 *
+    x2)), nrow = 3))
+ff <- expr_to_fun(ee)
+
 }

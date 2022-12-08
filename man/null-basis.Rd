@@ -13,12 +13,12 @@ which a model matrix can be extracted (using \code{model.matrix}).}
 }
 \value{
 A matrix (possibly with zero columns if the null space consists only
-    of the zero vector).
+of the zero vector).
 }
 \description{
 Finds the basis of the (right) null space of a matrix, a vector
-    (a 1-column matrix) or a model object for which a model matrix can be
-    extracted. I.e. finds basis for the (right) null space x : Mx = 0.
+(a 1-column matrix) or a model object for which a model matrix can be
+extracted. I.e. finds basis for the (right) null space x : Mx = 0.
 }
 \examples{
 

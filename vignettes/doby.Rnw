@@ -448,7 +448,7 @@ lines(fitted(mm) ~ tvar, data=tse2, col="red")
 \label{discussion}
 
 Credit is due to
-Dennis Chabot, Gabor Grothendieck, Paul Murrell, Jim Robison-Cox  and Erik J{\o}rgensen for
+Dennis Chabot, Gabor Grothendieck, Paul Murrell and Jim Robison-Cox for
 reporting various bugs and making various suggestions to the
 functionality in the \doby{} package.
 

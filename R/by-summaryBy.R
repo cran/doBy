@@ -7,7 +7,7 @@
 ##
 ###############################################################################
 #'
-#' @details Extra arguments ('...') are passed onto the functions in
+#' @details Extra arguments (...) are passed onto the functions in
 #'     FUN. Hence care must be taken that all functions in FUN accept
 #'     these arguments - OR one can explicitly write a functions which
 #'     get around this.  This can particularly be an issue in

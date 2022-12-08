@@ -19,7 +19,7 @@ splitBy(formula, data = parent.frame(), drop = TRUE)
 \arguments{
 \item{data}{A data frame}
 
-\item{formula}{Variables to split data frame by, as ‘as.quoted’
+\item{formula}{Variables to split data frame by, as \code{as.quoted}
 variables, a formula or character vector.}
 
 \item{drop}{Logical indicating if levels that do not occur should
@@ -40,8 +40,8 @@ A list of dataframes.
 }
 \description{
 Split a dataframe according to the levels of variables
-    in the dataframe. The variables to split by can be given as a
-    formula or as a character vector.
+in the dataframe. The variables to split by can be given as a
+formula or as a character vector.
 }
 \examples{
 
@@ -58,8 +58,8 @@ tail(x)
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{order_by}},
-    \code{\link{summaryBy}}, \code{\link{summary_by}},
-    \code{\link{transformBy}}, \code{\link{transform_by}}
+\code{\link{summaryBy}}, \code{\link{summary_by}},
+\code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

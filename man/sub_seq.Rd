@@ -18,7 +18,7 @@ rle2(x)
 \arguments{
 \item{x}{An atomic vector or a factor.}
 
-\item{item}{Optionally a specific value to look for in `x`.}
+\item{item}{Optionally a specific value to look for in \code{x}.}
 }
 \value{
 A dataframe.
@@ -27,13 +27,13 @@ A dataframe.
 Find sub-sequences of identical elements in a vector.
 }
 \details{
-* `sub_seq` is synonymous with `subSeq`
-
-* `rle2` is identical to `rle` (from base) but `rle2` works on
-    factors as input (a factor is coerced to character).
-
-* `is_grouped` checks if the values in `x` are clustered into the
+\itemize{
+\item \code{sub_seq} is synonymous with \code{subSeq}
+\item \code{rle2} is identical to \code{rle} (from base) but \code{rle2} works on
+factors as input (a factor is coerced to character).
+\item \code{is_grouped} checks if the values in \code{x} are clustered into the
 smallest number of clusters.
+}
 }
 \examples{
 

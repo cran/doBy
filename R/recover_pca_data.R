@@ -2,8 +2,8 @@
 ##' 
 ##' Recover data from principal component analysis based on the first (typically few) components.
 ##' 
-##' @param object An object of class 'prcomp.
-##' @param comp The number of compoents to be used. Must be smaller
+##' @param object An object of class `prcomp`.
+##' @param comp The number of components to be used. Must be smaller
 ##'     than the number of variables.
 ##' 
 ##' @return A dataframe

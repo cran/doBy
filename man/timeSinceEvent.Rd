@@ -13,17 +13,17 @@ timeSinceEvent(yvar, tvar = seq_along(yvar))
 }
 \value{
 A dataframe with columns 'yvar', 'tvar', 'abs.tse' (absolute time
-    since nearest event), 'sign.tse' (signed time since nearest event) and
-    'run' (indicator of the time window around each event).
+since nearest event), 'sign.tse' (signed time since nearest event) and
+'run' (indicator of the time window around each event).
 }
 \description{
 Calculate "time since event" in a vector.
 }
 \details{
 Events are coded as 1 in numeric vector (and non-events are
-    coded with values different from 1). \code{timeSinceEvent} will give the
-    time since event (with and without sign). In a logical vector, events are
-    coded as TRUE and all non-events as FALSE.
+coded with values different from 1). \code{timeSinceEvent} will give the
+time since event (with and without sign). In a logical vector, events are
+coded as TRUE and all non-events as FALSE.
 }
 \note{
 NA's in yvar are converted to zeros.

@@ -6,7 +6,7 @@
 #' @param x A numeric vector
 #' @param na.rm Should missing values be removed
 #' @return A vector with named elements.
-#' @author Gregor Gorjanc; gregor.gorjanc <at> bf.uni-lj.si
+#' @author Gregor Gorjanc; \email{gregor.gorjanc@@bf.uni-lj.si}
 #' @seealso \code{\link{summaryBy}}, \code{\link{summary_by}}
 #' @keywords utilities
 #' @examples

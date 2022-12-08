@@ -22,46 +22,25 @@ options(useFancyQuotes="UTF-8")
 library(doBy)
 
 ## ---------------------------------------------------------------------------------------
-f1  <- function(a, b, c=4, d=9){
+f  <- function(a, b, c=4, d=9){
     a + b + c + d
 }
-f1_ <- restrict_fun(f1, list(b=7, d=10))
-class(f1_)
+fr_ <- section_fun(f, list(b=7, d=10))
+fr_
+f(a=10, b=7, c=5, d=10)
+fr_(a=10, c=5)
 
 ## ---------------------------------------------------------------------------------------
-f1_
-f1_(100)
+fe_ <- section_fun(f, list(b=7, d=10), method = "env")
+fe_
+f(a=10, b=7, c=5, d=10)
+fe_(a=10, c=5)
 
 ## ---------------------------------------------------------------------------------------
-get_restrictions(f1_) 
-## attr(f1_, "arg_env")$args ## Same result
-get_fun(f1_) 
-## environment(f1_)$fun ## Same result
-
-## ---------------------------------------------------------------------------------------
-rnorm5 <- restrict_fun(rnorm, list(n=5))
-rnorm5()
-
-## ---------------------------------------------------------------------------------------
-f1s_ <- restrict_fun_sub(f1, list(b=7, d=10))
-f1s_
-f1s_(100)
-
-## ---------------------------------------------------------------------------------------
-f2  <- function(a) {
-    a <- a + 1
-    a
-}
-## Notice that the following is absurd
-f2s_ <- restrict_fun_sub(f2, list(a = 10))
-f2s_
-# do not run: f2s_()
-try(f2s_())
-
-## Using the environment approch, the result makes sense
-f2_ <- restrict_fun(f2, list(a = 10))
-f2_
-f2_()
+get_section(fe_) 
+## attr(fe_, "arg_env")$args ## Same result
+get_fun(fe_) 
+## environment(fe_)$fun ## Same result
 
 ## ---------------------------------------------------------------------------------------
 n <- 4
@@ -83,14 +62,14 @@ microbenchmark(
 
 ## ---------------------------------------------------------------------------------------
 n.vec  <- c(4, 8, 16, 32, 64)
-scaf.list <- lapply(n.vec,
+fun_list <- lapply(n.vec,
                   function(ni){
-                      restrict_fun(inv_toeplitz, list(n=ni))}
+                      section_fun(inv_toeplitz, list(n=ni))}
                   )
 
 ## ---------------------------------------------------------------------------------------
-scaf.list[[1]]
-scaf.list[[1]]()
+fun_list[[1]]
+fun_list[[1]]()
 
 ## ---------------------------------------------------------------------------------------
 bquote_list <- function(fnlist){
@@ -101,17 +80,17 @@ bquote_list <- function(fnlist){
 }
 
 ## ---------------------------------------------------------------------------------------
-bq.list <- bquote_list(scaf.list)
-bq.list[[1]]
+bq_fun_list <- bquote_list(fun_list)
+bq_fun_list[[1]]
 ## Evaluate one:
-eval(bq.list[[1]])
+eval(bq_fun_list[[1]])
 ## Evaluate all:
-## sapply(bq.list, eval)
+## sapply(bq_fun_list, eval)
 
 ## ---------------------------------------------------------------------------------------
-names(bq.list) <- n.vec
+names(bq_fun_list) <- n.vec
 microbenchmark(
-  list  = bq.list,
+  list  = bq_fun_list,
   times = 5
 )
 

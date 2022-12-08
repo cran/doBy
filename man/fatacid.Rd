@@ -15,10 +15,10 @@ Fish oil in pig food
 }
 \details{
 A fish oil fatty acid \code{X14} has been added in
-    different concentrations to the food for pigs in a
-    study. Interest is in studying how much of the fatty acid can
-    be found in the tissue. The concentrations of \code{x14} in the
-    food are \code{verb+dose+=\{0.0, 4.4, 6.2, 9.3\}}.
+different concentrations to the food for pigs in a
+study. Interest is in studying how much of the fatty acid can
+be found in the tissue. The concentrations of \code{x14} in the
+food are \code{verb+dose+=\{0.0, 4.4, 6.2, 9.3\}}.
 
 The pigs are fed with this food until their weight is 60 kg.  From
 thereof and until they are slaughtered at 100kg, their food does
@@ -31,6 +31,6 @@ related through litters.
 }
 \references{
 Data courtesy of Charlotte Lauridsen, Department of
-    Animal Science, Aarhus University, Denmark.
+Animal Science, Aarhus University, Denmark.
 }
 \keyword{datasets}

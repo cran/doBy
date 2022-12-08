@@ -1,4 +1,5 @@
-%\VignetteEngine{knitr::knitr} 
+
+% \VignetteEngine{knitr::knitr} 
 %\VignettePackage{doBy}
 %\VignetteIndexEntry{doBy: Linear estimates and LSmeans}
 %\VignetteIndexEntry{LSmeans}

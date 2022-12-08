@@ -32,12 +32,12 @@ A dataframe.
 }
 \description{
 A data frame is split according to some variables in a
-    formula, and a sample of a certain fraction of each is drawn.
+formula, and a sample of a certain fraction of each is drawn.
 }
 \details{
 If systematic=FALSE (default) then frac gives the fraction
-    of data sampled. If systematic=TRUE and frac=.2 then every 1/.2
-    i.e. every 5th observation is taken out.
+of data sampled. If systematic=TRUE and frac=.2 then every 1/.2
+i.e. every 5th observation is taken out.
 }
 \examples{
 data(dietox)
@@ -45,8 +45,8 @@ sampleBy(formula = ~ Evit + Cu, frac=.1, data = dietox)
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{order_by}},
-   \code{\link{splitBy}}, \code{\link{split_by}}, 
-   \code{\link{summaryBy}}, \code{\link{summary_by}}, 
-   \code{\link{transformBy}}, \code{\link{transform_by}}
+\code{\link{splitBy}}, \code{\link{split_by}},
+\code{\link{summaryBy}}, \code{\link{summary_by}},
+\code{\link{transformBy}}, \code{\link{transform_by}}
 }
 \keyword{utilities}
