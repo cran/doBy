@@ -1,6 +1,6 @@
 %\VignetteEngine{knitr::knitr} 
 %\VignettePackage{doBy}
-%\VignetteIndexEntry{Section functions to a smaller domain}
+%\VignetteIndexEntry{doBy: Section functions to a smaller domain}
 
 \documentclass[11pt]{article}
 

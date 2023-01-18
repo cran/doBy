@@ -2,13 +2,16 @@
 % Please edit documentation in R/section_fun.R
 \name{section_fun}
 \alias{section_fun}
+\alias{set_default}
 \alias{section_fun_sub}
 \alias{section_fun_env}
 \alias{get_section}
 \alias{get_fun}
-\title{section}
+\title{Section a function and set default values in function}
 \usage{
-section_fun(fun, nms, vls = NULL, method = "sub")
+set_default(fun, nms, vls = NULL)
+
+section_fun(fun, nms, vls = NULL, method = "def")
 
 section_fun_sub(fun, nms, vls = NULL, envir = parent.frame())
 
@@ -27,10 +30,11 @@ name is the name of an argument of the function (in which case
 
 \item{vls}{A vector or list of values of the arguments}
 
-\item{method}{Either "env" (for environment; the default, using an
-auxillary argument for storing sectioned values) or "sub" (for
-substitute; based on substituting fixed values into the
-function).}
+\item{method}{"def" (for default); based on substituting fixed
+values into the function argument list as default values).
+"env": (for environment); using an auxillary argument for
+storing sectioned values.  "sub": (for substitute); based on
+substituting fixed values into the function body.}
 
 \item{envir}{Environment}
 
@@ -52,25 +56,34 @@ Ex) is the set of $y$s in Y such that (x, y) is in
 E. Correspondingly, the section of f(x,y) defined by x is the
 function $f_x$ defined on Ex given by $f_x(y)=f(x,y)$.
 
-\code{section_fun} is a wrapper for calling \code{section_fun_sub}
-(default) or \code{section_fun_env}.
+\code{section_fun} is a wrapper for calling \code{set_default} (default
+method), \code{section_fun_env} or \code{section_fun_sub}. Notice that
+creating a sectioned function with \code{section_fun_sub} can be
+time consuming.
 }
 \examples{
 
 f  <- function(x, y){x + y}
-f_ <- section_fun(f, list(y = 10))
-f_ <- section_fun(f, nms="y", vls=10) ## SAME AS ABOVE
+
+f_ <- section_fun(f, list(y = 10),    method="def") ## "def"" is default
+f_ <- section_fun(f, nms="y", vls=10, method="def") ## SAME AS ABOVE
 f_
 f_(x=1)
 
-f_ <- section_fun(f, list(y = 10), method="env")
+f_ <- section_fun(f, list(y = 10),    method="sub") ## 
+f_ <- section_fun(f, nms="y", vls=10, method="sub") ## SAME AS ABOVE
+f_
+f_(x=1)
+
+f_ <- section_fun(f, list(y = 10),    method="env")
 f_ <- section_fun(f, nms="y", vls=10, method="env") ## SAME AS ABOVE
 f_
 f_(x=1)
 get_section(f_)
 get_fun(f_)
 
-## With moder complicated values:
+ 
+## With more complicated values:
 g <- function(A, B) {
   A + B
 }
@@ -78,7 +91,7 @@ g_ <- section_fun(g, list(A = matrix(1:4, nrow=2)))
 g_ <- section_fun(g, "A", list(matrix(1:4, nrow=2)))
 g_(diag(1, 2))
 
-g_ <- section_fun(g, list(A = matrix(1:4, nrow=2)), method="env")
+g_ <- section_fun(g, list(A = matrix(1:4, nrow=2)))
 
 ## Using built in function
 set.seed(123)
@@ -89,6 +102,9 @@ set.seed(123)
 rnorm(5)
 
 
+}
+\seealso{
+\code{\link[=bquote_fun_list]{bquote_fun_list()}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk} based on code

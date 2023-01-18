@@ -42,7 +42,8 @@ handle_order <- function(e, order){
 
     
     nms <- all.vars(e)
-    if (!setequal(nms, order)){        
+    ss <- setdiff(nms, order)
+    if (length(ss) > 0){        
         stop("some arguments are not given in 'order'")
     }
     return(order)
@@ -52,7 +53,7 @@ handle_order <- function(e, order){
 expr_to_one_param_fun <- function(e, order=NULL){
 
     nms <- handle_order(e, order)
-    e_str <- expr_to_string()
+    e_str <- expr_to_string(e)
     
     if (length(nms)) {
         aux <- sapply(1:length(nms),

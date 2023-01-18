@@ -1,3 +1,12 @@
+doBy v4.6.16 (Release date: 2023-01-18)
+=======================================
+
+Changes
+
+* `bquote_fun_list` added
+* Improved documentation
+
+
 doBy v4.6.15 (Release date: 2022-12-08)
 =======================================
 

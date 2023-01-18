@@ -21,16 +21,34 @@ split_bycol <- function(x){
 
 #' @export
 #' @rdname split_byrow_bycol
-split_byrow <- function(x){
-    if (!inherits(x, c("matrix", "data.frame")))
+split_byrow <- function (x) 
+{
+    if (!inherits(x, c("matrix", "data.frame"))) 
         stop("'x' must be matrix or dataframe\n")
-
-    if (nrow(x) == 0){
+    if (nrow(x) == 0) {
         return(list())
     }
-    if (!is.null(rownames(x)))
-        f <- rownames(x)
-    else
-        f <- 1:nrow(x)
-    split(x, f)    
+
+    f <- 1:nrow(x)
+    out <- split(x, f)
+    
+    if (!is.null(rownames(x))){ 
+        names(out) <- rownames(x)        
+    }
+    return(out)
 }
+
+
+## split_byrow <- function(x){
+    ## if (!inherits(x, c("matrix", "data.frame")))
+        ## stop("'x' must be matrix or dataframe\n")
+
+    ## if (nrow(x) == 0){
+        ## return(list())
+    ## }
+    ## if (!is.null(rownames(x)))
+        ## f <- rownames(x)
+    ## else
+        ## f <- 1:nrow(x)
+    ## split(x, f)    
+## }
