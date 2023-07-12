@@ -11,11 +11,8 @@
 ##' @examples
 ##' 
 ##' crime <- doBy::crimeRate
-##' rownames(crime) <- crime$State
-##' crime$State <- NULL
-##' crime <- doBy::crimeRate
-##' rownames(crime) <- crime$State
-##' crime$State <- NULL
+##' rownames(crime) <- crime$state
+##' crime$state <- NULL
 ##' 
 ##' o <- order(apply(scale(crime), 1, sum))
 ##' dat <- crime[o,]
@@ -33,10 +30,8 @@
 ##' matplot(scale(dat), type="l")
 ##' matplot(scale(rec2), type="l")
 ##' 
-##' 
 ##' j <- merge(dat, rec2, by=0)
 ##' pairs(j[,-1])
-##'
 ##'
 ##' @export
 recover_pca_data <- function (object, comp = 1) 

@@ -82,6 +82,9 @@
 #' 
 NULL
 
+## FIXME: If nms is a list it should be reported if not all elements
+## of nms have names. Guess the same applies to caracas.
+
 #' @rdname section_fun
 #' @export
 set_default <- function(fun, nms, vls=NULL){
@@ -154,10 +157,7 @@ section_fun_sub_worker <- function(fun, args, envir=parent.frame()){
             })
     }
 
-    
-
     hd <- paste0("function(", paste0(fmls2, collapse = ", "), ")")
-    
 
     aux <- sapply(1:length(args),
                   function(i){
@@ -178,37 +178,45 @@ section_fun_sub_worker <- function(fun, args, envir=parent.frame()){
     
     bd <- paste0("\n{ ", paste0(c(bd1, bd2), collapse="\n "), "\n}")
     
-    ff <- paste0(c(hd, bd), collapse="")
+    ff  <- paste0(c(hd, bd), collapse="")
     out <- eval(parse(text=ff))
-    out
     environment(out) <- environment(fun)
     out
 
 }
 
 
-
-
-
-
-
-
-
 nms_vls_to_list <- function(nms, vls){
+    ## cat("nms: "); print(nms); cat(" vls: "); print(vls)
 
+    all_has_names <- function(x){
+        (!is.null(names(x))) &&
+            all(nchar(names(x)) > 0)            
+    }
+    if (!(is.atomic(nms) || is.list(nms))){
+        stop("'nms' must be list or atomic")
+    }
     if (inherits(nms, "list")){
         if (!is.null(vls)) {
             warning("vls ignored")
         }
-        return(nms)
+        out <- nms
     } else {
-        if (length(nms) != length(vls))
-            stop("'nms' and 'vls' must have same length\n")
-        vls <- as.list(vls)
-        names(vls) <- nms
-        return(vls)        
+        if (all_has_names(nms)){
+            vls <- as.list(nms)
+            out <- vls
+        } else {                   
+            if (length(nms) != length(vls)){
+                stop("'nms' and 'vls' must have same length\n")
+            }
+            vls <- as.list(vls)
+            names(vls) <- nms
+            out <- vls
+        }        
     }
+    return(out)
 }
+
 
 
 
@@ -223,26 +231,26 @@ section_fun_env <- function(fun, nms, vls=NULL) {
 
 
 section_fun_env_worker <- function(fun, args){
-    fun <- as.scaffold(fun)
-    .apply_args(fun, args)
+    fun <- as.section_function(fun)
+    apply_args(fun, args)
 }
 
 
 
-as.scaffold <- function(fun) {
-  if (!inherits(fun, c("function", "scaffold")))
-    stop("Can not create scaffold\n")
+as.section_function <- function(fun) {
+  if (!inherits(fun, c("function", "section_function")))
+    stop("Can not create section_function\n")
 
-  if (inherits(fun, 'scaffold')) {
-    scaffold_update(fun)
+  if (inherits(fun, 'section_function')) {
+    section_function_update(fun)
   } else {
     from <- parent.frame()
-    scaffold_create(fun, from)
+    section_function_create(fun, from)
   }
 }
 
 
-scaffold_create <- function(fun, from = parent.frame()) {
+section_function_create <- function(fun, from = parent.frame()) {
 
   arg_env <- new.env(parent = emptyenv())
   assign('args',     list(), envir = arg_env)
@@ -250,12 +258,12 @@ scaffold_create <- function(fun, from = parent.frame()) {
   
   fmls <- get_formals(fun)
   arg_getter <- get_args(arg_env)
-  do_scaffold(fun, arg_env, fmls, from)  
+  do_section_function(fun, arg_env, fmls, from)  
 }
 
 
-scaffold_update <- function(fun, from = parent.frame()) {
-  #cat("scaffold_update\n")
+section_function_update <- function(fun, from = parent.frame()) {
+  #cat("section_function_update\n")
   arg_env <- clone_environment(attr(fun, "arg_env"))
   fmls <- get_formals(fun)
   #cat("formals:\n"); print(fmls)
@@ -264,10 +272,10 @@ scaffold_update <- function(fun, from = parent.frame()) {
   
   fun_orig <- environment(fun)$fun
   arg_getter <- get_args(arg_env)
-  do_scaffold(fun_orig, arg_env, fmls, from)
+  do_section_function(fun_orig, arg_env, fmls, from)
 }
 
-do_scaffold <- function(fun, arg_env, fmls, from){
+do_section_function <- function(fun, arg_env, fmls, from){
     ## fmls <- get_formals(fun)
     arg_getter <- get_args(arg_env)
     
@@ -283,7 +291,7 @@ do_scaffold <- function(fun, arg_env, fmls, from){
     list(fun = substitute(fun, from))
     )
   
-  structure(new_fun, class = 'scaffold', arg_env = arg_env)
+  structure(new_fun, class = c('section_function', 'function'), arg_env = arg_env)
 }
 
 
@@ -303,21 +311,21 @@ get_formals <- function(fun){
 #' @rdname section_fun
 #' @export
 get_section <- function(object){
-    if (!inherits(object, "scaffold"))
-        stop("'object' must be scaffold object\n")
+    if (!inherits(object, "section_function"))
+        stop("'object' must be section_function object\n")
     attr(object, "arg_env")$args
 }
 
 #' @rdname section_fun
 #' @export
 get_fun <- function(object){
-    if (!inherits(object, "scaffold"))
-        stop("'object' must be scaffold object\n")
+    if (!inherits(object, "section_function"))
+        stop("'object' must be section_function object\n")
     environment(object)$fun
 }
 
 #' @export
-print.scaffold <- function(x, ...){
+print.section_function <- function(x, ...){
   x2 <- x
   attributes(x2) <- NULL
   print.default(x2)
@@ -326,7 +334,7 @@ print.scaffold <- function(x, ...){
 
 
 #' @export
-summary.scaffold <- function(object, ...){
+summary.section_function <- function(object, ...){
 
     cat("Original function: \n")
     print(get_fun(object))
@@ -368,7 +376,7 @@ get_args <- function(added_env) {
 }
 
 
-.apply_args <- function(fun, args, last = FALSE) {
+apply_args <- function(fun, args, last = FALSE) {
   fmls <- formals(fun)
   #cat("+++ formals: \n"); print(fmls)
   arg_env <- attr(fun, 'arg_env')
@@ -386,7 +394,7 @@ get_args <- function(added_env) {
       arg_env$args[common] <- NULL    
     assign('args', append(arg_env$args, args), envir = arg_env)
   }
-  structure(fun, class = 'scaffold', arg_env = arg_env)
+  structure(fun, class = c('section_function', 'function'), arg_env = arg_env)
 }
 
 

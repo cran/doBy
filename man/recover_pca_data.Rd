@@ -21,11 +21,8 @@ Recover data from principal component analysis based on the first (typically few
 \examples{
 
 crime <- doBy::crimeRate
-rownames(crime) <- crime$State
-crime$State <- NULL
-crime <- doBy::crimeRate
-rownames(crime) <- crime$State
-crime$State <- NULL
+rownames(crime) <- crime$state
+crime$state <- NULL
 
 o <- order(apply(scale(crime), 1, sum))
 dat <- crime[o,]
@@ -43,9 +40,7 @@ par(mfrow=c(1,2))
 matplot(scale(dat), type="l")
 matplot(scale(rec2), type="l")
 
-
 j <- merge(dat, rec2, by=0)
 pairs(j[,-1])
-
 
 }

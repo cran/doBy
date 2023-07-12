@@ -1,45 +1,97 @@
 ###########################################################################
-##' Scale a dataframe or matrix
+##' @title Scaling numerical values
 ##'
-##' Similar to 'base::scale' but scales / centers only numeric values
+##' @description Similar to 'base::scale' but applies to scales / centers only numeric values
 ##' in data.
 ##'
+##' @name scale_df
 ###########################################################################
 ##' 
 ##' @param x dataframe or matrix
 ##' @param center Logical, should data be centered.
 ##' @param scale Logical, should data be scaled.
 ##'
+##' @details
+##'
+##' * If `x` is not a dataframe, then base::scale is invoked on
+##'   `x`.
+##'
+##' * Suppose `x` is a dataframe. Then base::scale is invoked
+##'     on all columns that are numeric, integer or logical.
+##' 
 ##' @return An object of same class as `x`
 ##' @examples
 ##' 
 ##' scale2(iris)
 
+#' @rdname scale_df
 #' @export
-scale2 <- function(x, center = TRUE, scale = TRUE){
+scale_df <- function(x, center = TRUE, scale = TRUE){
 
-    if (!inherits(x, c("data.frame", "matrix")))
-        stop("'x' must be matrix or dataframe.\n")
+    if (!is(x, "data.frame")){
+        return(scale(x, center=center, scale=scale))
+    } else { ## x is dataframe
+            
+        b <- sapply(x,
+                    function(z){is(z, c("numeric")) || is(z, c("integer")) || is(z, c("logical")) })
         
-    if (inherits(x, "matrix")){
-        scale(x, center=center, scale=scale)
-    } else {
-        b <- sapply(x, is.numeric)
-        if (!any(b))
-            stop("No numeric value in data; can not scale.\n")
-        
-        sc <- scale(x[, b], center=center, scale=scale)        
-        x[,b] <- sc
-        
-        if (!is.null(a <- attributes(sc)$"scaled:center"))
-            attr(x, "scaled:center") <- a
-        
-        if (!is.null(a <- attributes(sc)$"scaled:scale"))
-            attr(x, "scaled:scale") <- a
-        
-        x    
-    }        
+        if (!any(b)){ ## x only has numeric values
+            return(scale(x, center=center, scale=scale))
+        } else { ## x is dataframe with non-numerics
+            
+            x2 <- x[,b, drop=FALSE]
+            x2 <- scale(x2, center=center, scale=scale)
+            x[, b] <- x2
+
+            if (!is.null(a <- attributes(x2)$"scaled:center"))
+                attr(x, "scaled:center") <- a
+            
+            if (!is.null(a <- attributes(x2)$"scaled:scale"))
+                attr(x, "scaled:scale") <- a
+                        
+            return(x)
+            
+        }
+            
+    }
+
 }
+
+#' @rdname scale_df
+#' @export
+scale2 <- scale_df
+
+
+
+## scale2 <- function(x, center = TRUE, scale = TRUE){
+
+##     if (!inherits(x, c("data.frame", "matrix")))
+##         stop("'x' must be matrix or dataframe.\n")
+        
+##     if (inherits(x, "matrix")){
+##         scale(x, center=center, scale=scale)
+##     } else {
+##         b <- sapply(x, is.numeric)
+##         if (!any(b))
+##             stop("No numeric value in data; can not scale.\n")
+        
+##         sc <- scale(x[, b], center=center, scale=scale)        
+##         x[,b] <- sc
+        
+##         if (!is.null(a <- attributes(sc)$"scaled:center"))
+##             attr(x, "scaled:center") <- a
+        
+##         if (!is.null(a <- attributes(sc)$"scaled:scale"))
+##             attr(x, "scaled:scale") <- a
+        
+##         x    
+##     }        
+## }
+
+
+
+
+
 
 
 ###########################################################################

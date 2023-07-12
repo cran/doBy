@@ -55,16 +55,20 @@
 #' 
 #' 
 #' @export recodeVar
-recodeVar <- function(x, src, tgt, default=NULL, keep.na=TRUE){
+recodeVar <- function(x, src, tgt, default=NULL, keep.na=TRUE) {
 
-  if (length(src)!=length(tgt)){
+  if (length(src)!=length(tgt)) {
     stop("length of src not equal to length of tgt")
   }
-  mtc <- lapply(src, function(zzz){which(x %in% zzz)})
+    mtc <- lapply(src,
+                  function(zzz) {
+                      which(x %in% zzz)
+                  })
+    
   idx <- seq_along(x)
   unmatch <- setdiff(idx, unlist(mtc))
   
-  if (is.factor(x)){
+  if (is.factor(x)) {
     val <- as.character(x)
   } else {
     val <- x
@@ -72,8 +76,8 @@ recodeVar <- function(x, src, tgt, default=NULL, keep.na=TRUE){
   for (ii in 1:length(tgt))
     val[mtc[[ii]]] <- tgt[[ii]]
 
-  if (!is.null(default)){
-    if (keep.na){
+  if (!is.null(default)) {
+    if (keep.na) {
       iii <- intersect(which(!is.na(x)), unmatch)
       val[iii] <- default
     } else {
@@ -87,3 +91,7 @@ recodeVar <- function(x, src, tgt, default=NULL, keep.na=TRUE){
 
   return(val)
 }
+
+#' @rdname recodeVar
+#' @export
+recode_var <- recodeVar

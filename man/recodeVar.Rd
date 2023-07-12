@@ -2,9 +2,12 @@
 % Please edit documentation in R/recodeVar.R
 \name{recodeVar}
 \alias{recodeVar}
+\alias{recode_var}
 \title{Recode values of a vector}
 \usage{
 recodeVar(x, src, tgt, default = NULL, keep.na = TRUE)
+
+recode_var(x, src, tgt, default = NULL, keep.na = TRUE)
 }
 \arguments{
 \item{x}{A vector; the variable to be recoded.}

@@ -51,8 +51,8 @@ subSeq <- function (x, item = NULL) {
     first <- last <- rep.int(NA, length(val))
     first[1] <- 1
     last [1] <- len[1]
-    if (length(val) > 1){
-	for (kk in 2:length(val)){
+    if (length(val) > 1) {
+	for (kk in 2:length(val)) {
             first[kk] <- last[kk - 1] + 1
             last [kk] <- last[kk - 1] + len[kk]
 	}
@@ -78,19 +78,34 @@ sub_seq <- subSeq
 
 #' @rdname sub_seq
 #' @export
-is_grouped <- function(x){
+is_grouped <- function(x) {
     !any(table(rle2(x)$values) > 1)    
 }
 
 #' @rdname sub_seq
 #' @export
-rle2 <- function(x){
-    if (is.factor(x)){        
+rle2 <- function(x) {
+    if (is.factor(x)) {        
         rle(as.character(x))
     } else {
         rle(x)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## subSeq <- function (x, item = NULL) {

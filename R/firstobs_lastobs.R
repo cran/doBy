@@ -34,7 +34,7 @@ firstobs <- function(x, ...) UseMethod("firstobs")
 
 #' @export
 #' @rdname firstlastobs
-lastobs.default <- function(x, ...){
+lastobs.default <- function(x, ...) {
   ux <- unique(x)
   m <-match(ux, x)
   sort(sapply(ux, function(i) {max(which(i==x))}))
@@ -42,7 +42,7 @@ lastobs.default <- function(x, ...){
 
 #' @export
 #' @rdname firstlastobs
-firstobs.default <- function(x, ...){
+firstobs.default <- function(x, ...) {
   ux <- unique(x)
   m <- match(ux,x)
   sort(sapply(ux, function(i) {min(which(i==x))}))
@@ -50,14 +50,14 @@ firstobs.default <- function(x, ...){
 
 #' @export
 #' @rdname firstlastobs
-lastobs.formula <- function(formula, data=parent.frame(), ...){
+lastobs.formula <- function(formula, data=parent.frame(), ...) {
   rhs <- gsub(" +","",strsplit(paste(formula[2]),"\\+")[[1]][1])
   lastobs(data[,rhs])
 }
 
 #' @export
 #' @rdname firstlastobs
-firstobs.formula <- function(formula, data=parent.frame(), ...){
+firstobs.formula <- function(formula, data=parent.frame(), ...) {
    rhs <- gsub(" +","",strsplit(paste(formula[2]),"\\+")[[1]][1])
    firstobs(data[,rhs])
 }
