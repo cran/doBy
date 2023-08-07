@@ -14,10 +14,10 @@
 #'
 #' @examples
 #'
-#' ToothGrowth %>% interaction_plot(len ~ dose + supp)
-#' ToothGrowth %>% interaction_plot(len ~ dose + supp, interval="conf.int")
-#' ToothGrowth %>% interaction_plot(len ~ dose + supp, interval="boxplot")
-#' ToothGrowth %>% interaction_plot(len ~ dose + supp, interval="none")
+#' ToothGrowth |> interaction_plot(len ~ dose + supp)
+#' ToothGrowth |> interaction_plot(len ~ dose + supp, interval="conf.int")
+#' ToothGrowth |> interaction_plot(len ~ dose + supp, interval="boxplot")
+#' ToothGrowth |> interaction_plot(len ~ dose + supp, interval="none")
 
 #' @import dplyr
 #' @import ggplot2
@@ -43,8 +43,8 @@ interaction_plot <- function(.data, .formula, interval="conf.int"){
     .data$RESP <- resp  ## KLUDGY
     rr2 <- sym("RESP")  ## KLUDGY
 
-    dd1 <- .data %>% group_by(!!sym(s1), !!sym(s2)) 
-    tmp <- dd1 %>% summarise(val = mean({{ rr2 }}),
+    dd1 <- .data |> group_by(!!sym(s1), !!sym(s2)) 
+    tmp <- dd1 |> summarise(val = mean({{ rr2 }}),
                              sd  = sd({{ rr2 }}) / sqrt(n()),
                              lwr = .data$val - 1.96 * sd, upr=.data$val + 1.96 * sd,
                              .groups="keep")

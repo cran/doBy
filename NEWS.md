@@ -1,3 +1,10 @@
+doBy v4.6.18 (Release date: 2023-08-03)
+=======================================
+
+Changes
+
+* R version requirement updated to ensure that Rs native pipe is available
+
 doBy v4.6.17 (Release date: 2023-07-10)
 =======================================
 

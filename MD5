@@ -1,6 +1,6 @@
-83f4bad11f94633a1dcf38ea1769548d *DESCRIPTION
+9a575f1d3c7e2e1ce78d3121e65d6f56 *DESCRIPTION
 57963dfa397dab36e85f368d3baacb29 *NAMESPACE
-354c07226800708a7bb71299ca9e15d6 *NEWS.md
+9ae1b442a50c5eb0db1f6c945286c63e *NEWS.md
 1a25a5ff46adb128d6d4b95e9ac4970d *R/DATA_cad.R
 ca117d925d2cd8566bac5f19affd3261 *R/DATA_doby.R
 0eaddc895bc21cd2eaca5b1d0ed9d153 *R/DATA_personality.R
@@ -23,7 +23,7 @@ e9be592db8aadc3bcae3734410c2a8f8 *R/dobyxtabs.R
 33613aad0ce2deb04630c5d2328f4e11 *R/expr_to_fun.R
 024428cd95e5a545a03cb5303f4607e2 *R/firstobs_lastobs.R
 f680241dcf67ce3503ffd0aa35cc0121 *R/formula_ops.R
-02e43b99ff590ea78cf5ff0f6f745f8f *R/interaction_plot.R
+a714aa50b3e7a5b72804e947c5405b2a *R/interaction_plot.R
 45851fb2336f5e2dbe59db24f534ab64 *R/linest_LSmeans.R
 0e44ae4d74cc6dcb7d3497f9dec959b4 *R/linest_compute.R
 a4429a6e97aed11ef9b0cee4c5f46730 *R/linest_get.R
@@ -72,13 +72,13 @@ e383a9b3a103e3ae6612075080234bef *data/potatoes.txt
 30a6779405c7ce68b234fd083afaac8f *data/prostate.RData
 0d8d7e6a6cd476a8667b687c188a3837 *inst/WORDLIST
 a2b2b4e691b3464aae18ec289e3934e9 *inst/doc/doby.R
-5c829bc5d8387e39b5812dd5fd19ae1b *inst/doc/doby.pdf
+179deeef030d34c2cf1a79d088a63ead *inst/doc/doby.pdf
 b6a96b8684dcda051fc5d998356a4fdf *inst/doc/doby.rnw
 9094208ac44c0d7161198ea28e2acdb5 *inst/doc/linest_lsmeans.R
-cf8d4db41363f09bdeb351975c5e9e9f *inst/doc/linest_lsmeans.pdf
+f608fa4e24e491e381efc5cd60d4a264 *inst/doc/linest_lsmeans.pdf
 c128b6c2b3185addd2eb74410f812462 *inst/doc/linest_lsmeans.rnw
 527c3d8d000edc5513603d63d7a845da *inst/doc/section_fun.R
-9382c1c87e3537b8309a251a3ff437ff *inst/doc/section_fun.pdf
+e13b67f082acf291a981fba298309079 *inst/doc/section_fun.pdf
 864c51affc0acf33c2dd257448c95b39 *inst/doc/section_fun.rnw
 5766be5acb1db1161867dd988709a412 *man/NIRmilk.Rd
 f215341a610f1fa077e1832b340717a9 *man/beets.Rd
@@ -115,7 +115,7 @@ dcfe37f0a1045b30e673fc323270cac2 *man/fev.Rd
 cd887170bdf5850a2a3a33bcbeb635b3 *man/firstlastobs.Rd
 db444833d3678c0b1528f0007ac252ff *man/formula_ops.Rd
 aa0f12e9dbda39782abbfd7d1331202c *man/haldCement.Rd
-bf33096fefb15f8a74fb02ce7050c19f *man/interaction-plot.Rd
+37482af4de2769570ae4a1355c756186 *man/interaction-plot.Rd
 c4e4423c9af31024335680215860650a *man/is-estimable.Rd
 d0aeba5248874bff092838b6991e3dbc *man/linest-get.Rd
 4cf4d8203deb6485b8b85c7b833baef2 *man/linest-matrix.Rd
