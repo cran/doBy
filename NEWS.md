@@ -1,3 +1,11 @@
+doBy v4.6.19 (Release date: 2023-10-02)
+=======================================
+
+Changes
+
+* Smaller changes in section_fun and related functions
+
+
 doBy v4.6.18 (Release date: 2023-08-03)
 =======================================
 
