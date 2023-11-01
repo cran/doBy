@@ -1,3 +1,10 @@
+doBy v4.6.20 (Release date: 2023-11-01)
+=======================================
+
+Changes
+
+* smaller changes to expr_to_fun (length_nparm is argument)
+
 doBy v4.6.19 (Release date: 2023-10-02)
 =======================================
 

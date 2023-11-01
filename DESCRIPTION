@@ -1,5 +1,5 @@
 Package: doBy
-Version: 4.6.19
+Version: 4.6.20
 Title: Groupwise Statistics, LSmeans, Linear Estimates, Utilities
 Author: Søren Højsgaard <sorenh@math.aau.dk> and Ulrich Halekoh
     <uhalekoh@health.sdu.dk>
@@ -21,6 +21,6 @@ Imports: broom, Deriv, dplyr, ggplot2, MASS, Matrix, magrittr,
 Suggests: multcomp, geepack, lme4, survival, testthat (>= 2.1.0), knitr
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-10-02 03:17:39 UTC; sorenh
+Packaged: 2023-11-01 17:30:14 UTC; sorenh
 Repository: CRAN
-Date/Publication: 2023-10-02 14:10:08 UTC
+Date/Publication: 2023-11-01 18:00:06 UTC

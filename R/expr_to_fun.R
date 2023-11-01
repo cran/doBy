@@ -1,3 +1,5 @@
+##ee <- expression(matrix(c(a, b, 0, b, a, b, 0, b, a), nrow = 3))
+
 #' Convert expression into function object.
 #'
 #' @param expr_ R expression.
@@ -66,8 +68,9 @@ expr_to_one_param_fun <- function(e, order=NULL) {
     comb <- c(aux, e_str)    
     
     fun_str <- "function(parm)"
+    fun_str <- sprintf("function(parm, length_parm=%d)", length(nms))
     
-    bd <- paste0("\n{ \n", paste0(comb, collapse=";\n "), "\n}")
+    bd <- paste0("\n{ \n ", paste0(comb, collapse=";\n "), "\n}")
 
     ff <- paste0(fun_str, bd)
     fun <- eval(parse(text=ff))

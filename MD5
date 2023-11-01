@@ -1,6 +1,6 @@
-613dc84883b47866e020cb7b7c0cd559 *DESCRIPTION
+feed59d0ef6bb61248022264a3634fdf *DESCRIPTION
 57963dfa397dab36e85f368d3baacb29 *NAMESPACE
-36bd0db3f0ea117dd512cb30c38c9326 *NEWS.md
+38cb59386db49b84b16b500255339e1b *NEWS.md
 1a25a5ff46adb128d6d4b95e9ac4970d *R/DATA_cad.R
 ca117d925d2cd8566bac5f19affd3261 *R/DATA_doby.R
 0eaddc895bc21cd2eaca5b1d0ed9d153 *R/DATA_personality.R
@@ -20,7 +20,7 @@ f1f0390401a27bc6f4eb79fe31b003c2 *R/by_subsetBy.R
 70581a8778f72a984518bd80aa07eeb9 *R/doby_utilities.R
 e9be592db8aadc3bcae3734410c2a8f8 *R/dobyxtabs.R
 107a5a620e2bcee1634e88f5103ee35c *R/esticon.R
-a78c8c48acd0135a819f05c4993f7a56 *R/expr_to_fun.R
+913b0bdb5ef5c737646e5cea7f6fcbf8 *R/expr_to_fun.R
 024428cd95e5a545a03cb5303f4607e2 *R/firstobs_lastobs.R
 f680241dcf67ce3503ffd0aa35cc0121 *R/formula_ops.R
 a714aa50b3e7a5b72804e947c5405b2a *R/interaction_plot.R
@@ -42,7 +42,7 @@ bd3ea2ec99f6d7f928e4c3d22f30f416 *R/tidy.R
 d0ad0e365a99bf7f2d1bf0122398f7d7 *R/time_since_event.R
 d3560942fdff7a8b50507026787bf7e7 *R/which_maxn.R
 c3b4bb5954adeba7e45229e4d380948a *README.md
-559eafb8068c021756c8a4fdd3c22902 *build/vignette.rds
+3f303f7761204ceaaef325fc26ce9017 *build/vignette.rds
 f2c2d30983b8dcda1962c29a6cb9c7a5 *data/NIRmilk.RData
 25a3a55d27aa15aa5472e6fc4d10310d *data/beets.RData
 77eecc67b87d8036bd12087d375fbebe *data/breastcancer.rda
@@ -72,13 +72,13 @@ e383a9b3a103e3ae6612075080234bef *data/potatoes.txt
 30a6779405c7ce68b234fd083afaac8f *data/prostate.RData
 0d8d7e6a6cd476a8667b687c188a3837 *inst/WORDLIST
 a2b2b4e691b3464aae18ec289e3934e9 *inst/doc/doby.R
-a947c42f5ff26f515a478471a20932bf *inst/doc/doby.pdf
+76c719b40746643e51d584f45f669393 *inst/doc/doby.pdf
 b6a96b8684dcda051fc5d998356a4fdf *inst/doc/doby.rnw
 9094208ac44c0d7161198ea28e2acdb5 *inst/doc/linest_lsmeans.R
-feb158121e536bd8fb4e3dc7a52b93b6 *inst/doc/linest_lsmeans.pdf
+550ca476beae50ed2b05ca5b54b819bf *inst/doc/linest_lsmeans.pdf
 c128b6c2b3185addd2eb74410f812462 *inst/doc/linest_lsmeans.rnw
 527c3d8d000edc5513603d63d7a845da *inst/doc/section_fun.R
-900fc2ad43252e1090d2b8e13a500ace *inst/doc/section_fun.pdf
+ad6abcdc70d11686bfff8a4755f16e18 *inst/doc/section_fun.pdf
 864c51affc0acf33c2dd257448c95b39 *inst/doc/section_fun.rnw
 5766be5acb1db1161867dd988709a412 *man/NIRmilk.Rd
 f215341a610f1fa077e1832b340717a9 *man/beets.Rd
