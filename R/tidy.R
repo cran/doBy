@@ -13,19 +13,19 @@
 #' @param conf.level Desired confidence level.
 #' @param \dots Additional arguments; currently not used.
 #' @export
-tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
+tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
     co <- stats::coef(x)
     rownames(co) <- NULL
     
-    if (ncol(co)==5){ ## There are degreeso of freedom in the output.
+    if (ncol(co) == 5) { ## There are degrees of freedom in the output.
         co <- co[,c(1,2,3,5,4)]
         nn <- c("estimate", "std.error", "statistic", "p.value", "df")
     } else
         nn <- c("estimate", "std.error", "statistic", "p.value")
-
+    
     names(co) <- nn
-
-    if (conf.int){
+    
+    if (conf.int) {
         ci <- .ci_fun(co, level=conf.level)
         colnames(ci) <- c("conf.low", "conf.high")    
         co <- cbind(co, ci)
@@ -42,7 +42,7 @@ tidy.linest_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
 #' @param conf.level Desired confidence level.
 #' @param \dots Additional arguments; currently not used.
 #' @export
-tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...){
+tidy.esticon_class <- function(x, conf.int = FALSE, conf.level = 0.95, ...) {
     co <- x[,1:6]
     rownames(co) <- NULL
 

@@ -6,13 +6,34 @@
 \alias{split_byrow}
 \title{Split matrix or dataframe into list}
 \usage{
-split_bycol(x)
+split_bycol(x, idx = NULL, as.list = FALSE)
 
-split_byrow(x)
+split_byrow(x, idx = NULL)
 }
 \arguments{
 \item{x}{Matrix or dataframe.}
+
+\item{idx}{Index to split by. If NULL, split by columns or rows.}
+
+\item{as.list}{If TRUE, return list of dataframes. If FALSE, return list of matrices.}
 }
 \description{
 Split matrix or dataframe into list by columns or by rows
+}
+\examples{
+x <- mtcars[1:3, 1:6]
+x  |> split_bycol()
+x  |> split_bycol(as.list=TRUE)
+x  |> split_bycol(as.list=FALSE)
+x  |> split_bycol(idx=c(1,1,1,2,2,3,3,3))
+## x  |> split_bycol(idx=c(1,1,7,2,2,3,3,3)) ## Gives error
+
+x <- mtcars[1:6, 1:6]
+x  |> split_byrow()
+x  |> split_byrow(idx=c(1,1,2,2))
+
+m <- as.matrix(x)
+u <- x |> split_byrow(idx=c(1,1,2,2))
+y <- m |> split_byrow(idx=c(1,1,2,2))
+
 }

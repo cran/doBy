@@ -11,7 +11,7 @@
 \usage{
 set_default(fun, nms, vls = NULL)
 
-section_fun(fun, nms, vls = NULL, method = "def")
+section_fun(fun, nms, vls = NULL, method = "args")
 
 section_fun_sub(fun, nms, vls = NULL, envir = parent.frame())
 
@@ -30,11 +30,13 @@ name is the name of an argument of the function (in which case
 
 \item{vls}{A vector or list of values of the arguments}
 
-\item{method}{"def" (for default); based on substituting fixed
-values into the function argument list as default values).
-"env": (for environment); using an auxillary argument for
-storing sectioned values.  "sub": (for substitute); based on
-substituting fixed values into the function body.}
+\item{method}{One of the following: 1) "args" (default); based on
+substituting fixed values into the function argument list as
+default values). For backward compatibility can also be "def".
+2) "body" for substituting fixed values into the function
+body. For backward compatibility can also be "sub". 3) "env":
+(for environment); using an auxillary argument for storing
+sectioned values.}
 
 \item{envir}{Environment}
 
@@ -65,13 +67,13 @@ time consuming.
 
 f  <- function(x, y){x + y}
 
-f_ <- section_fun(f, list(y = 10),    method="def") ## "def"" is default
-f_ <- section_fun(f, nms="y", vls=10, method="def") ## SAME AS ABOVE
+f_ <- section_fun(f, list(y = 10),    method="args") ## "def"" is default
+f_ <- section_fun(f, nms="y", vls=10, method="args") ## SAME AS ABOVE
 f_
 f_(x=1)
 
-f_ <- section_fun(f, list(y = 10),    method="sub") ## 
-f_ <- section_fun(f, nms="y", vls=10, method="sub") ## SAME AS ABOVE
+f_ <- section_fun(f, list(y = 10),    method="body") ## 
+f_ <- section_fun(f, nms="y", vls=10, method="body") ## SAME AS ABOVE
 f_
 f_(x=1)
 

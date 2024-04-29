@@ -1,3 +1,38 @@
+#' @title crickets data
+#'
+#' @description
+#'
+#' name crickets
+#'
+#' @docType data
+#' @format This data frame contains:
+#' \describe{
+#' \item{species:}{Species, see details}
+#' \item{temp:}{temperature}
+#' \item{pps:}{pulse per second}
+#' }
+#' @keywords datasets
+#'
+#
+#' @details
+#'
+#'  Walker (1962) studied the mating songs of male
+#'  tree crickets. Each wingstroke by a cricket produces a pulse of
+#'  song, and females may use the number of pulses per second to
+#'  identify males of the correct species. Walker (1962) wanted to
+#'  know whether the chirps of the crickets Oecanthus
+#'  exclamationis and Oecanthus niveus had different pulse
+#'  rates. See \url{http://www.biostathandbook.com/ancova.html} for
+#'  details.  He measured the pulse rate of the crickets (variable
+#'  `pps`) at a variety of temperatures (`temp`):
+#'
+#' @examples
+#' 	
+#' data(crickets)
+#' coplot(pps ~ temp | species, data=crickets) 
+"crickets"
+
+
 ##
 ## beets
 ##

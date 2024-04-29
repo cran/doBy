@@ -100,8 +100,8 @@ rownames(CO2.bal) <- NULL
 
 ## ---------------------------------------------------------------------------------------
 CO2.ubal <- CO2.bal[-c(1, 5, 12, 17, 18, 19, 20, 28),]
-CO2.ubal %>% head
-xtabs(~Type + Treatment + conc, data=CO2.ubal) %>%
+CO2.ubal |> head()
+xtabs(~Type + Treatment + conc, data=CO2.ubal) |>
     ftable(row.vars = "Type")
 
 ## ---------------------------------------------------------------------------------------

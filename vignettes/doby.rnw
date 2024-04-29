@@ -151,7 +151,7 @@ Inspired by the \pkg{dplyr} package, there is a \verb|summary_by| function which
 does the samme as \summaryby{} but with the data argument being the first so
 that one may write
 <<>>= 
-mtcars %>% summary_by(cbind(mpg, cyl, lh=log(hp)) ~ vs,
+mtcars |> summary_by(cbind(mpg, cyl, lh=log(hp)) ~ vs,
                       FUN=myfun1)
 @
 
@@ -178,8 +178,8 @@ Alternative forms are:
 << >>=
 x3 <- orderBy(c("gear", "carb"), data=mtcars)
 x4 <- orderBy(c("-gear", "carb"), data=mtcars)
-x5 <- mtcars %>% order_by(c("gear", "carb"))
-x6 <- mtcars %>% order_by(~ -gear + carb)
+x5 <- mtcars |> order_by(c("gear", "carb"))
+x6 <- mtcars |> order_by(~ -gear + carb)
 @
 
  
@@ -198,7 +198,7 @@ attributes(x)
 Alternative forms are:
 << >>=
 splitBy("vs", data=mtcars)
-mtcars %>% split_by(~ vs)
+mtcars |> split_by(~ vs)
 @
 %% 
  
@@ -220,8 +220,8 @@ each month.
 Alternative forms are
 << >>=
 x <- subsetBy("am", subset=mpg > mean(mpg), data=mtcars)
-x <- mtcars  %>% subset_by("vs", subset=mpg > mean(mpg))
-x <- mtcars  %>% subset_by(~vs, subset=mpg > mean(mpg))
+x <- mtcars  |> subset_by("vs", subset=mpg > mean(mpg))
+x <- mtcars  |> subset_by(~vs, subset=mpg > mean(mpg))
 @
 
 
@@ -242,7 +242,7 @@ Alternative forms:
 << >>=
 x <- transformBy("vs", data=mtcars, 
                  min.mpg=min(mpg), max.mpg=max(mpg))
-x <- mtcars %>% transform_by("vs",
+x <- mtcars |> transform_by("vs",
                              min.mpg=min(mpg), max.mpg=max(mpg))
 @
 
@@ -256,7 +256,7 @@ a function to each element of the list (using lapply).
 
 <<>>=
 lapplyBy(~vs, data=mtcars,
-         FUN=function(d) lm(mpg~cyl, data=d)  %>% summary  %>% coef)
+         FUN=function(d) lm(mpg~cyl, data=d)  |> summary()  |> coef())
 @ 
 
 
@@ -497,7 +497,7 @@ options(oopt)
 % does the samme as \summaryby{} but with the data argument being the first so
 % that one may write
 % <<results=hide>>= 
-% CO2 %>% summary_by(cbind(conc, uptake, lu=log(uptake)) ~ Plant, 
+% CO2 |> summary_by(cbind(conc, uptake, lu=log(uptake)) ~ Plant, 
 %                    FUN=myfun1)
 % @
 % which is the same as writing:
@@ -520,7 +520,7 @@ options(oopt)
 
 %%<< >>= 
 %%library(magrittr)
-%%CO2 %>% summary_by(cbind(conc, uptake) ~ Plant, FUN=myfun1)
+%%CO2 |> summary_by(cbind(conc, uptake) ~ Plant, FUN=myfun1)
 %%@
 %%
 %%
@@ -744,8 +744,8 @@ options(oopt)
 
 %% Inspired by the \pkg{dplyr} package, there is an \verb|order_by| function
 %% << >>= 
-%% x5 <- airquality %>% order_by(c("Temp", "Month"))
-%% x6 <- airquality %>% order_by(c("-Temp", "Month"))
+%% x5 <- airquality |> order_by(c("Temp", "Month"))
+%% x6 <- airquality |> order_by(c("-Temp", "Month"))
 %% @
 %% which is the same as
 %% << >>= 

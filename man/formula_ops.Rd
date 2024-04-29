@@ -21,7 +21,7 @@
 \usage{
 formula_add(frm1, frm2)
 
-formula_poly(chr1, n, noint = FALSE)
+formula_poly(chr1, n, noint = FALSE, y = NULL)
 
 formula_nth(frm1, n)
 
@@ -57,6 +57,8 @@ unique_formula(list_of_formulas)
 \item{n}{Positive integer.}
 
 \item{noint}{Boolean.}
+
+\item{y}{Response}
 
 \item{rhs, lhs}{right-hand-side and left-hand-side for formula (as characters)}
 

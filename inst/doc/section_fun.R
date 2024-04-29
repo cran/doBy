@@ -1,70 +1,61 @@
-## ----echo=FALSE-------------------------------------------------------------------------
-require( doBy )
-prettyVersion <- packageDescription("doBy")$Version
-prettyDate <- format(Sys.Date())
-
-## ----include=FALSE,echo=FALSE-----------------------------------------------------------
-library(knitr)
-
-## ----r setup, echo=FALSE----------------------------------------------------------------
-knitr::opts_chunk$set(prompt=TRUE) 
+## ----include = FALSE--------------------------------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options("digits"=3)
 library(doBy)
-if (!dir.exists("figures")) dir.create("figures")
-opts_chunk$set(
-               tidy=FALSE,fig.path='figures/doBy'
-           )
-
-oopt <- options()
-options("digits"=4, "width"=90, "prompt"="> ", "continue"="  ")
-options(useFancyQuotes="UTF-8")
-
-## ----echo=F-----------------------------------------------------------------------------
-library(doBy)
+library(boot)
+#devtools::load_all()
 
 ## ---------------------------------------------------------------------------------------
-f  <- function(a, b, c=4, d=9){
+fun  <- function(a, b, c=4, d=9){
     a + b + c + d
 }
-fr_ <- section_fun(f, list(b=7, d=10))
-fr_
-f(a=10, b=7, c=5, d=10)
-fr_(a=10, c=5)
 
 ## ---------------------------------------------------------------------------------------
-fe_ <- section_fun(f, list(b=7, d=10), method = "env")
-fe_
-f(a=10, b=7, c=5, d=10)
-fe_(a=10, c=5)
+fun_def <- section_fun(fun, list(b=7, d=10))
+fun_def
+fun_body <- section_fun(fun, list(b=7, d=10), method="sub")
+fun_body
+fun_env <- section_fun(fun, list(b=7, d=10), method = "env")
+fun_env
 
 ## ---------------------------------------------------------------------------------------
-get_section(fe_) 
-## attr(fe_, "arg_env")$args ## Same result
-get_fun(fe_) 
-## environment(fe_)$fun ## Same result
+get_section(fun_env) 
+## same as: attr(fun_env, "arg_env")$args 
+get_fun(fun_env) 
+## same as: environment(fun_env)$fun
+
+## ---------------------------------------------------------------------------------------
+fun(a=10, b=7, c=5, d=10)
+fun_def(a=10, c=5)
+fun_body(a=10, c=5)
+fun_env(a=10, c=5)
 
 ## ---------------------------------------------------------------------------------------
 n <- 4
 toeplitz(1:n)
 
 ## ---------------------------------------------------------------------------------------
-inv_toeplitz <- function(n) {
+inv_toep <- function(n) {
     solve(toeplitz(1:n))
 }
-inv_toeplitz(4)
+inv_toep(4)
 
 ## ---------------------------------------------------------------------------------------
 library(microbenchmark)
 microbenchmark(
-    inv_toeplitz(4), inv_toeplitz(8), inv_toeplitz(16),
-    inv_toeplitz(32), inv_toeplitz(64),
+    inv_toep(4), inv_toep(8), inv_toep(16),
+    inv_toep(32), inv_toep(64),
     times=5
 )
 
 ## ---------------------------------------------------------------------------------------
-n.vec  <- c(4, 8, 16, 32, 64)
+n.vec  <- c(3, 4, 5)
 fun_list <- lapply(n.vec,
                   function(ni){
-                      section_fun(inv_toeplitz, list(n=ni))}
+                      section_fun(inv_toep, list(n=ni))}
                   )
 
 ## ---------------------------------------------------------------------------------------
@@ -85,12 +76,35 @@ bq_fun_list[[1]]
 ## Evaluate one:
 eval(bq_fun_list[[1]])
 ## Evaluate all:
-## sapply(bq_fun_list, eval)
+## lapply(bq_fun_list, eval)
 
 ## ---------------------------------------------------------------------------------------
 names(bq_fun_list) <- n.vec
 microbenchmark(
   list  = bq_fun_list,
   times = 5
+)
+
+## ---------------------------------------------------------------------------------------
+n.vec  <- seq(20, 80, by=20)
+fun_def <- lapply(n.vec,
+                  function(ni){
+                      section_fun(inv_toep, list(n=ni), method="def")}
+                  )
+fun_body <- lapply(n.vec,
+                  function(ni){
+                      section_fun(inv_toep, list(n=ni), method="sub")}
+                  )
+fun_env <- lapply(n.vec,
+                  function(ni){
+                      section_fun(inv_toep, list(n=ni), method="env")}
+                  )
+
+bq_fun_list <- bquote_list(c(fun_def, fun_body, fun_env))
+names(bq_fun_list) <- paste0(rep(c("def", "body", "env"), each=length(n.vec)), rep(n.vec, 3))
+
+mb <- microbenchmark(
+  list  = bq_fun_list,
+  times = 2
 )
 

@@ -1,3 +1,5 @@
+## FIXME: DO WE NEED THESE TWO FUNCTIONS???
+
 
 ##' Matrix operations based on matching dimensions
 ##'
@@ -14,7 +16,7 @@
 ##' matrix_op(mat1, mat2, `*`)
 ##'
 ##' @export
-matrix_op <- function(m1, m2, op=`+`){
+matrix_op <- function(m1, m2, op=`+`) {
     
     dn1 <- dimnames(m1)
     dn2 <- dimnames(m2)

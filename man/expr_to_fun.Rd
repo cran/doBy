@@ -35,6 +35,9 @@ ee <- expression(
     3 * x2 * (x1 - cos(x2 * x3)/3 -
     0.5) * sin(x2 * x3) + 400 * x3 + 189.52380952381 + 20 * exp(-x1 *
     x2)), nrow = 3))
-ff <- expr_to_fun(ee)
+f1 <- expr_to_fun(ee)
+f2 <- expr_to_fun(ee, vec_arg=TRUE)
+## Note: how long should parm be in f2?
+formals(f2)$length_parm
 
 }

@@ -10,6 +10,7 @@
 ##' 
 ##' @param chr1 Character vector to be coerced to formulas.
 ##' @param frm1,frm2 Formulas to be coerced to character vectors.
+##' @param y Response
 ##' @param object Character vector or formula.
 ##' @param noint Boolean.
 ##' @param string Boolean.
@@ -58,9 +59,6 @@ formula_add <- function(frm1, frm2){
     ## str(o_rhs)
     ## Remove redunancies    
     o_rhs <- simplify_rhs(o_rhs)
-
-
-
     
     ## Left-hand-side
     frm1_lhs <- as_lhs_chr(frm1)
@@ -76,7 +74,7 @@ formula_add <- function(frm1, frm2){
 
 ##' @rdname formula_ops
 ##' @export
-formula_poly <- function(chr1, n, noint=FALSE){
+formula_poly <- function(chr1, n, noint=FALSE, y=NULL){
     if (n > 1){
         b <- paste0(chr1, "^", 2:n)
         o <- paste0("I(", b, ")", collapse = "+")
@@ -86,9 +84,9 @@ formula_poly <- function(chr1, n, noint=FALSE){
     }
 
     if (noint){
-        o <- paste0("-1 +", o)
+        o <- paste0(y, "-1 +", o)
     }
-    formula(paste("~", o))
+    formula(paste(y, "~", o))
 }
 
 ##' @rdname formula_ops
@@ -236,8 +234,8 @@ as_lhs_frm.formula <- function(frm1){
 
 ##' @export
 as_rhs_chr.character <- function(object, string=TRUE){
-    object <- object |> to_str()
-    rev(strsplit(object,"\\s~\\s")[[1]])[1]
+    ob <- object |> to_str(collapse = "")
+    rev(strsplit(ob,"\\s~\\s")[[1]])[1]
 }
 
 ##' @export

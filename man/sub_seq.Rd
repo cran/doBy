@@ -40,14 +40,16 @@ smallest number of clusters.
 x <- c(1, 1, 1, 0, 0, 1, 1, 1, 2, 2, 2, 1, 2, 2, 2, 3)
 (ans <- subSeq(x))
 ans$value
-# Notice: Same results below
+
+## Notice: Same results below
 subSeq(x, item=1)
 subSeq(x, item="1")
 
 xc <- as.character(x)
 (ans<-subSeq(xc))
 ans$value
-# Notice: Same results below
+
+## Notice: Same results below
 subSeq(xc, item="1")
 subSeq(xc, item=1)
 

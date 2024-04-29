@@ -390,7 +390,6 @@ LSmeans(mm2, effect=~A)$L
 \label{sec:miscellaneous}
 
 
-
 \subsection{Excerpt of the CO2 data}
 \label{sec:excerpt-co2-data}
 
@@ -404,7 +403,7 @@ rownames(CO2.bal) <- NULL
 @ 
 
 % <<>>=
-% xtabs(~Type + Treatment + conc, data=CO2.bal) %>%
+% xtabs(~Type + Treatment + conc, data=CO2.bal) |>
 %     ftable(row.vars = "Type")
 % @ 
 
@@ -412,8 +411,8 @@ Data is perfectly balanced.
 We also use an unbalanced subset of the data
 <<>>=
 CO2.ubal <- CO2.bal[-c(1, 5, 12, 17, 18, 19, 20, 28),]
-CO2.ubal %>% head
-xtabs(~Type + Treatment + conc, data=CO2.ubal) %>%
+CO2.ubal |> head()
+xtabs(~Type + Treatment + conc, data=CO2.ubal) |>
     ftable(row.vars = "Type")
 @
 
@@ -1478,7 +1477,7 @@ linest(fm2.ubal, L=L)
 % % @ %def
 
 % % <<>>=
-% % ToothGrowth %>% interaction_plot(len ~ dose + supp)
+% % ToothGrowth |> interaction_plot(len ~ dose + supp)
 % % @ 
 
 % % The interaction plot suggests a mild interaction which is supported by a formal comparison:
@@ -1493,8 +1492,8 @@ linest(fm2.ubal, L=L)
 
 
 %% <<linear:interaction, fig.cap="Interaction plot for the ToothGrowth data. The average length for each group is a dot. Boxplot outliers are crosses." >>= 
-%% tooth_avglen <- ToothGrowth %>%
-%%   group_by(dose, supp) %>%
+%% tooth_avglen <- ToothGrowth |>
+%%   group_by(dose, supp) |>
 %%   summarise(val = mean(len))
 %% tooth_avglen
 %% ggplot(ToothGrowth, aes(x = factor(dose), y = len, colour = supp)) +

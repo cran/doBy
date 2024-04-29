@@ -114,7 +114,9 @@ summaryBy(cbind(lw=log(Weight), Feed) ~ Evit + Cu, data=dietox12, FUN=mean)
 sumfun <- function(x, ...){
   c(m=mean(x, na.rm=TRUE, ...), v=var(x, na.rm=TRUE, ...), l=length(x))
 }
-summaryBy(cbind(Ozone, Solar.R) ~ Month, data=airquality, FUN=sumfun )
+summaryBy(cbind(Ozone, Solar.R) ~ Month, data=airquality, FUN=sumfun)
+## Compare with
+aggregate(cbind(Ozone, Solar.R) ~ Month, data=airquality, FUN=sumfun)
 
 ## Using '.' on the right hand side of a formula means to stratify by
 ## all variables not used elsewhere:
@@ -122,6 +124,8 @@ summaryBy(cbind(Ozone, Solar.R) ~ Month, data=airquality, FUN=sumfun )
 data(warpbreaks)
 summaryBy(breaks ~ wool + tension, warpbreaks, FUN=mean)
 summaryBy(breaks ~ ., warpbreaks, FUN=mean)
+summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
+
 summaryBy(. ~ wool + tension, warpbreaks, FUN=mean)
 
 }

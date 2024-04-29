@@ -40,7 +40,7 @@ summaryBy(list(c("mpg", "cyl"), "vs"),
           data=mtcars, FUN=myfun1)
 
 ## ---------------------------------------------------------------------------------------
-mtcars %>% summary_by(cbind(mpg, cyl, lh=log(hp)) ~ vs,
+mtcars |> summary_by(cbind(mpg, cyl, lh=log(hp)) ~ vs,
                       FUN=myfun1)
 
 ## ---------------------------------------------------------------------------------------
@@ -54,8 +54,8 @@ x2 <- orderBy(~ -gear + carb, data=mtcars)
 ## ---------------------------------------------------------------------------------------
 x3 <- orderBy(c("gear", "carb"), data=mtcars)
 x4 <- orderBy(c("-gear", "carb"), data=mtcars)
-x5 <- mtcars %>% order_by(c("gear", "carb"))
-x6 <- mtcars %>% order_by(~ -gear + carb)
+x5 <- mtcars |> order_by(c("gear", "carb"))
+x6 <- mtcars |> order_by(~ -gear + carb)
 
 ## ---------------------------------------------------------------------------------------
 x <- splitBy(~ Month, data=airquality)
@@ -65,7 +65,7 @@ attributes(x)
 
 ## ---------------------------------------------------------------------------------------
 splitBy("vs", data=mtcars)
-mtcars %>% split_by(~ vs)
+mtcars |> split_by(~ vs)
 
 ## ---------------------------------------------------------------------------------------
 x <- subsetBy(~am, subset=mpg > mean(mpg), data=mtcars)
@@ -73,8 +73,8 @@ head(x)
 
 ## ---------------------------------------------------------------------------------------
 x <- subsetBy("am", subset=mpg > mean(mpg), data=mtcars)
-x <- mtcars  %>% subset_by("vs", subset=mpg > mean(mpg))
-x <- mtcars  %>% subset_by(~vs, subset=mpg > mean(mpg))
+x <- mtcars  |> subset_by("vs", subset=mpg > mean(mpg))
+x <- mtcars  |> subset_by(~vs, subset=mpg > mean(mpg))
 
 ## ---------------------------------------------------------------------------------------
 head(x)
@@ -85,12 +85,12 @@ head(x)
 ## ---------------------------------------------------------------------------------------
 x <- transformBy("vs", data=mtcars, 
                  min.mpg=min(mpg), max.mpg=max(mpg))
-x <- mtcars %>% transform_by("vs",
+x <- mtcars |> transform_by("vs",
                              min.mpg=min(mpg), max.mpg=max(mpg))
 
 ## ---------------------------------------------------------------------------------------
 lapplyBy(~vs, data=mtcars,
-         FUN=function(d) lm(mpg~cyl, data=d)  %>% summary  %>% coef)
+         FUN=function(d) lm(mpg~cyl, data=d)  |> summary()  |> coef())
 
 ## ---------------------------------------------------------------------------------------
 x <- c(1, 1, 1, 2, 2, 2, 1, 1, 1, 3)

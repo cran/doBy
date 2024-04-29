@@ -29,7 +29,6 @@ ii <- which.minn(x, 5)
 x <- c(1, rep(NA,10), 2)
 ii <- which.minn(x, 5)
 
-
 }
 \seealso{
 \code{\link{which.max}}, \code{\link{which.min}}
