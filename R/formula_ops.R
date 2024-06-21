@@ -2,6 +2,9 @@
 ##
 ## https://stackoverflow.com/questions/70735907/how-to-evaluate-in-a-formula-in-r
 
+
+
+
 ##' @title Formula operations and coercion.
 ##'
 ##' @description Formula operations and coercion as a supplement to `update.formula()`
@@ -11,6 +14,8 @@
 ##' @param chr1 Character vector to be coerced to formulas.
 ##' @param frm1,frm2 Formulas to be coerced to character vectors.
 ##' @param y Response
+##' @param terms Character string.
+##' @param op Either "+" (default) or "-".
 ##' @param object Character vector or formula.
 ##' @param noint Boolean.
 ##' @param string Boolean.
@@ -41,6 +46,22 @@
 ##' formula_add(y~a*b+z, ~-1)
 ##' formula_add(y~a*b+z, ~a:b)
 ##'
+##' formula_add_str(y~x1 + x2, "x3")
+##' formula_add_str(y~x1 + x2, "x1")
+##' formula_add_str(y~x1 + x2, "x1", op="-")
+##'
+
+##' @rdname formula_ops
+#' @export
+formula_add_str <- function(frm1, terms, op="+"){
+    ## FIXME: Need to handle case where frm1 is a rhs-formula
+    ch <- as.character(frm1)
+    ch[3] <- paste0(ch[3], op, terms)
+    
+    frm12 <- as.formula(paste(ch[2], ch[1], ch[3]))
+    frm1 <- update(frm1, frm12)
+    return(frm1)
+}
 
 
 ##' @rdname formula_ops

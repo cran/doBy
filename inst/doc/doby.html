@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>doby: Groupwise computations and miscellaneous utilities</title>
+<style type="text/css">
+/**
+ * Prism.s theme ported from highlight.js's xcode style
+ */
+pre code {
+  padding: 1em;
+}
+.token.comment {
+  color: #007400;
+}
+.token.punctuation {
+  color: #999;
+}
+.token.tag,
+.token.selector {
+  color: #aa0d91;
+}
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #1c00cf;
+}
+.token.property,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #c41a16;
+}
+.token.inserted {
+  background-color: #ccffd8;
+}
+.token.deleted {
+  background-color: #ffebe9;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #836c28;
+}
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #5c2699;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+</style>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
+}
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+section.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
+
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>doby: Groupwise computations and miscellaneous utilities</h1></div>
+<div class="author"><h2>Søren Højsgaard</h2></div>
+<div class="date"><h3></h3></div>
+</div>
+<div class="body">
+<p>The \doby{} package contains a variety of utility functions. This
+working document describes some of these functions. The package
+originally grew out of a need to calculate groupwise summary
+statistics (much in the spirit of \code{PROC SUMMARY} of the
+\proglang{SAS} system), but today the package contains many different
+utilities.</p>
+<pre><code class="language-r">library(doBy)
+</code></pre>
+<p>\section{Data used for illustration}
+\label{sec:co2data}</p>
+<p>The description of the \code{doBy} package is based on the \code{mtcars}
+dataset.</p>
+<pre><code class="language-r">head(mtcars)
+#&gt;                    mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; Mazda RX4         21.0   6  160 110 3.90 2.62 16.5  0  1    4    4
+#&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.88 17.0  0  1    4    4
+#&gt; Datsun 710        22.8   4  108  93 3.85 2.32 18.6  1  1    4    1
+#&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.21 19.4  1  0    3    1
+#&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.0  0  0    3    2
+#&gt; Valiant           18.1   6  225 105 2.76 3.46 20.2  1  0    3    1
+tail(mtcars)
+#&gt;                 mpg cyl  disp  hp drat   wt qsec vs am gear carb
+#&gt; Porsche 914-2  26.0   4 120.3  91 4.43 2.14 16.7  0  1    5    2
+#&gt; Lotus Europa   30.4   4  95.1 113 3.77 1.51 16.9  1  1    5    2
+#&gt; Ford Pantera L 15.8   8 351.0 264 4.22 3.17 14.5  0  1    5    4
+#&gt; Ferrari Dino   19.7   6 145.0 175 3.62 2.77 15.5  0  1    5    6
+#&gt; Maserati Bora  15.0   8 301.0 335 3.54 3.57 14.6  0  1    5    8
+#&gt; Volvo 142E     21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2
+</code></pre>
+<p>A description of the variable names can be found here: \url{<a href="https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html%7D">https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html}</a>; see also \url{<a href="https://www.jstor.org/stable/2529336?seq=12%7D">https://www.jstor.org/stable/2529336?seq=12}</a>.</p>
+<h1 id="groupwise-computations">Groupwise computations</h1>
+<h2 id="summaryby-and-summary-by">summaryBy()  and summary_by()</h2>
+<p>\label{sec:summaryBy}</p>
+<p>The \summaryby{} function is used for calculating quantities like
+``the mean and variance of numerical variables \(x\) and `hv(y)hv` for
+each combination of two factors `hv(A)hv` and `hv(B)hv`’’.
+Notice: A functionality similar to \summaryby\ is provided by
+\code{aggregate()} from base \R.</p>
+<pre><code class="language-r">myfun1 &lt;- function(x){
+    c(m=mean(x), s=sd(x))
+}
+summaryBy(cbind(mpg, cyl, lh=log(hp)) ~ vs, 
+          data=mtcars, FUN=myfun1)
+#&gt;   vs mpg.m mpg.s cyl.m cyl.s lh.m  lh.s
+#&gt; 1  0  16.6  3.86  7.44 1.149 5.20 0.330
+#&gt; 2  1  24.6  5.38  4.57 0.938 4.48 0.289
+</code></pre>
+<p>A simpler call is</p>
+<pre><code class="language-r">summaryBy(mpg ~ vs, data=mtcars, FUN=mean)
+#&gt;   vs mpg.mean
+#&gt; 1  0     16.6
+#&gt; 2  1     24.6
+</code></pre>
+<p>Instead of formula we may specify a list containing the left hand side
+and the right hand side of a formula\footnote{This is a feature of
+\summaryby\ and it does not work with \code{aggregate}.} but that is
+possible only for variables already in the dataframe:</p>
+<pre><code class="language-r">summaryBy(list(c(&quot;mpg&quot;, &quot;cyl&quot;), &quot;vs&quot;), 
+          data=mtcars, FUN=myfun1)
+#&gt;   vs mpg.m mpg.s cyl.m cyl.s
+#&gt; 1  0  16.6  3.86  7.44 1.149
+#&gt; 2  1  24.6  5.38  4.57 0.938
+</code></pre>
+<p>Inspired by the \pkg{dplyr} package, there is a \verb|summary_by| function which
+does the samme as \summaryby{} but with the data argument being the first so
+that one may write</p>
+<pre><code class="language-r">mtcars |&gt; summary_by(cbind(mpg, cyl, lh=log(hp)) ~ vs,
+                      FUN=myfun1)
+#&gt;   vs mpg.m mpg.s cyl.m cyl.s lh.m  lh.s
+#&gt; 1  0  16.6  3.86  7.44 1.149 5.20 0.330
+#&gt; 2  1  24.6  5.38  4.57 0.938 4.48 0.289
+</code></pre>
+<h2 id="orderby-and-order-by">orderBy() and order_by()</h2>
+<p>Ordering (or sorting) a data frame is possible with the \code{orderBy}
+function. For example, we order the rows according to \code{gear} and \code{carb} (within \code{gear}):</p>
+<pre><code class="language-r">x1 &lt;- orderBy(~ gear + carb, data=mtcars)
+head(x1, 4)
+#&gt;                    mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.21 19.4  1  0    3    1
+#&gt; Valiant           18.1   6  225 105 2.76 3.46 20.2  1  0    3    1
+#&gt; Toyota Corona     21.5   4  120  97 3.70 2.46 20.0  1  0    3    1
+#&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.0  0  0    3    2
+tail(x1, 4)
+#&gt;                 mpg cyl  disp  hp drat   wt qsec vs am gear carb
+#&gt; Lotus Europa   30.4   4  95.1 113 3.77 1.51 16.9  1  1    5    2
+#&gt; Ford Pantera L 15.8   8 351.0 264 4.22 3.17 14.5  0  1    5    4
+#&gt; Ferrari Dino   19.7   6 145.0 175 3.62 2.77 15.5  0  1    5    6
+#&gt; Maserati Bora  15.0   8 301.0 335 3.54 3.57 14.6  0  1    5    8
+</code></pre>
+<p>If we want the ordering to be by decreasing values of one of the
+variables, we can do</p>
+<pre><code class="language-r">x2 &lt;- orderBy(~ -gear + carb, data=mtcars)
+</code></pre>
+<p>Alternative forms are:</p>
+<pre><code class="language-r">x3 &lt;- orderBy(c(&quot;gear&quot;, &quot;carb&quot;), data=mtcars)
+x4 &lt;- orderBy(c(&quot;-gear&quot;, &quot;carb&quot;), data=mtcars)
+x5 &lt;- mtcars |&gt; order_by(c(&quot;gear&quot;, &quot;carb&quot;))
+x6 &lt;- mtcars |&gt; order_by(~ -gear + carb)
+</code></pre>
+<h2 id="splitby-and-split-by">splitBy() and split_by()</h2>
+<p>Suppose we want to split the \code{airquality} data into a list of dataframes, e.g.\ one
+dataframe for each month. This can be achieved by:</p>
+<pre><code class="language-r">x &lt;- splitBy(~ Month, data=airquality)
+x &lt;- splitBy(~ vs, data=mtcars)
+lapply(x, head, 4)
+#&gt; $`0`
+#&gt;                    mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; Mazda RX4         21.0   6  160 110 3.90 2.62 16.5  0  1    4    4
+#&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.88 17.0  0  1    4    4
+#&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.0  0  0    3    2
+#&gt; Duster 360        14.3   8  360 245 3.21 3.57 15.8  0  0    3    4
+#&gt; 
+#&gt; $`1`
+#&gt;                 mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; Datsun 710     22.8   4  108  93 3.85 2.32 18.6  1  1    4    1
+#&gt; Hornet 4 Drive 21.4   6  258 110 3.08 3.21 19.4  1  0    3    1
+#&gt; Valiant        18.1   6  225 105 2.76 3.46 20.2  1  0    3    1
+#&gt; Merc 240D      24.4   4  147  62 3.69 3.19 20.0  1  0    4    2
+attributes(x)
+#&gt; $names
+#&gt; [1] &quot;0&quot; &quot;1&quot;
+#&gt; 
+#&gt; $groupid
+#&gt;   vs
+#&gt; 1  0
+#&gt; 2  1
+#&gt; 
+#&gt; $idxvec
+#&gt; $idxvec$`0`
+#&gt;  [1]  1  2  5  7 12 13 14 15 16 17 22 23 24 25 27 29 30 31
+#&gt; 
+#&gt; $idxvec$`1`
+#&gt;  [1]  3  4  6  8  9 10 11 18 19 20 21 26 28 32
+#&gt; 
+#&gt; 
+#&gt; $grps
+#&gt;  [1] &quot;0&quot; &quot;0&quot; &quot;1&quot; &quot;1&quot; &quot;0&quot; &quot;1&quot; &quot;0&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;1&quot; &quot;1&quot;
+#&gt; [20] &quot;1&quot; &quot;1&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;1&quot; &quot;0&quot; &quot;1&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;1&quot;
+#&gt; 
+#&gt; $class
+#&gt; [1] &quot;splitByData&quot; &quot;list&quot;
+</code></pre>
+<p>Alternative forms are:</p>
+<pre><code class="language-r">splitBy(&quot;vs&quot;, data=mtcars)
+#&gt;   listentry vs
+#&gt; 1         0  0
+#&gt; 2         1  1
+mtcars |&gt; split_by(~ vs)
+#&gt;   listentry vs
+#&gt; 1         0  0
+#&gt; 2         1  1
+</code></pre>
+<h2 id="subsetby-and-subset-by">subsetBy() and subset_by()</h2>
+<p>Suppose we want to select those rows within each month for which the the
+wind speed is larger than the mean wind speed (within the month). This
+is achieved by:</p>
+<pre><code class="language-r">x &lt;- subsetBy(~am, subset=mpg &gt; mean(mpg), data=mtcars)
+head(x)
+#&gt;                   mpg cyl  disp  hp drat   wt qsec vs am gear carb
+#&gt; 1.Fiat 128       32.4   4  78.7  66 4.08 2.20 19.5  1  1    4    1
+#&gt; 1.Honda Civic    30.4   4  75.7  52 4.93 1.61 18.5  1  1    4    2
+#&gt; 1.Toyota Corolla 33.9   4  71.1  65 4.22 1.83 19.9  1  1    4    1
+#&gt; 1.Fiat X1-9      27.3   4  79.0  66 4.08 1.94 18.9  1  1    4    1
+#&gt; 1.Porsche 914-2  26.0   4 120.3  91 4.43 2.14 16.7  0  1    5    2
+#&gt; 1.Lotus Europa   30.4   4  95.1 113 3.77 1.51 16.9  1  1    5    2
+</code></pre>
+<p>Note that the statement \code{Wind &gt; mean(Wind)} is evaluated within
+each month.</p>
+<p>Alternative forms are</p>
+<pre><code class="language-r">x &lt;- subsetBy(&quot;am&quot;, subset=mpg &gt; mean(mpg), data=mtcars)
+x &lt;- mtcars  |&gt; subset_by(&quot;vs&quot;, subset=mpg &gt; mean(mpg))
+x &lt;- mtcars  |&gt; subset_by(~vs, subset=mpg &gt; mean(mpg))
+</code></pre>
+<h2 id="transformby-and-transform-by">transformBy() and transform_by()</h2>
+<p>The \code{transformBy} function is analogous to the \code{transform}
+function except that it works within groups. For example:</p>
+<pre><code class="language-r">head(x)
+#&gt;                      mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; 0.Mazda RX4         21.0   6  160 110 3.90 2.62 16.5  0  1    4    4
+#&gt; 0.Mazda RX4 Wag     21.0   6  160 110 3.90 2.88 17.0  0  1    4    4
+#&gt; 0.Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.0  0  0    3    2
+#&gt; 0.Merc 450SL        17.3   8  276 180 3.07 3.73 17.6  0  0    3    3
+#&gt; 0.Pontiac Firebird  19.2   8  400 175 3.08 3.85 17.1  0  0    3    2
+#&gt; 0.Porsche 914-2     26.0   4  120  91 4.43 2.14 16.7  0  1    5    2
+x &lt;- transformBy(~vs, data=mtcars, 
+                 min.mpg=min(mpg), max.mpg=max(mpg))
+head(x)
+#&gt;    mpg cyl disp  hp drat   wt qsec vs am gear carb min.mpg max.mpg
+#&gt; 1 21.0   6  160 110 3.90 2.62 16.5  0  1    4    4    10.4      26
+#&gt; 2 21.0   6  160 110 3.90 2.88 17.0  0  1    4    4    10.4      26
+#&gt; 3 18.7   8  360 175 3.15 3.44 17.0  0  0    3    2    10.4      26
+#&gt; 4 14.3   8  360 245 3.21 3.57 15.8  0  0    3    4    10.4      26
+#&gt; 5 16.4   8  276 180 3.07 4.07 17.4  0  0    3    3    10.4      26
+#&gt; 6 17.3   8  276 180 3.07 3.73 17.6  0  0    3    3    10.4      26
+</code></pre>
+<p>Alternative forms:</p>
+<pre><code class="language-r">x &lt;- transformBy(&quot;vs&quot;, data=mtcars, 
+                 min.mpg=min(mpg), max.mpg=max(mpg))
+x &lt;- mtcars |&gt; transform_by(&quot;vs&quot;,
+                             min.mpg=min(mpg), max.mpg=max(mpg))
+</code></pre>
+<h2 id="lapplyby-and-lapply-by">lapplyBy() and lapply_by()</h2>
+<p>This \code{lapplyBy} function is a wrapper for first splitting data
+into a list according to the formula (using splitBy) and then applying
+a function to each element of the list (using lapply).</p>
+<pre><code class="language-r">lapplyBy(~vs, data=mtcars,
+         FUN=function(d) lm(mpg~cyl, data=d)  |&gt; summary()  |&gt; coef())
+#&gt; $`0`
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)
+#&gt; (Intercept)    36.93       3.69   10.01 2.73e-08
+#&gt; cyl            -2.73       0.49   -5.56 4.27e-05
+#&gt; 
+#&gt; $`1`
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)
+#&gt; (Intercept)     41.9       5.78    7.26  0.00001
+#&gt; cyl             -3.8       1.24   -3.07  0.00978
+</code></pre>
+<h1 id="miscellaneous-utilities">Miscellaneous utilities</h1>
+<h2 id="firstobs-and-lastobs">firstobs() and lastobs()</h2>
+<p>To obtain the indices of the first/last occurences of an item in a
+vector do:</p>
+<pre><code class="language-r">x &lt;- c(1, 1, 1, 2, 2, 2, 1, 1, 1, 3)
+firstobs(x)
+#&gt; [1]  1  4 10
+lastobs(x)
+#&gt; [1]  6  9 10
+</code></pre>
+<p>The same can be done on variables in a data frame, e.g.</p>
+<pre><code class="language-r">firstobs(~vs, data=mtcars)
+#&gt; [1] 1 3
+lastobs(~vs, data=mtcars)
+#&gt; [1] 31 32
+</code></pre>
+<p>\subsection{The \code{which.maxn()} and \code{which.minn()} functions}
+\label{sec:whichmaxn}</p>
+<p>The location of the \(n\) largest / smallest entries in a numeric vector
+can be obtained with</p>
+<pre><code class="language-r">x &lt;- c(1:4, 0:5, 11, NA, NA)
+which.maxn(x, 3)
+#&gt; [1] 11 10  4
+which.minn(x, 5)
+#&gt; [1] 5 1 6 2 7
+</code></pre>
+<h2 id="subsequences-subseq">Subsequences - subSeq()</h2>
+<p>Find (sub) sequences in a vector:</p>
+<pre><code class="language-r">x &lt;- c(1, 1, 2, 2, 2, 1, 1, 3, 3, 3, 3, 1, 1, 1)
+subSeq(x)
+#&gt;   first last slength midpoint value
+#&gt; 1     1    2       2        2     1
+#&gt; 2     3    5       3        4     2
+#&gt; 3     6    7       2        7     1
+#&gt; 4     8   11       4       10     3
+#&gt; 5    12   14       3       13     1
+subSeq(x, item=1)
+#&gt;   first last slength midpoint value
+#&gt; 1     1    2       2        2     1
+#&gt; 2     6    7       2        7     1
+#&gt; 3    12   14       3       13     1
+subSeq(letters[x])
+#&gt;   first last slength midpoint value
+#&gt; 1     1    2       2        2     a
+#&gt; 2     3    5       3        4     b
+#&gt; 3     6    7       2        7     a
+#&gt; 4     8   11       4       10     c
+#&gt; 5    12   14       3       13     a
+subSeq(letters[x], item=&quot;a&quot;)
+#&gt;   first last slength midpoint value
+#&gt; 1     1    2       2        2     a
+#&gt; 2     6    7       2        7     a
+#&gt; 3    12   14       3       13     a
+</code></pre>
+<h2 id="recoding-values-of-a-vector-recodevar">Recoding values of a vector - recodeVar()</h2>
+<pre><code class="language-r">x &lt;- c(&quot;dec&quot;, &quot;jan&quot;, &quot;feb&quot;, &quot;mar&quot;, &quot;apr&quot;, &quot;may&quot;)
+src1 &lt;- list(c(&quot;dec&quot;, &quot;jan&quot;, &quot;feb&quot;), c(&quot;mar&quot;, &quot;apr&quot;, &quot;may&quot;))
+tgt1 &lt;- list(&quot;winter&quot;, &quot;spring&quot;)
+recodeVar(x, src=src1, tgt=tgt1)
+#&gt; [1] &quot;winter&quot; &quot;winter&quot; &quot;winter&quot; &quot;spring&quot; &quot;spring&quot; &quot;spring&quot;
+</code></pre>
+<h2 id="renaming-columns-of-a-dataframe-or-matrix-renamecol">Renaming columns of a dataframe or matrix - renameCol()</h2>
+<pre><code class="language-r">head(renameCol(mtcars, c(&quot;vs&quot;, &quot;mpg&quot;), c(&quot;vs_&quot;, &quot;mpg_&quot;)))
+#&gt;                   mpg_ cyl disp  hp drat   wt qsec vs_ am gear carb
+#&gt; Mazda RX4         21.0   6  160 110 3.90 2.62 16.5   0  1    4    4
+#&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.88 17.0   0  1    4    4
+#&gt; Datsun 710        22.8   4  108  93 3.85 2.32 18.6   1  1    4    1
+#&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.21 19.4   1  0    3    1
+#&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.0   0  0    3    2
+#&gt; Valiant           18.1   6  225 105 2.76 3.46 20.2   1  0    3    1
+</code></pre>
+<h2 id="time-since-an-event-timesinceevent">Time since an event - timeSinceEvent()</h2>
+<p>Consider the vector</p>
+<pre><code class="language-r">yvar &lt;- c(0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)
+</code></pre>
+<p>Imagine that “1” indicates an event of some kind which takes place
+at a certain time point. By default time points are assumed
+equidistant but for illustration we define time time variable</p>
+<pre><code class="language-r">tvar &lt;- seq_along(yvar) + c(0.1, 0.2)
+</code></pre>
+<p>Now we find time since event as</p>
+<pre><code class="language-r">tse &lt;- timeSinceEvent(yvar, tvar)
+tse
+#&gt;    yvar tvar abs.tse sign.tse ewin run tae  tbe
+#&gt; 1     0  1.1     3.1     -3.1    1  NA  NA -3.1
+#&gt; 2     0  2.2     2.0     -2.0    1  NA  NA -2.0
+#&gt; 3     0  3.1     1.1     -1.1    1  NA  NA -1.1
+#&gt; 4     1  4.2     0.0      0.0    1   1 0.0  0.0
+#&gt; 5     0  5.1     0.9      0.9    1   1 0.9 -5.1
+#&gt; 6     0  6.2     2.0      2.0    1   1 2.0 -4.0
+#&gt; 7     0  7.1     2.9      2.9    1   1 2.9 -3.1
+#&gt; 8     0  8.2     2.0     -2.0    2   1 4.0 -2.0
+#&gt; 9     0  9.1     1.1     -1.1    2   1 4.9 -1.1
+#&gt; 10    1 10.2     0.0      0.0    2   2 0.0  0.0
+#&gt; 11    0 11.1     0.9      0.9    2   2 0.9 -3.1
+#&gt; 12    0 12.2     2.0      2.0    2   2 2.0 -2.0
+#&gt; 13    0 13.1     1.1     -1.1    3   2 2.9 -1.1
+#&gt; 14    1 14.2     0.0      0.0    3   3 0.0  0.0
+#&gt; 15    1 15.1     0.0      0.0    4   4 0.0  0.0
+#&gt; 16    0 16.2     1.1      1.1    4   4 1.1   NA
+#&gt; 17    0 17.1     2.0      2.0    4   4 2.0   NA
+#&gt; 18    0 18.2     3.1      3.1    4   4 3.1   NA
+#&gt; 19    0 19.1     4.0      4.0    4   4 4.0   NA
+#&gt; 20    0 20.2     5.1      5.1    4   4 5.1   NA
+</code></pre>
+<p>The output reads as follows:
+\begin{itemize} \item \verb&quot;abs.tse&quot;: Absolute time since (nearest) event. \item \verb&quot;sign.tse&quot;: Signed time since (nearest) event. \item \verb&quot;ewin&quot;: Event window: Gives a symmetric window around each event. \item \verb&quot;run&quot;: The value of \verb&quot;run&quot; is set to </code>hv(1)hv<code>when the first event occurs and is increased by</code>hv(1)hv<code> at each subsequent event. \item \verb&quot;tae&quot;: Time after event. \item \verb&quot;tbe&quot;: Time before event. \end{itemize}</p>
+<pre><code class="language-r">plot(sign.tse ~ tvar, data=tse, type=&quot;b&quot;)
+grid()
+rug(tse$tvar[tse$yvar == 1], col=&quot;blue&quot;,lwd=4)
+points(scale(tse$run), col=tse$run, lwd=2)
+lines(abs.tse + .2 ~ tvar, data=tse, type=&quot;b&quot;,col=3)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-27" /></p>
+<pre><code class="language-r">plot(tae ~ tvar, data=tse, ylim=c(-6,6), type=&quot;b&quot;)
+grid()
+lines(tbe ~ tvar, data=tse, type=&quot;b&quot;, col=&quot;red&quot;)
+rug(tse$tvar[tse$yvar==1], col=&quot;blue&quot;, lwd=4)
+lines(run ~ tvar, data=tse, col=&quot;cyan&quot;, lwd=2)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-28" /></p>
+<pre><code class="language-r">plot(ewin ~ tvar, data=tse, ylim=c(1, 4))
+rug(tse$tvar[tse$yvar==1], col=&quot;blue&quot;, lwd=4)
+grid()
+lines(run ~ tvar, data=tse, col=&quot;red&quot;)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-29" /></p>
+<p>We may now find times for which time since an event is at most 1 as</p>
+<pre><code class="language-r">tse$tvar[tse$abs &lt;= 1]
+#&gt; [1]  4.2  5.1 10.2 11.1 14.2 15.1
+</code></pre>
+<h2 id="example-using-subseq-and-timesinceevent">Example: Using subSeq() and timeSinceEvent()</h2>
+<p>Consider the \verb|lynx| data:</p>
+<pre><code class="language-r">lynx &lt;- as.numeric(lynx)
+tvar &lt;- 1821:1934
+plot(tvar, lynx, type=&quot;l&quot;)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-31" /></p>
+<p>Suppose we want to estimate the cycle lengths. One way of doing this
+is as follows:</p>
+<pre><code class="language-r">yyy &lt;- lynx &gt; mean(lynx)
+head(yyy)
+#&gt; [1] FALSE FALSE FALSE FALSE FALSE  TRUE
+sss &lt;- subSeq(yyy, TRUE)
+sss
+#&gt;    first last slength midpoint value
+#&gt; 1      6   10       5        8  TRUE
+#&gt; 2     16   19       4       18  TRUE
+#&gt; 3     27   28       2       28  TRUE
+#&gt; 4     35   38       4       37  TRUE
+#&gt; 5     44   47       4       46  TRUE
+#&gt; 6     53   55       3       54  TRUE
+#&gt; 7     63   66       4       65  TRUE
+#&gt; 8     75   76       2       76  TRUE
+#&gt; 9     83   87       5       85  TRUE
+#&gt; 10    92   96       5       94  TRUE
+#&gt; 11   104  106       3      105  TRUE
+#&gt; 12   112  114       3      113  TRUE
+</code></pre>
+<pre><code class="language-r">plot(tvar, lynx, type=&quot;l&quot;)
+rug(tvar[sss$midpoint], col=&quot;blue&quot;, lwd=4)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-33" /></p>
+<p>Create the “event vector”</p>
+<pre><code class="language-r">yvar &lt;- rep(0, length(lynx))
+yvar[sss$midpoint] &lt;- 1
+str(yvar)
+#&gt;  num [1:114] 0 0 0 0 0 0 0 1 0 0 ...
+</code></pre>
+<pre><code class="language-r">tse &lt;- timeSinceEvent(yvar,tvar)
+head(tse, 20)
+#&gt;    yvar tvar abs.tse sign.tse ewin run tae tbe
+#&gt; 1     0 1821       7       -7    1  NA  NA  -7
+#&gt; 2     0 1822       6       -6    1  NA  NA  -6
+#&gt; 3     0 1823       5       -5    1  NA  NA  -5
+#&gt; 4     0 1824       4       -4    1  NA  NA  -4
+#&gt; 5     0 1825       3       -3    1  NA  NA  -3
+#&gt; 6     0 1826       2       -2    1  NA  NA  -2
+#&gt; 7     0 1827       1       -1    1  NA  NA  -1
+#&gt; 8     1 1828       0        0    1   1   0   0
+#&gt; 9     0 1829       1        1    1   1   1  -9
+#&gt; 10    0 1830       2        2    1   1   2  -8
+#&gt; 11    0 1831       3        3    1   1   3  -7
+#&gt; 12    0 1832       4        4    1   1   4  -6
+#&gt; 13    0 1833       5        5    1   1   5  -5
+#&gt; 14    0 1834       4       -4    2   1   6  -4
+#&gt; 15    0 1835       3       -3    2   1   7  -3
+#&gt; 16    0 1836       2       -2    2   1   8  -2
+#&gt; 17    0 1837       1       -1    2   1   9  -1
+#&gt; 18    1 1838       0        0    2   2   0   0
+#&gt; 19    0 1839       1        1    2   2   1  -9
+#&gt; 20    0 1840       2        2    2   2   2  -8
+</code></pre>
+<p>We get two different (not that different) estimates of period
+lengths:</p>
+<pre><code class="language-r">len1 &lt;- tapply(tse$ewin, tse$ewin, length)
+len2 &lt;- tapply(tse$run, tse$run, length)
+c(median(len1), median(len2), mean(len1), mean(len2))
+#&gt; [1] 9.50 9.00 9.50 8.92
+</code></pre>
+<p>We can overlay the cycles as:</p>
+<pre><code class="language-r">tse$lynx &lt;- lynx
+tse2 &lt;- na.omit(tse)
+plot(lynx ~ tae, data=tse2)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-37" /></p>
+<pre><code class="language-r">plot(tvar, lynx, type=&quot;l&quot;, lty=2)
+mm &lt;- lm(lynx ~ tae + I(tae^2) + I(tae^3), data=tse2)
+lines(fitted(mm) ~ tvar, data=tse2, col=&quot;red&quot;)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-38" /></p>
+<p>\section{Acknowledgements}
+\label{discussion}</p>
+<p>Credit is due to
+Dennis Chabot, Gabor Grothendieck, Paul Murrell and Jim Robison-Cox for
+reporting various bugs and making various suggestions to the
+functionality in the \doby{} package.</p>
+<!-- ```  -->
+<!-- \end{document} -->
+<!-- % \appendix -->
+<!-- % \section{The data} -->
+<!-- % \label{sec:appdata} -->
+<!-- % The reduced \code{C02} are: -->
+<!-- % ```{r} -->
+<!-- % CO2 -->
+<!-- % ```  -->
+<!-- % The reduced \code{airquality} data are: -->
+<!-- % ```{r} -->
+<!-- % head(airquality, n=20) -->
+<!-- % ```  -->
+<!-- % On the to-do-list is to allow to write as follows (but this feature is not -->
+<!-- % implemented yet): -->
+<!-- % <<eval=F>>=  -->
+<!-- % summaryBy(list(c("conc", "uptake", lu="log(uptake)"), "Plant"),  -->
+<!-- %           data=CO2, FUN=c(mean, sd)) -->
+<!-- % ``` -->
+<!-- % Inspired by the \pkg{dplyr} package, there is a \verb|summary_by| function which -->
+<!-- % does the samme as \summaryby{} but with the data argument being the first so -->
+<!-- % that one may write -->
+<!-- % <<results=hide>>=  -->
+<!-- % CO2 |> summary_by(cbind(conc, uptake, lu=log(uptake)) ~ Plant,  -->
+<!-- %                    FUN=myfun1) -->
+<!-- % ``` -->
+<!-- % which is the same as writing: -->
+<!-- % <<results=hide>>=  -->
+<!-- % summary_by(CO2, cbind(conc, uptake, lu=log(uptake)) ~ Plant,  -->
+<!-- %            FUN=myfun1) -->
+<!-- % ``` -->
+<!-- %% Same as -->
+<!-- %% <<results=hide>>=  -->
+<!-- %% aggregate(cbind(conc, uptake, log(uptake)) ~ Plant, data=CO2, FUN=myfun1) -->
+<!-- %% aggregate(conc ~ Plant, data=CO2, FUN=mean) -->
+<!-- %% ``` -->
+<!-- %%  -->
+<!-- %%<< >>=  -->
+<!-- %%library(magrittr) -->
+<!-- %%CO2 |> summary_by(cbind(conc, uptake) ~ Plant, FUN=myfun1) -->
+<!-- %%``` -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%<< >>=  -->
+<!-- %%summaryBy2( list(c("conc","uptake"), "Plant"), data=CO2, FUN=myfun1) -->
+<!-- %%``` -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%Above \code{myfun1()} is a function that returns a vector of named -->
+<!-- %%values. Note that the values returned by the function has been named as -->
+<!-- %%\code{m} and \code{v}. An alternative specification is: -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy( list(c("conc","uptake"), "Plant"), data=CO2, FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%If the result of the function(s) are not named, then the names in the -->
+<!-- %%output data in general become less intuitive: -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%myfun2 <- function(x){c(mean(x), var(x))} -->
+<!-- %%summaryBy( conc + uptake ~ Plant, data=CO2, FUN=myfun2) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%Another usage is to specify a list of functions each of which returns -->
+<!-- %%a single value: -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryByOLD( conc + uptake ~ Plant, data=CO2, FUN=list( mean, var ) ) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%Notice that if we specify a list of functions of which some returns a -->
+<!-- %%vector with more than one element, then the proper names are not -->
+<!-- %%retrieved: -->
+<!-- %%%%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 )) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%One can ``hard code'' the function names into the output as -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryByOLD(uptake~Plant, data=CO2, FUN=list( mean, var, myfun1 ), -->
+<!-- %%          fun.names=c("mean","var","mm","vv")) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- % \subsubsection{Statistics on functions of data} -->
+<!-- % \label{sec:xxx} -->
+<!-- % We may want to calculate the mean and variance for the logarithm of -->
+<!-- % \code{uptake}, for \code{uptake}+\code{conc} (not likely to be a -->
+<!-- % useful statistic) as well as for \code{uptake} and -->
+<!-- % \code{conc}. This can be achieved as: -->
+<!-- % ``` -->
+<!-- % ```{r} -->
+<!-- % summaryByOLD(log(uptake) + I(conc+uptake) + conc+uptake ~ Plant, data=CO2, -->
+<!-- %           FUN=myfun1) -->
+<!-- % ```  -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(cbind(lu=log(uptake), conc + uptake, conc, uptake) ~ Plant, data=CO2, -->
+<!-- %%          FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%The names of the variables become involved with this. The user may -->
+<!-- %%control the names of the variables directly: -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(log(uptake) + I(conc+uptake) + conc + uptake ~ Plant, data=CO2, -->
+<!-- %%          FUN=myfun1, var.names=c("log.upt", "conc+upt", "conc", "upt")) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%If one does not want output variables to contain parentheses then -->
+<!-- %%setting \code{p2d=TRUE} causes the parentheses to be replaced by dots -->
+<!-- %%(``.''). -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(log(uptake)+I(conc+uptake)~Plant, data=CO2, p2d=TRUE, -->
+<!-- %%FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %% -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%\subsubsection{Copying variables out with the \code{id} argument} -->
+<!-- %%\label{sec:xxx} -->
+<!-- %% -->
+<!-- %%To get the value of the \code{Type} and \code{Treat} in the first row of the -->
+<!-- %%groups (defined by the values of \code{Plant}) copied to the output -->
+<!-- %%dataframe we use the \code{id} argument in one of the following forms: -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(conc+uptake~Plant, data=CO2, FUN=myfun1, id=~Type+Treat) -->
+<!-- %%summaryBy(conc+uptake~Plant, data=CO2, FUN=myfun1, id=c("Type","Treat")) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%\subsubsection{Using '.' on the left hand side of a formula} -->
+<!-- %%\label{sec:xxx} -->
+<!-- %% -->
+<!-- %%It is possible  to use the dot (".") on the left hand side of -->
+<!-- %%the formula. The dot means "all numerical variables which do not -->
+<!-- %%appear elsewhere" (i.e.\ on the right hand side of the formula and in -->
+<!-- %%the \code{id} statement): -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(log(uptake)+I(conc+uptake)+. ~Plant, data=CO2, FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%\subsubsection{Using '.' on the right hand side of a formula} -->
+<!-- %%\label{sec:xxx} -->
+<!-- %% -->
+<!-- %%The dot (".") can also be used on the right hand side of the formula -->
+<!-- %%where it refers to "all non--numerical variables which are not -->
+<!-- %%specified elsewhere": -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(log(uptake) ~Plant+., data=CO2, FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%\subsubsection{Using '1' on the right hand side of the formula} -->
+<!-- %%\label{sec:xxx} -->
+<!-- %% -->
+<!-- %%Using 1 on the -->
+<!-- %%  right hand side means no grouping: -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(log(uptake) ~ 1, data=CO2, FUN=myfun1) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%\subsubsection{Preserving names of variables using \code{keep.names}} -->
+<!-- %%\label{sec:xxx} -->
+<!-- %%If the function applied to data only returns one value, it is possible -->
+<!-- %%to force that the summary variables retain the original names by -->
+<!-- %%setting \code{keep.names=TRUE}. A -->
+<!-- %%typical use of this could be -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%summaryBy(conc+uptake+log(uptake)~Plant, -->
+<!-- %%data=CO2, FUN=mean, id=~Type+Treat, keep.names=TRUE) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%\subsection{The \code{splitBy} function} -->
+<!-- %%\label{splitBy} -->
+<!-- %% -->
+<!-- %%Suppose we want to split the \code{airquality} data into a list of dataframes, e.g.\ one -->
+<!-- %%dataframe for each month. This can be achieved by: -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%x<-splitBy(~Month, data=airquality) -->
+<!-- %%x -->
+<!-- %%```  -->
+<!-- %%Hence for month 5, the relevant entry-name in the list is '5' and this -->
+<!-- %%part of data  can -->
+<!-- %%be extracted as -->
+<!-- %%``` -->
+<!-- %%%<<eval=F, results=hide>>= -->
+<!-- %%%x[['5']] -->
+<!-- %%%```  -->
+<!-- %% -->
+<!-- %%Information about the grouping is stored as a dataframe -->
+<!-- %%in an attribute called \code{groupid} and can be retrieved with: -->
+<!-- %%```{r} -->
+<!-- %%attr(x,"groupid") -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% \subsection{The \code{sampleBy} function} -->
+<!-- %% \label{sampleBy} -->
+<!-- %%  -->
+<!-- %% Suppose we want a random sample of 50 \% of the observations from a -->
+<!-- %% dataframe. This can be achieved with: -->
+<!-- %% ``` -->
+<!-- %% <<results=hide>>= -->
+<!-- %% sampleBy(~1, frac=0.5, data=airquality) -->
+<!-- %% ```  -->
+<!-- %%  -->
+<!-- %% Suppose instead that we want a  systematic sample of  every fifth -->
+<!-- %% observation within each month. This is achieved with: -->
+<!-- %% ``` -->
+<!-- %% <<results=hide>>= -->
+<!-- %% sampleBy(~Month, frac=0.2, data=airquality,systematic=T) -->
+<!-- %% ```  -->
+<!-- %%  -->
+<!-- %%  -->
+<!-- %% Inspired by the \pkg{dplyr} package, there is an \verb|order_by| function -->
+<!-- %% << >>=  -->
+<!-- %% x5 <- airquality |> order_by(c("Temp", "Month")) -->
+<!-- %% x6 <- airquality |> order_by(c("-Temp", "Month")) -->
+<!-- %% ``` -->
+<!-- %% which is the same as -->
+<!-- %% << >>=  -->
+<!-- %% x5 <- order_by(airquality, c("Temp", "Month")) -->
+<!-- %% x6 <- order_by(airquality, c("-Temp", "Month")) -->
+<!-- %% ``` -->
+<!-- %% <<echo=F, results=hide>>=  -->
+<!-- %% c(all.equal(x1, x3), all.equal(x1, x5),  -->
+<!-- %%   all.equal(x2, x4), all.equal(x2, x6)) -->
+<!-- %% ``` -->
+<!-- %% Suppose we want to calculate the weekwise feed efficiency of the pigs -->
+<!-- %% in the \code{dietox} data, i.e. weight gain divided by feed intake. -->
+<!-- %% ``` -->
+<!-- %% ```{r} -->
+<!-- %% data(dietox) -->
+<!-- %% dietox <- orderBy(~Pig+Time, data=dietox) -->
+<!-- %% FEfun  <- function(d){c(NA, diff(d$Weight)/diff(d$Feed))} -->
+<!-- %% v      <- lapplyBy(~Pig, data=dietox, FEfun) -->
+<!-- %% dietox$FE <- unlist(v) -->
+<!-- %% ```  -->
+<!-- %%  -->
+<!-- %% Technically, the above is the same as -->
+<!-- %% ``` -->
+<!-- %% ```{r} -->
+<!-- %% dietox <- orderBy(~Pig+Time, data=dietox) -->
+<!-- %% wdata  <- splitBy(~Pig, data=dietox) -->
+<!-- %% v      <- lapply(wdata, FEfun) -->
+<!-- %% dietox$FE <- unlist(v) -->
+<!-- %% ```  -->
+<!-- %%  -->
+<!-- %% -->
+<!-- %% \subsection{The \code{scaleBy} function} -->
+<!-- %%  -->
+<!-- %% Standardize the \code{iris} data within each value of \code{"Species"}: -->
+<!-- %% ``` -->
+<!-- %% ```{r} -->
+<!-- %% x <- scaleBy(cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) ~ Species,      -->
+<!-- %%              data=iris) -->
+<!-- %% lapply(x, head, 4) -->
+<!-- %% head(iris) -->
+<!-- %% ``` def -->
+<!-- %%  -->
+<!-- %% Alternative forms: -->
+<!-- %% << >>=  -->
+<!-- %% x <- scaleBy( list(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"), -->
+<!-- %%                  "Species"),     data=iris) -->
+<!-- %% x <- scaleBy(. ~ Species, data=iris) -->
+<!-- %% x <- scaleBy(list(".", "Species"),  data=iris) -->
+<!-- %% x <- iris  >% scale_by(. ~ Species) -->
+<!-- %% ``` -->
+<!-- %%  -->
+<!-- %%\section{Create By--functions on the fly} -->
+<!-- %%\label{sec:create-functions-fly} -->
+<!-- %% -->
+<!-- %%Create a function for creating groupwise t-tests -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%mydata <- data.frame(y=rnorm(32), x=rnorm(32), -->
+<!-- %%g1=factor(rep(c(1,2),each=16)), g2=factor(rep(c(1,2), each=8)), -->
+<!-- %%g3=factor(rep(c(1,2),each=4))) -->
+<!-- %%head(mydata) -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%## Based on the formula interface to t.test -->
+<!-- %%t.testBy1 <- function(formula, group, data, ...){ -->
+<!-- %%  formulaFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...) -->
+<!-- %%} -->
+<!-- %%## Based on the default interface to t.test -->
+<!-- %%t.testBy2 <- function(formula, group, data, ...){ -->
+<!-- %%  xyFunBy(formula, group, data, FUN=t.test, class="t.testBy1", ...) -->
+<!-- %%} -->
+<!-- %%```  -->
+<!-- %% -->
+<!-- %%Notice: The optional \code{class} argument will facilitate that you -->
+<!-- %%create your own print / summary methods etc. -->
+<!-- %% -->
+<!-- %%``` -->
+<!-- %%```{r} -->
+<!-- %%t.testBy1(y~g1, ~g2, data=mydata) -->
+<!-- %%t.testBy2(y~x,  ~g2, data=mydata) -->
+<!-- %%```  -->
+<!-- %% -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/combine/npm/katex/dist/katex.min.js,npm/katex/dist/contrib/auto-render.min.js,npm/@xiee/utils/js/render-katex.js" defer></script>
+</body>
+</html>

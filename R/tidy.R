@@ -1,9 +1,6 @@
 ## Note to self: The 'modern' packages tibble and broom are only used
 ## in this file
 
-#' @importFrom tibble as_tibble
-#' @importFrom broom tidy
-
 #' @title Tidy a linest object
 #' @description Tidy summarizes information about the components of the object.
 #' @name tidy-linest

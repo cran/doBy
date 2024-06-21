@@ -91,7 +91,6 @@
 #' Gene expression signatures for p53 mutation status in 250 breast cancer
 #' samples
 #' 
-#' 
 #' Perturbations of the p53 pathway are associated with more aggressive and
 #' therapeutically refractory tumours. We preprocessed the data using Robust
 #' Multichip Analysis (RMA). Dataset has been truncated to the 1000 most
@@ -102,7 +101,7 @@
 #' The factor \code{code} defines whether there was a mutation in the p53
 #' sequence (code=case) or not (code=control).
 #' 
-#' @name breastcancer
+#' @name data_breastcancer
 #'
 #' @docType data
 #'
@@ -128,7 +127,7 @@
 #' table(bc$code[train])
 #' \dontrun{
 #' library(MASS)
-#' z <- lda(code ~ ., data=bc, prior = c(1,1)/2, subset = train)
+#' z <- lda(code ~ ., data=bc, prior = c(1, 1) / 2, subset = train)
 #' pc <- predict(z, bc[-train, ])$class
 #' pc
 #' bc[-train, "code"]
@@ -136,7 +135,6 @@
 #' }
 #' 
 "breastcancer"
-
 
 
 ##
@@ -305,7 +303,6 @@
 "codstom"
 
 
-
 #' crimeRate
 #' 
 #' Crime rates per 100,000 inhabitants in states of the USA for different crime
@@ -401,12 +398,7 @@
 #' 
 #' data(dietox)
 #' head(dietox)
-#' if (require(ggplot2)){
-#'   qplot(Time, Weight, data=dietox, col=Pig) + geom_line() +
-#'            theme(legend.position = "none") + facet_grid(Evit~Cu)
-#' } else {
-#'   coplot(Weight ~ Time | Evit * Cu, data=dietox)
-#' }
+#' coplot(Weight ~ Time | Evit * Cu, data=dietox)
 #' 
 "dietox"
 
@@ -672,7 +664,7 @@
 #' 
 #' The \code{mathmark} data frame has 88 rows and 5 columns.
 #'
-#' @name data-mathmark
+#' @name data_mathmark
 #' 
 #' @aliases mathmark math
 #' @format This data frame contains the following columns: mechanics, vectors,
@@ -689,3 +681,180 @@
 #' 
 "mathmark"
 "math"
+
+
+#' @title Budworm data
+#' 
+#' @description Experiment on the toxicity to the tobacco budworm
+#'     Heliothis virescens of doses of the pyrethroid
+#'     trans-cypermethrin to which the moths were beginning to show
+#'     resistance. Batches of 20 moths of each sex were exposed for
+#'     three days to the pyrethroid and the number in each batch that
+#'     were dead or knocked down was recorded. Data is reported in
+#'     Collett (1991, p. 75).
+#'
+#' @concept data
+#' @name data_budworm
+#' @docType data
+#' 
+#' @format This data frame contains 12 rows and 4 columns:
+#'
+#' \describe{
+#' \item{sex:}{sex of the budworm.}
+#' \item{dose:}{dose of the insecticide trans-cypermethrin (in micro grams)}.
+#' \item{ndead:}{budworms killed in a trial.}
+#' \item{ntotal:}{total number of budworms exposed per trial.}
+#' }
+#'
+#' @references Venables, W.N; Ripley, B.D.(1999) Modern Applied Statistics with
+#' S-Plus, Heidelberg, Springer, 3rd edition, chapter 7.2
+#'
+#' @source Collett, D. (1991) Modelling Binary Data, Chapman & Hall, London,
+#' Example 3.7
+#'
+#' 
+#' @keywords datasets
+#' @examples
+#' 
+#' data(budworm)
+#' 
+#' ## function to caclulate the empirical logits
+#' empirical.logit<- function(nevent,ntotal) {
+#'    y <- log((nevent + 0.5) / (ntotal - nevent + 0.5))
+#'    y
+#' }
+#' 
+#' 
+#' # plot the empirical logits against log-dose
+#' 
+#' log.dose <- log(budworm$dose)
+#' emp.logit <- empirical.logit(budworm$ndead, budworm$ntotal)
+#' plot(log.dose, emp.logit, type='n', xlab='log-dose',ylab='emprirical logit')
+#' title('budworm: emprirical logits of probability to die ')
+#' male <- budworm$sex=='male'
+#' female <- budworm$sex=='female'
+#' lines(log.dose[male], emp.logit[male], type='b', lty=1, col=1)
+#' lines(log.dose[female], emp.logit[female], type='b', lty=2, col=2)
+#' legend(0.5, 2, legend=c('male', 'female'), lty=c(1,2), col=c(1,2))
+#' 
+#' \dontrun{
+#' * SAS example;
+#' data budworm;
+#' infile 'budworm.txt' firstobs=2;
+#' input sex dose ndead ntotal;
+#' run;
+#' }
+#' 
+#' 
+"budworm"
+
+
+#' Coronary artery disease data
+#' 
+#' A cross classified table with observational data from a Danish
+#' heart clinic.  The response variable is CAD (coronary artery
+#' disease, some times called heart attack).
+#'
+#' @details
+#'
+#' Notice that data are collected at a heart clinic, so data do not
+#' represent the population, but are conditional on patients having
+#' ended up at the clinic.
+#' 
+#' * cad1: Complete dataset, 236 cases.
+#'
+#' * cad2: Incomplete dataset, 67 cases. Information on (some of) the
+#'     variables 'Hyperchol', 'Smoker' and 'Inherit' is missing.
+#' 
+#' @name data_cad
+#' @aliases cad1 cad2
+#' @docType data
+#' @format A data frame with 236 observations on the following 14 variables.
+#'
+#' \describe{
+#'   \item{\code{Sex}}{Sex; a factor with levels \code{Female} \code{Male}}
+#'
+#'   \item{\code{AngPec}}{Angina pectoris (chest pain attacks); a
+#'   factor with levels \code{Atypical} \code{None} \code{Typical}}
+#'
+#'   \item{\code{AMI}}{Acute myocardic infarct; a factor with
+#'   levels \code{Definite} \code{NotCertain}}
+#'
+#'   \item{\code{QWave}}{A reading from an electrocardiogram; a
+#'   factor with levels \code{No} \code{Yes}; Yes means pathological and is a sign of previous myocardial infarction. }
+#'
+#'   \item{\code{QWavecode}}{a factor with levels \code{Nonusable}
+#'   \code{Usable}. An assesment of whether QWave is reliable.}
+#'
+#'   \item{\code{STcode}}{a factor with levels
+#'   \code{Nonusable} \code{Usable}. An assesment of whether STchange is reliable.}
+#'
+#'   \item{\code{STchange}}{A reading from an electrocardiogram; a factor
+#'   with levels \code{No} \code{Yes}. An STchange indicates a blockage of the coronary artery.}
+#'
+#'   \item{\code{SuffHeartF}}{Sufficient heart frequency; a factor with levels \code{No}, \code{Yes}}
+#' 
+#'   \item{\code{Hypertrophi}}{a factor with levels \code{No}, \code{Yes}. Hypertrophy refers to an
+#'   increased size of the heart muscle due to exercise. }
+#'
+#'   \item{\code{Hyperchol}}{a factor with levels \code{No} \code{Yes}. Hypercholesterolemia, also called high cholesterol,
+#'    is the presence of high levels of cholesterol in the blood.}
+#'
+#'   \item{\code{Smoker}}{Is the patient a smoker; a factor with levels \code{No}, \code{Yes}.}
+#'
+#'   \item{\code{Inherit}}{Hereditary predispositions for CAD; a factor with levels  \code{No}, \code{Yes}.}
+#'
+#'   \item{\code{Heartfail}}{Previous heart failures; a factor with  levels \code{No} \code{Yes}}
+#'
+#'   \item{\code{CAD}}{Coronary Artery Disease; a factor with levels
+#'    \code{No} \code{Yes}}.  CAD refers to a reduction of blood flow
+#'    to the heart muscle (commonly known as a heart attack). The
+#'    diagnosis made from biopsies.
+#'
+#' }
+#'
+#' 
+#' @references Hansen, J. F. (1980). The clinical diagnosis of
+#'     ischaemic heart disease due to coronary artery disease. Danish
+#'     Medical Bulletin
+#'
+#' Højsgaard, Søren and Thiesson, Bo (1995). BIFROST - Block recursive
+#' models Induced From Relevant knowledge, Observations and
+#' Statistical Techniques. Computational Statistics and Data Analysis,
+#' vol. 19, p. 155-175
+#' 
+#' 
+#'
+#' @keywords datasets
+#' @usage data(cad1)
+#' 
+#' @examples
+#' 
+#' data(cad1)
+#' ## maybe str(cad1) ; plot(cad1) ...
+#' 
+"cad1"
+"cad2"
+
+
+#' Personality traits
+#'
+#' The `peronality` dataframe has 240 rows and 32 columns
+#'
+#' @name data_personality
+#'
+#' @format This dataframe has recordings on the following 32
+#'     variables: distant, talkatv, carelss, hardwrk, anxious,
+#'     agreebl, tense, kind, opposng, relaxed, disorgn, outgoin,
+#'     approvn, shy, discipl, harsh, persevr, friendl, worryin,
+#'     respnsi, contrar, sociabl, lazy, coopera, quiet, organiz,
+#'     criticl, lax, laidbck, withdrw, givinup, easygon
+#'
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#' @references Origin unclear
+#' @keywords datasets
+#' @usage data(personality)
+#' @examples
+#' data(personality)
+#' str(personality)
+"personality"

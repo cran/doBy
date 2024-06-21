@@ -28,8 +28,8 @@ model_stability_glm <- function(data., model, n.searches=10, method=c("subgroups
 ##    fit_list2 <<- fit_list2
     rhs_nms  <- get_rhs_nms(model)    
     rhs_list <- get_predictor_list(fit_list2)
-    rhs_matrix <- glist2matrix(rhs_list, rhs_nms, aggregate=TRUE)
-    rhs_raw    <- glist2matrix(rhs_list, rhs_nms, aggregate=FALSE)    
+    rhs_matrix <- set_list2matrix(rhs_list, aggregate=TRUE)
+    rhs_raw    <- set_list2matrix(rhs_list, aggregate=FALSE)    
     rhs_matrix <- as.data.frame(rhs_matrix)
     freq <- rhs_matrix$Freq__
     rhs_matrix$Freq__ <- NULL
@@ -205,71 +205,135 @@ get_rhs_matrix <- function(x, aggregate=FALSE){
   if (!inherits(x, "model_stability_glm_class"))
     stop("'x' is not model_stability_glm_class\n")
   rhs_list <- get_predictor_list(x$fit)
-  rhs_raw <- glist2matrix(rhs_list, aggregate=aggregate)
+  rhs_raw <- set_list2matrix(rhs_list, aggregate=aggregate)
   t(rhs_raw)
 }
 
-aggregate_matrix <- function(mat){
-  
-    if (ncol(mat) > 0){
-        mat <- mat |> as.data.frame()  |> table() |> as.data.frame.table()
-        mat <- dplyr::filter(mat, .data$Freq>0)
-        mat <- mat[order(mat$Freq, decreasing=TRUE),]
-        mat <- sapply(mat, 
-                      function(o){
-                        as.numeric(as.character(o))
-                        })
+
+#' @title Matrix representatation of list of vectors and vice versa
+#' @param set_list list of vectors
+#' @param aggregate should the vectors be aggregated
+#' @param set_matrix matrix representatation
+#' @name set_list_set_matrix
+#'
+#' @examples
+#' l <- list(c(1,2,3), c(3,2,4), c(3,2,4))
+#' m1 <- set_list2matrix(l)
+#' m1
+#' matrix2set_list(m1)
+#' 
+#' m2 <- set_list2matrix(l, aggregate=TRUE)
+#' m2
+#' matrix2set_list(m2)
+#' 
+#' 
+#' @export
+set_list2matrix <- function(set_list, aggregate=FALSE){  
+    aggregate_matrix <- function(mat){
         
-        if (is.null(dim(mat)))
-            mat <- as.data.frame(t(mat))
-        else
-          mat
-    } else { 
-        as.data.frame(cbind(Freq=nrow(mat)))        
+        if (ncol(mat) > 0){
+            mat <- mat |> as.data.frame()  |> table() |> as.data.frame.table()
+            mat <- dplyr::filter(mat, .data$Freq>0)
+            mat <- mat[order(mat$Freq, decreasing=TRUE),]
+            mat <- sapply(mat, 
+                          function(o){
+                              as.numeric(as.character(o))
+                          })
+            
+            if (is.null(dim(mat)))
+                mat <- as.data.frame(t(mat))
+            else
+                mat
+        } else { 
+            as.data.frame(cbind(Freq=nrow(mat)))        
+        }
     }
+    
+    ## Get unique terms across all lists
+    unique_terms <- unique(unlist(set_list))
+  
+    ## Create an empty matrix M with 3 rows and columns equal to the number of unique terms
+    M <- matrix(0, nrow = length(set_list), ncol = length(unique_terms), 
+                dimnames = list(NULL, unique_terms))
+    
+    ## Iterate over each list and mark the presence of terms in the matrix
+    for (i in seq_along(set_list)) {
+        ##print(set_list[[i]])
+        M[i, set_list[[i]]] <- 1
+    }
+
+    if (aggregate) {
+        M2 <- aggregate_matrix(M)
+        colnames(M2) <- c(colnames(M), "Freq__")
+        return(M2)
+    }
+    else
+        return(M)
 }
 
-glist2matrix <- function(rhs_list, nms, aggregate=TRUE){
-  
-  
-  # Get unique terms across all lists
-  unique_terms <- unique(unlist(rhs_list))
-  
-  # Create an empty matrix M with 3 rows and columns equal to the number of unique terms
-  M <- matrix(0, nrow = length(rhs_list), ncol = length(unique_terms), 
-              dimnames = list(NULL, unique_terms))
-  
-  # Iterate over each list and mark the presence of terms in the matrix
-  for (i in seq_along(rhs_list)) {
-        ##print(rhs_list[[i]])
-        M[i, rhs_list[[i]]] <- 1
-  }
 
-  if (aggregate) {
-    M2 <- aggregate_matrix(M)
-    colnames(M2) <- c(colnames(M), "Freq__")
-    M2
-  }
-  else
-    M
-  
-  
-    #   zz <- matrix(0, length(rhs_list), length(nms))
-    #     colnames(zz) <- nms
-    #         ii <- lapply(rhs_list, match, nms)
-    # 
-    # for (i in 1:length(rhs_list)){
-    #     zz[i, ii[[i]]] <- 1
-    # }
-    # 
-    # if (aggregate) {
-    #    zz2 <- aggregate_matrix(zz)
-    #     colnames(zz2) <- c(nms, "Freq__")
-    #     zz2
-    #     }
-    # else
-    #     zz
+#' @rdname set_list_set_matrix
+#' @param set_matrix matrix representatation
+#' @export
+matrix2set_list<- function(set_matrix){
+    has_freq <- "Freq__" %in% colnames(set_matrix)
+    if (has_freq){
+        set_matrix <- exclude_column_by_name(repeat_rows(set_matrix, set_matrix[,"Freq__"]), "Freq__")
+    }
+      nr <- nrow(set_matrix)
+    out <- vector("list", nr)
+    nms <- colnames(set_matrix)
+    nms <- if(is.null(nms)) 1:ncol(set_matrix) else nms
+    ##print(out); cat("nms:\n"); print(nms)
+    
+    for (i in 1:nrow(set_matrix)){
+        ri <- set_matrix[i,]
+      ##  print(ri)
+        idx <- which(abs(ri)> 1e-5)
+        ##cat("idx:\n");print(idx);print(nms[idx])
+        out[[i]] <- nms[idx]
+    }
+    return(out)
 }
+
+repeat_rows <- function(M, v) {
+  # Check that the length of v matches the number of rows in M
+  if (length(v) != nrow(M)) {
+    stop("The length of vector v must match the number of rows in matrix M.")
+  }
+  
+  # Create an empty list to store the repeated rows
+  repeated_rows <- vector("list", length = sum(v))
+  
+  # Fill the list with repeated rows
+  index <- 1
+  for (i in seq_along(v)) {
+    for (j in seq_len(v[i])) {
+      repeated_rows[[index]] <- M[i, , drop = FALSE]
+      index <- index + 1
+    }
+  }
+  
+  # Combine the list into a new matrix
+  new_matrix <- do.call(rbind, repeated_rows)
+  return(new_matrix)
+}
+
+exclude_column_by_name <- function(M, colname) {
+  # Check if the column name exists in the matrix
+  col_index <- which(colnames(M) == colname)
+  
+  if (length(col_index) == 0) {
+    stop(paste("Column", colname, "does not exist in the matrix."))
+  }
+  
+  # Exclude the column by name
+  M <- M[, -col_index, drop = FALSE]
+  
+  return(M)
+}
+
+
 
 
 #' @title Generate data list
@@ -319,7 +383,7 @@ generate_data_list <- function(data., K, method=c("subgroups", "resample")){
 #            function(s){
 #                s |> terms() |> attr("term.labels")  
 #            })
-# rhs.matrix <- glist2matrix(predictor.list, aggregate=FALSE)
+# rhs.matrix <- set_list2matrix(predictor.list, aggregate=FALSE)
 
 
 
@@ -396,7 +460,7 @@ generate_data_list <- function(data., K, method=c("subgroups", "resample")){
     
 ##     rhs_nms <- get_rhs_nms(model)    
 ##     predictor.list <- get_predictor_list(fit_list2)
-##     rhs <- glist2matrix(predictor.list, rhs_nms, aggregate=TRUE)
+##     rhs <- set_list2matrix(predictor.list, rhs_nms, aggregate=TRUE)
 ##     rhs <- as.data.frame(rhs)
 ##     freq <- rhs$Freq__
 ##     rhs$Freq__ <- NULL
@@ -425,8 +489,8 @@ generate_data_list <- function(data., K, method=c("subgroups", "resample")){
 ##     rhs_nms <- get_rhs_nms(object$model)    
 ##     predictor.list <- get_predictor_list(object$fit)
     
-##     rhs_raw <- glist2matrix(predictor.list, rhs_nms, aggregate=FALSE)
-##     rhs_matrix <- glist2matrix(predictor.list, rhs_nms, aggregate=TRUE)
+##     rhs_raw <- set_list2matrix(predictor.list, rhs_nms, aggregate=FALSE)
+##     rhs_matrix <- set_list2matrix(predictor.list, rhs_nms, aggregate=TRUE)
 ##     rownames(rhs_matrix) <- 1:nrow(rhs_matrix)
     
 ##     rhs_matrix <-

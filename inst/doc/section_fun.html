@@ -196,7 +196,7 @@ fun_env
 #&gt;     args &lt;- arg_getter()
 #&gt;     do.call(fun, args)
 #&gt; }
-#&gt; &lt;environment: 0x5f27c03f5488&gt;
+#&gt; &lt;environment: 0x5a38c1b3f338&gt;
 </code></pre>
 <p>In the last case, we can see the section and the original function definition as:</p>
 <pre><code class="language-r">get_section(fun_env) 
@@ -252,11 +252,11 @@ microbenchmark(
 )
 #&gt; Unit: microseconds
 #&gt;          expr   min    lq  mean median    uq    max neval cld
-#&gt;   inv_toep(4)  12.9  13.2  14.2   13.6  14.3   16.7     5   a
-#&gt;   inv_toep(8)  15.6  15.6  16.7   16.6  17.0   18.5     5   a
-#&gt;  inv_toep(16)  21.5  22.2 363.2   23.6  26.9 1721.7     5   a
-#&gt;  inv_toep(32)  47.7  48.6  51.3   48.9  50.4   61.0     5   a
-#&gt;  inv_toep(64) 152.4 157.5 156.7  157.7 158.0  158.1     5   a
+#&gt;   inv_toep(4)  11.8  12.4  13.3   12.6  13.8   15.7     5   a
+#&gt;   inv_toep(8)  14.7  15.0  15.6   15.6  16.0   16.8     5   a
+#&gt;  inv_toep(16)  22.3  22.8 398.1   23.1  24.4 1897.8     5   a
+#&gt;  inv_toep(32)  56.4  56.5  59.5   56.7  58.5   69.6     5   a
+#&gt;  inv_toep(64) 264.6 264.9 268.0  268.1 269.8  272.4     5   a
 </code></pre>
 <p>However, it is tedious (and hence error prone) to write these function calls.</p>
 <p>A programmatic approach using \code{section_fun} is as follows: First create a list of sectioned functions:</p>
@@ -310,9 +310,9 @@ microbenchmark(
 )
 #&gt; Unit: microseconds
 #&gt;  expr  min   lq mean median   uq   max neval cld
-#&gt;     3 12.6 12.8 37.0   13.5 19.9 126.0     5   a
-#&gt;     4 13.5 13.8 14.6   14.2 14.3  17.0     5   a
-#&gt;     5 13.7 14.0 18.5   17.6 22.9  24.1     5   a
+#&gt;     3 12.0 12.2 32.1   13.1 21.0 102.4     5   a
+#&gt;     4 12.5 12.6 13.2   12.7 13.3  15.2     5   a
+#&gt;     5 13.2 15.8 18.7   16.9 22.6  25.2     5   a
 </code></pre>
 <p>Running the code below provides a benchmark of the different ways of sectioning in terms of speed.</p>
 <pre><code class="language-r">n.vec  &lt;- seq(20, 80, by=20)

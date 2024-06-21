@@ -1,3 +1,9 @@
+doBy v4.6.22 (Release date: 2024-06-20)
+=======================================
+
+* Various internal cleanups
+
+
 doBy v4.6.21 (Release date: )
 =======================================
 

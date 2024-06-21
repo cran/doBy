@@ -41,12 +41,7 @@ The cumulated feed intake is also recorded. The pigs are litter mates.
 
 data(dietox)
 head(dietox)
-if (require(ggplot2)){
-  qplot(Time, Weight, data=dietox, col=Pig) + geom_line() +
-           theme(legend.position = "none") + facet_grid(Evit~Cu)
-} else {
-  coplot(Weight ~ Time | Evit * Cu, data=dietox)
-}
+coplot(Weight ~ Time | Evit * Cu, data=dietox)
 
 }
 \keyword{datasets}

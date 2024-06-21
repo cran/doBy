@@ -2,6 +2,7 @@
 % Please edit documentation in R/formula_ops.R
 \name{formula_ops}
 \alias{formula_ops}
+\alias{formula_add_str}
 \alias{formula_add}
 \alias{formula_poly}
 \alias{formula_nth}
@@ -19,6 +20,8 @@
 \alias{unique_formula}
 \title{Formula operations and coercion.}
 \usage{
+formula_add_str(frm1, terms, op = "+")
+
 formula_add(frm1, frm2)
 
 formula_poly(chr1, n, noint = FALSE, y = NULL)
@@ -51,6 +54,10 @@ unique_formula(list_of_formulas)
 }
 \arguments{
 \item{frm1, frm2}{Formulas to be coerced to character vectors.}
+
+\item{terms}{Character string.}
+
+\item{op}{Either "+" (default) or "-".}
 
 \item{chr1}{Character vector to be coerced to formulas.}
 
@@ -97,5 +104,9 @@ formula_chr_to_form(c("a*b", "z"), "log(y)")
 
 formula_add(y~a*b+z, ~-1)
 formula_add(y~a*b+z, ~a:b)
+
+formula_add_str(y~x1 + x2, "x3")
+formula_add_str(y~x1 + x2, "x1")
+formula_add_str(y~x1 + x2, "x1", op="-")
 
 }
