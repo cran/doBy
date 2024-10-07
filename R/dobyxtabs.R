@@ -19,7 +19,7 @@ function (formula = ~., data = parent.frame(),
   m <- match.call(expand.dots = FALSE)
   if (is.matrix(eval(m$data, parent.frame()))) 
     m$data <- as.data.frame(data)
-  m$... <- m$exclude <- m$drop.unused.levels <- NULL
+  m$... <- m$exclude <- m$drop.unused.levels <- NULL ## FIXME ...
   m$... <- m$exclude <- m$FUN <- NULL
   m[[1]] <- as.name("model.frame")
   mf <- eval(m, parent.frame())

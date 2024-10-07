@@ -8,24 +8,23 @@
 #' 
 #' @export
 model_stability_glm <- function(data., model, n.searches=10, method=c("subgroups", "resample"), ...){
-  method <- match.arg(method)
+    method <- match.arg(method)
     data_list <- generate_data_list(data., K=n.searches, method=method)
-
+    
     lhs <- as.character(model$formula[[2]])
     
     
     fit_list <- data_list |>
-        lapply(function(dat..){
+        parallel::mclapply(function(dat..){
             model <- update(model, data=dat..)
             step(model, ...)
         })
     
-    fit_list2 <- lapply(
-        fit_list, function(x){
-            update(x, data=data.)
-        }
-    )
-##    fit_list2 <<- fit_list2
+    fit_list2 <- parallel::mclapply(
+                               fit_list, function(x){
+                                   update(x, data=data.)
+                               }
+                           )
     rhs_nms  <- get_rhs_nms(model)    
     rhs_list <- get_predictor_list(fit_list2)
     rhs_matrix <- set_list2matrix(rhs_list, aggregate=TRUE)
@@ -33,10 +32,10 @@ model_stability_glm <- function(data., model, n.searches=10, method=c("subgroups
     rhs_matrix <- as.data.frame(rhs_matrix)
     freq <- rhs_matrix$Freq__
     rhs_matrix$Freq__ <- NULL
-
+    
     rhs_matrix = as(t(rhs_matrix), "dgCMatrix")
     rhs_raw = as(t(rhs_raw), "dgCMatrix")
-
+    
     loc <- get_location(rhs_raw, rhs_matrix)    
     
     out <- list(
@@ -148,17 +147,21 @@ get_formulas <- function(object, unique=TRUE, text=FALSE){
 #' 
 #' @importFrom boot cv.glm
 #' @export
-cv_glm_fitlist <- function(data., fit_list, K=5){
-    #  sapply(obj, inherits, "glm")
-      fit_list <- lapply(fit_list, function(x){
-          if(!inherits(x, "glm"))  stop("x must be an glm object")
-          update(x, data=data.)
-      })
+cv_glm_fitlist <- function(data., fit_list, K=10){
+    fit_list <-
+        lapply(fit_list,
+               function(fit){
+                   if(!inherits(fit, "glm"))
+                       stop("fit must be an glm object")
+                   update(fit, data=data.)
+               })
 
-      cv.error <- sapply(fit_list, function(x){
-
-        boot::cv.glm(data., x, K=K)$delta[1] 
-    })
+    cv.error <-
+        sapply(fit_list,
+               function(fit){
+                   boot::cv.glm(data., fit, K=K)$delta[1] 
+               })
+    
     return(cv.error)    
 }
 

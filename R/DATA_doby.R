@@ -1,8 +1,28 @@
+#' @title income data
+#' @description Data on income, years of educations and ethnicity.
+#' @name income
+#' @docType data
+#' @format This data frame contains:
+#' \describe{
+#' \item{inc:}{Income: Yearly income.}
+#' \item{educ:}{Education: Number of years of education.}
+#' \item{race:}{Racial-Ethnic group: "b" (black), "h" (hispanic) and "w" (white).}
+#' }
+#' @keywords datasets
+#'
+#' @details Variable names are as in the reference.
+#' 
+#' @references Agresti, A. (2024) Statistical Methods for the Social
+#'     Sciences, Global Edition (6th edition).  ISBN-13: 9781292449197. Table 13.1
+#' 
+"income"
+
+
 #' @title crickets data
 #'
-#' @description
+#' @description Mating songs of male tree crickets.
 #'
-#' name crickets
+#' @name crickets
 #'
 #' @docType data
 #' @format This data frame contains:
@@ -22,7 +42,7 @@
 #'  identify males of the correct species. Walker (1962) wanted to
 #'  know whether the chirps of the crickets Oecanthus
 #'  exclamationis and Oecanthus niveus had different pulse
-#'  rates. See \url{http://www.biostathandbook.com/ancova.html} for
+#'  rates. See \url{https://www.biostathandbook.com/ancova.html} for
 #'  details.  He measured the pulse rate of the crickets (variable
 #'  `pps`) at a variety of temperatures (`temp`):
 #'
@@ -36,7 +56,6 @@
 ##
 ## beets
 ##
-
 #' @title beets data
 #'
 #' @description Yield and sugar percentage in sugar beets from a split plot

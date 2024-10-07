@@ -4,7 +4,7 @@
 \alias{cv_glm_fitlist}
 \title{Cross-validation for list of glm objects}
 \usage{
-cv_glm_fitlist(data., fit_list, K = 5)
+cv_glm_fitlist(data., fit_list, K = 10)
 }
 \arguments{
 \item{data.}{A data frame}

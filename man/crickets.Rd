@@ -16,7 +16,7 @@ This data frame contains:
 crickets
 }
 \description{
-name crickets
+Mating songs of male tree crickets.
 }
 \details{
 Walker (1962) studied the mating songs of male
@@ -25,7 +25,7 @@ song, and females may use the number of pulses per second to
 identify males of the correct species. Walker (1962) wanted to
 know whether the chirps of the crickets Oecanthus
 exclamationis and Oecanthus niveus had different pulse
-rates. See \url{http://www.biostathandbook.com/ancova.html} for
+rates. See \url{https://www.biostathandbook.com/ancova.html} for
 details.  He measured the pulse rate of the crickets (variable
 \code{pps}) at a variety of temperatures (\code{temp}):
 }

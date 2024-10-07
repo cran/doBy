@@ -47,7 +47,7 @@ head(mtcars)
 tail(mtcars)
 ``` 
 
-A description of the variable names can be found here: \url{https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html}; see also \url{https://www.jstor.org/stable/2529336?seq=12}.
+
 
 
 

@@ -1,3 +1,15 @@
+doBy v4.6.24 (Release date: 2024-10-07)
+=======================================
+
+* `response_plot` function added.
+* file with matrix operations removed.
+
+
+doBy v4.6.23 (Release date: )
+=======================================
+
+* income data added
+
 doBy v4.6.22 (Release date: 2024-06-20)
 =======================================
 
