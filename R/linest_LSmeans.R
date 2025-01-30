@@ -26,8 +26,7 @@
 #' 
 #' @return A dataframe with results from computing the contrasts.
 #'
-#' @note \code{LSmeans} and \code{popMeans} are synonymous. Some of
-#'     the code has been inspired by the \bold{lsmeans} package.
+#' @note \code{LSmeans} and \code{popMeans} are synonymous. 
 #' 
 #' @section Warning: Notice that \code{LSmeans} and \code{LE_matrix}
 #'     fails if the model formula contains an offset (as one would

@@ -13,7 +13,7 @@
 \alias{summary.linest_class}
 \title{Compute linear estimates}
 \usage{
-linest(object, L = NULL, ...)
+linest(object, L = NULL, level = 0.95, ...)
 
 \method{confint}{linest_class}(object, parm, level = 0.95, ...)
 
@@ -29,12 +29,12 @@ the number of parameters in the systematic effects in the
 model. If \code{NULL} then \code{L} is taken to be the p times
 p identity matrix}
 
+\item{level}{The level of the (asymptotic) confidence interval.}
+
 \item{\dots}{Additional arguments; currently not used.}
 
 \item{parm}{Specification of the parameters estimates for which
 confidence intervals are to be calculated.}
-
-\item{level}{The level of the (asymptotic) confidence interval.}
 
 \item{confint}{Should confidence interval appear in output.}
 }

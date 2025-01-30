@@ -1,3 +1,8 @@
+doBy v4.6.25 (Release date: 2025-01-29)
+=======================================
+
+* Various minor changes; too many to remember.
+
 doBy v4.6.24 (Release date: 2024-10-07)
 =======================================
 

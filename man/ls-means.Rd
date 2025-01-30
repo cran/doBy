@@ -51,8 +51,7 @@ For example having \code{y ~ log(x)} will cause an error. Instead one
 must define the variable \code{logx = log(x)} and do \code{y ~ logx}.
 }
 \note{
-\code{LSmeans} and \code{popMeans} are synonymous. Some of
-the code has been inspired by the \bold{lsmeans} package.
+\code{LSmeans} and \code{popMeans} are synonymous.
 }
 \section{Warning}{
  Notice that \code{LSmeans} and \code{LE_matrix}

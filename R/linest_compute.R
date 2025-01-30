@@ -42,15 +42,15 @@
 #' @export linest
 
 #' @export
-linest <- function(object, L=NULL, ...){
+linest <- function(object, L=NULL, level=0.95, ...){
     UseMethod("linest")
 }
 
 #' @export
-linest.lm <- function(object, L=NULL, ...){
+linest.lm <- function(object, L=NULL, level=0.95, ...){
     bhat   <- coef(object)
     L      <- .constructL(L, bhat)    
-    is.est <- is_estimable(L, null_basis( object ))
+    is.est <- is_estimable(L, null_basis(model.matrix(object)))
     VV0    <- vcov(object, complete=FALSE)
     ddf.vec <- rep(object$df.residual, nrow( L ))
     res     <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
@@ -58,16 +58,16 @@ linest.lm <- function(object, L=NULL, ...){
     p.value <- 2 * pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
     res <- as.data.frame(cbind(res, p.value))
     
-    .finalize_linest(res, L)
+    .finalize_linest(res, L, level)
 }
 
 
 #' @export
-linest.glm <- function(object, L=NULL, ...){
+linest.glm <- function(object, L=NULL, level=0.95, ...){
 
     bhat    <- coef(object)
     L       <- .constructL(L, bhat)        
-    is.est  <- is_estimable(L, null_basis( object ))
+    is.est  <- is_estimable(L, null_basis(model.matrix(object)))
     VV0     <- vcov(object, complete=FALSE)
     ddf.vec <- rep(object$df.residual, nrow( L ))
     res     <- .getLb2(L, bhat, VV0, ddf.vec, is.est)
@@ -81,15 +81,15 @@ linest.glm <- function(object, L=NULL, ...){
         ## qq <- qt(1-(1-level)/2, df=res[,"df"])
     }
     res <- as.data.frame(cbind(res, p.value))
-    .finalize_linest(res, L)
+    .finalize_linest(res, L, level)
 }
 
 #' @export
-linest.geeglm <- function(object, L=NULL, ...){
+linest.geeglm <- function(object, L=NULL, level=0.95, ...){
 
     bhat <- coef(object)
     L    <- .constructL(L, bhat)    
-    is.est  <- is_estimable(L, null_basis( object ))
+    is.est  <- is_estimable(L, null_basis(model.matrix(object)))
     VV0     <- summary(object)$cov.scaled
     ddf.vec <- rep(1, nrow(L))
     res     <- .getLb2( L, bhat, VV0, ddf.vec, is.est)
@@ -97,15 +97,15 @@ linest.geeglm <- function(object, L=NULL, ...){
     res <- res[, 1:3]
     p.value <- 2 * pnorm(abs(res[,"statistic"]), lower.tail=FALSE)
     res <- as.data.frame(cbind(res, p.value))
-    .finalize_linest(res, L)
+    .finalize_linest(res, L, level)
 }
 
 #' @export
-linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
+linest.lmerMod <- function(object, L=NULL, level=0.95, adjust.df=TRUE, ...){
 
     bhat <- lme4::fixef(object)
     L  <- .constructL(L, bhat)    
-    is.est <- is_estimable(L, null_basis( object ))
+    is.est <- is_estimable(L, null_basis(model.matrix(object)))
 
     if (adjust.df){
         if (requireNamespace("pbkrtest", quietly=TRUE)){
@@ -127,29 +127,60 @@ linest.lmerMod <- function(object, L=NULL, adjust.df=TRUE, ...){
     p.value <- 2 * pt(abs(res[,"statistic"]), df=res[,"df"], lower.tail=FALSE)
 
     res <- as.data.frame(cbind(res, p.value))
-    .finalize_linest(res, L)
+    .finalize_linest(res, L, level)
 }
 
 #' @export
-linest.merMod <- function(object, L=NULL, conf.int=FALSE, conf.level=0.95, ...){
+linest.merMod <- function(object, L=NULL, level=0.95, ...){
     cl <- match.call()
     cl[[1]] <- as.name("linest.lmerMod")
     cl$adjust.df <- FALSE
     eval(cl)
 }
 
-.finalize_linest <- function(.coef, L){
+.finalize_linest <- function(.coef, L, level){
 
+     ## cat(".finalize_linest\n")
+     ## print(.coef)
     rownames(.coef) <- NULL
+
+
+    
+    df <- .coef$df
+
+    qq <- 1-(1-level)/2
+    
+    if (!is.null(df)) {
+        crit <- qt(qq, df=df)
+    } else {
+        crit <- qnorm(qq)
+    }
+    
+    .coef <- cbind(.coef,
+      cbind(lwr=.coef$estimate -crit*.coef$std.error,
+            upr=.coef$estimate +crit*.coef$std.error))
+
+    gr <- attr(L, "grid")
+    ## gr <- lapply(gr, as.character)
+
+    ## print(gr)
+
+    if (!is.null(gr)){
+        .coef <- cbind(gr, .coef)
+    }
+    ## print(.coef)
+
+    ## .coef$estimate <- format(.coef$estimate, digits = 3, nsmall = 2)
     
     if (!is.null(rownames(L)))
         rownames(.coef) <- rownames(L)
 
     ## .coef <- as.data.frame(.coef)
-    
-    res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
-    class(res) <- "linest_class"
-    res
+
+    attr(.coef, "L") <- L
+    #res  <- list(coef=.coef, grid=attr(L, "grid"), L=L)
+    class(.coef) <- c("linest_class", "data.frame")
+    .coef
 }
 
 
@@ -316,26 +347,32 @@ coef.linest_class <- function (object, ...) {
 #' @export
 print.linest_class <- function (x, ...){
     ## cat("Coefficients:\n")
-    printCoefmat(x$coef)
+    ##printCoefmat(x$coef)
+    old <- options("digits")$digits    
+    options("digits"=3)
+    print.data.frame(x)
+    options("digits"=old)
+    return(invisible(x))
 }
 
 #' @export
 #' @rdname linest
 summary.linest_class <- function (object, ...) 
 {
-    cat("Coefficients:\n")
-    printCoefmat(object$coef)
-    cat("\n")
+    print(object)
+##     cat("Coefficients:\n")
+##     printCoefmat(object$coef)
+##     cat("\n")
 
-#    if (!is.null(object$grid)){
-        cat("Grid:\n")
-        print(object$grid)
-        cat("\n")
-#    }
+## #    if (!is.null(object$grid)){
+##         cat("Grid:\n")
+##         print(object$grid)
+##         cat("\n")
+## #    }
 
-    cat("L:\n")
-    print(object$L)
-    cat("\n")
+##     cat("L:\n")
+##     print(object$L)
+##     cat("\n")
 
     invisible(object)
 }

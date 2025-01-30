@@ -128,15 +128,6 @@ LE_matrix.default <- function(object, effect=NULL, at=NULL){
 }
 
 
-
-## OLD
-## LE_matrix.default <- function(object, effect=NULL, at=NULL){
-##     out <- get_linest_list(object, effect, at)
-##     out <- aggregate_linest_list (out)
-##     class(out) <- c("linest_matrix_class", "matrix")
-##     out
-## }
-
 #' @export
 #' @rdname linest-matrix
 aggregate_linest_list <- function (linest_list){
@@ -240,10 +231,10 @@ get_linest_list <- function(object, effect=NULL, at=NULL){
             }
         }
 
-        XXlist <- list(get_X(object, newdata=newdata, at=NULL))
-        ## cat("XXlist:\n"); print(XXlist)
-        attr(XXlist, "at")   <- at[intersect(vartype$numeric, names(at))]
-        attr(XXlist, "grid") <- NULL
+        out_list <- list(get_X(object, newdata=newdata, at=NULL))
+        ## cat("out_list:\n"); print(out_list)
+        attr(out_list, "at")   <- at[intersect(vartype$numeric, names(at))]
+        attr(out_list, "grid") <- NULL
     }
     else
     {
@@ -254,27 +245,24 @@ get_linest_list <- function(object, effect=NULL, at=NULL){
         ## nfl <<- new.fact.lev
         ## gd <<- grid.data
         ##str(list(new.fact.lev=new.fact.lev, grid.data=grid.data))
-
-        ## cat("HHHH grid.data\n")
-        ## print(grid.data)
         
-        XXlist    <- list()
+        out_list    <- list()
         for (ii in 1:nrow(grid.data)){
             config    <- grid.data[ii, ,drop=FALSE ]
             fact.lev2 <- set_xlevels(fact.lev, at=config)
             newdata   <- expand.grid(fact.lev2)
             newdata[, cov.ave.name]  <- cov.ave
             XX             <- get_X(object, newdata=newdata, at=at)
-            XXlist[[ ii ]] <- XX
+            out_list[[ ii ]] <- XX
         }
 
         grid.data[, names(cov.ave) ] <- cov.ave
-        attr(XXlist, "at") <- at
-        attr(XXlist, "grid") <- grid.data
-        attr(XXlist, "offset") <- attr(XX, "offset")  ## FIXME: reference to XX; what is offset?
+        attr(out_list, "at") <- at
+        attr(out_list, "grid") <- grid.data
+        attr(out_list, "offset") <- attr(XX, "offset")  ## FIXME: reference to XX; what is offset?
     }
-    class(XXlist) <- "linest_list_class"
-    XXlist
+    class(out_list) <- "linest_list_class"
+    out_list
 }
 
 

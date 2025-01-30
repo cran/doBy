@@ -179,8 +179,8 @@ tail(mtcars)
 <h2 id="summaryby-and-summary-by">summaryBy()  and summary_by()</h2>
 <p>\label{sec:summaryBy}</p>
 <p>The \summaryby{} function is used for calculating quantities like
-``the mean and variance of numerical variables \(x\) and `eO(y)eO` for
-each combination of two factors `eO(A)eO` and `eO(B)eO`’’.
+``the mean and variance of numerical variables \(x\) and `oR(y)oR` for
+each combination of two factors `oR(A)oR` and `oR(B)oR`’’.
 Notice: A functionality similar to \summaryby\ is provided by
 \code{aggregate()} from base \R.</p>
 <pre><code class="language-r">myfun1 &lt;- function(x){
@@ -468,7 +468,7 @@ tse
 #&gt; 20    0 20.2     5.1      5.1    4   4 5.1   NA
 </code></pre>
 <p>The output reads as follows:
-\begin{itemize} \item \verb&quot;abs.tse&quot;: Absolute time since (nearest) event. \item \verb&quot;sign.tse&quot;: Signed time since (nearest) event. \item \verb&quot;ewin&quot;: Event window: Gives a symmetric window around each event. \item \verb&quot;run&quot;: The value of \verb&quot;run&quot; is set to </code>eO(1)eO<code>when the first event occurs and is increased by</code>eO(1)eO<code> at each subsequent event. \item \verb&quot;tae&quot;: Time after event. \item \verb&quot;tbe&quot;: Time before event. \end{itemize}</p>
+\begin{itemize} \item \verb&quot;abs.tse&quot;: Absolute time since (nearest) event. \item \verb&quot;sign.tse&quot;: Signed time since (nearest) event. \item \verb&quot;ewin&quot;: Event window: Gives a symmetric window around each event. \item \verb&quot;run&quot;: The value of \verb&quot;run&quot; is set to </code>oR(1)oR<code>when the first event occurs and is increased by</code>oR(1)oR<code> at each subsequent event. \item \verb&quot;tae&quot;: Time after event. \item \verb&quot;tbe&quot;: Time before event. \end{itemize}</p>
 <pre><code class="language-r">plot(sign.tse ~ tvar, data=tse, type=&quot;b&quot;)
 grid()
 rug(tse$tvar[tse$yvar == 1], col=&quot;blue&quot;,lwd=4)

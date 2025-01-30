@@ -1,5 +1,3 @@
-##ee <- expression(matrix(c(a, b, 0, b, a, b, 0, b, a), nrow = 3))
-
 #' Convert expression into function object.
 #'
 #' @param expr_ R expression.
@@ -8,27 +6,22 @@
 #'
 #' @examples
 #'
-#' ee <- expression(b1 + (b0 - b1)*exp(-k*x) + b2*x)
-#' ff <- expr_to_fun(ee)
-#'
+#' ee  <- expression(b1 + (b0 - b1)*exp(-k*x) + b2*x)
+#' ff1 <- expr_to_fun(ee)
+#' formals(ff1)
+#' 
+#' ff2 <- expr_to_fun(ee, vec_arg=TRUE)
+#' formals(ff2)
+#' formals(ff2)$length_parm
+#' formals(ff2)$names_parm |> eval()
+#' 
 #' ee <- expression(matrix(c(x1+x2, x1-x2, x1^2+x2^2, x1^3+x2^3), nrow=2))
-#' ff <- expr_to_fun(ee)
+#' ff1 <- expr_to_fun(ee)
+#' ff2 <- expr_to_fun(ee, vec_arg=TRUE)
 #'
-#' ee <- expression(
-#'   matrix(
-#'     c(8 * x1 * (4 * x1^2 - 625 * x2^2 - 2 * x2
-#'     - 1) + 9 * x1 - 20 * x2 * (x3 + 0.473809523809524 + exp(-x1 *
-#'     x2)/20) * exp(-x1 * x2) - 3 * cos(x2 * x3) - 4.5,
-#'     -20 * x1 * (x3 + 0.473809523809524 + exp(-x1 * x2)/20) * exp(-x1 * x2) + 3 * x3 *
-#'     (x1 - cos(x2 * x3)/3 - 0.5) * sin(x2 * x3) + (-1250 * x2 - 2) * (4
-#'     * x1^2 - 625 * x2^2 - 2 * x2 - 1),
-#'     3 * x2 * (x1 - cos(x2 * x3)/3 -
-#'     0.5) * sin(x2 * x3) + 400 * x3 + 189.52380952381 + 20 * exp(-x1 *
-#'     x2)), nrow = 3))
-#' f1 <- expr_to_fun(ee)
-#' f2 <- expr_to_fun(ee, vec_arg=TRUE)
-#' ## Note: how long should parm be in f2?
-#' formals(f2)$length_parm
+#' formals(ff2)
+#' formals(ff2)$length_parm
+#' formals(ff2)$names_parm |> eval()
 #' 
 #' @export
 expr_to_fun <- function(expr_, order=NULL, vec_arg=FALSE) {
@@ -69,8 +62,10 @@ expr_to_one_param_fun <- function(e, order=NULL) {
     }
 
     comb <- c(aux, e_str)    
+
+    uuu <- paste("c(",paste0(sQuote(nms, q="'"), collapse=", "), ")")
     
-    fun_str <- sprintf("function(parm, length_parm=%d)", length(nms))
+    fun_str <- sprintf("function(parm, length_parm=%d, names_parm=%s)", length(nms), uuu)
     
     bd <- paste0("\n{ \n ", paste0(comb, collapse=";\n "), "\n}")
 

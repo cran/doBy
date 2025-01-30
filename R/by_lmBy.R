@@ -36,8 +36,6 @@
 #' coef(summary(bb))
 #' coef(summary(bb), simplify=TRUE)
 
-
-
 #' @export
 #' @rdname by-lmby
 lm_by <- function (data, formula, id=NULL, ...) {
@@ -48,8 +46,6 @@ lm_by <- function (data, formula, id=NULL, ...) {
     cl[[1]] <- as.name("lmBy")
     eval(cl)
 }
-
-
 
 #' @export
 #' @rdname by-lmby
@@ -146,8 +142,9 @@ coef.lmBy <- function(object, augment=FALSE, ...){
 fitted.lmBy <- function(object, augment=FALSE, ...){
   ans <- lapply(object, fitted)
   if (augment) {
-    ans <- mapply(function(a,b){data.frame(.fit=a,b)}, ans, getBy(object, "dataList"),
-                  SIMPLIFY=FALSE)
+      ans <- mapply(function(a,b){
+          data.frame(.fit=a,b)
+      }, ans, getBy(object, "dataList"), SIMPLIFY=FALSE)
   }
   ans
 }
@@ -156,8 +153,9 @@ fitted.lmBy <- function(object, augment=FALSE, ...){
 residuals.lmBy <- function(object, augment=FALSE, ...){
   ans <- lapply(object, residuals)
   if (augment) {
-    ans <- mapply(function(a,b){data.frame(.fit=a,b)}, ans, getBy(object, "dataList"),
-                  SIMPLIFY=FALSE)
+      ans <- mapply(function(a,b){
+          data.frame(.fit=a,b)
+      }, ans, getBy(object, "dataList"), SIMPLIFY=FALSE)
   }
   ans
 }
