@@ -7,7 +7,7 @@
 \format{
 This data frame contains:
 \describe{
-\item{species:}{Species, see details}
+\item{species:}{Species, (exis, nius), see details}
 \item{temp:}{temperature}
 \item{pps:}{pulse per second}
 }
@@ -19,15 +19,16 @@ crickets
 Mating songs of male tree crickets.
 }
 \details{
-Walker (1962) studied the mating songs of male
-tree crickets. Each wingstroke by a cricket produces a pulse of
-song, and females may use the number of pulses per second to
-identify males of the correct species. Walker (1962) wanted to
-know whether the chirps of the crickets Oecanthus
-exclamationis and Oecanthus niveus had different pulse
-rates. See \url{https://www.biostathandbook.com/} for
-details.  He measured the pulse rate of the crickets (variable
-\code{pps}) at a variety of temperatures (\code{temp}):
+Walker (1962) studied the mating songs of male tree crickets. Each
+wingstroke by a cricket produces a pulse of song, and females may
+use the number of pulses per second to identify males of the
+correct species. Walker (1962) wanted to know whether the chirps
+of the crickets Oecanthus exclamationis (abbreviated exis) and
+Oecanthus niveus (abbreviated nius) had different pulse rates. See
+\url{https://www.biostathandbook.com/} for details.  (The
+abbreviations are made from the the first two and last two letters
+of the species.) He measured the pulse rate of the crickets
+(variable \code{pps}) at a variety of temperatures (\code{temp}):
 }
 \examples{
 	

@@ -1,11 +1,92 @@
+##' @title Berkeley Growth Study data
+##' @description dataframe with heights of 39 boys and 54 girls from
+##'     age 1 to 18 and the ages at which they were collected.
+##'
+##' Format:
+##'
+##' gender: Gender of child
+##' age: Age at time of data recordning
+##' subject: Idenfication for each child
+##' height: Height of child
+##'
+##'
+##' @details Notice that the ages are not equally spaced. Data are
+##'     taken from the fda package (growth) but put in long format
+##'     here.
+##'
+##' @references
+##'     Ramsay, James O., Hooker, Giles, and Graves, Spencer (2009),
+##'     _Functional data analysis with R and Matlab_, Springer, New York.
+##'
+##'     Ramsay, James O., and Silverman, Bernard W. (2005), _Functional
+##'     Data Analysis, 2nd ed._, Springer, New York.
+##'
+##'     Ramsay, James O., and Silverman, Bernard W. (2002), _Applied
+##'     Functional Data Analysis_, Springer, New York.
+##'
+##'     Tuddenham, R. D., and Snyder, M. M. (1954) "Physical growth of
+##'     California boys and girls from birth to age 18", _University of
+##'     California Publications in Child Development_, 1, 183-364.
+##'
+##'
+"child_growth"     
+
+
+
+#' Chemical composition of wine
+#' 
+#' Using chemical analysis determine the origin of wines
+#' 
+#' Data comes from the UCI Machine Learning Repository. The grape variety
+#' \code{Cult} is the class identifier.  
+#' @concept dataset
+#' @name data-wine
+#' @docType data
+#' @format A data frame with 178 observations on the following 14 variables.
+#'   \describe{
+#'   \item{\code{Cult}}{a factor with levels \code{v1} \code{v2}
+#'     \code{v3}: 3 different graph varieties}
+#'   \item{\code{Alch}}{Alcohol}
+#'   \item{\code{Mlca}}{Malic acid}
+#'   \item{\code{Ash}}{Ash}
+#'   \item{\code{Aloa}}{Alcalinity of ash}
+#'   \item{\code{Mgns}}{Magnesium}
+#'   \item{\code{Ttlp}}{Total phenols}
+#'   \item{\code{Flvn}}{Flavanoids}
+#'   \item{\code{Nnfp}}{Nonflavanoid phenols}
+#'   \item{\code{Prnt}}{Proanthocyanins}
+#'   \item{\code{Clri}}{Color intensity}
+#'   \item{\code{Hue}}{Hue}
+#'   \item{\code{Oodw}}{OD280/OD315 of diluted wines}
+#'   \item{\code{Prln}}{Proline}
+#' }
+#' 
+#' @references See references at
+#'   \url{https://archive.ics.uci.edu/ml/datasets/Wine/}
+#'
+#' @source Frank, A. & Asuncion, A. (2010). UCI Machine Learning
+#'     Repository \url{https://archive.ics.uci.edu/ml/}. Irvine, CA:
+#'     University of California, School of Information and Computer
+#'     Science.
+#'
+#' @keywords datasets
+#' @usage data(wine)
+#' @examples
+#' 
+#' data(wine)
+#' ## maybe str(wine) ; plot(wine) ...
+#' 
+"wine"
+
+
 #' @title income data
-#' @description Data on income, years of educations and ethnicity.
+#' @description Data on income, years of educations and ethnicity for a samle of adult Americans aged over 25. The year of sampling is not avalable in the source.
 #' @name income
 #' @docType data
 #' @format This data frame contains:
 #' \describe{
-#' \item{inc:}{Income: Yearly income.}
-#' \item{educ:}{Education: Number of years of education.}
+#' \item{inc:}{Income: Yearly income (thousands of dollars).}
+#' \item{educ:}{Education: Number of years of education (12=high school graduate, 16=college graduate).}
 #' \item{race:}{Racial-Ethnic group: "b" (black), "h" (hispanic) and "w" (white).}
 #' }
 #' @keywords datasets
@@ -27,7 +108,7 @@
 #'     different synthetic materials, a standard material A and a
 #'     cheaper material B.
 #' 
-#' @name income
+#' @name shoes
 #' @docType data
 #' @format This data frame contains:
 #' \describe{
@@ -43,37 +124,31 @@
 "shoes"
 
 
-
-
-
-
 #' @title crickets data
-#'
 #' @description Mating songs of male tree crickets.
-#'
 #' @name crickets
 #'
 #' @docType data
 #' @format This data frame contains:
 #' \describe{
-#' \item{species:}{Species, see details}
+#' \item{species:}{Species, (exis, nius), see details}
 #' \item{temp:}{temperature}
 #' \item{pps:}{pulse per second}
 #' }
 #' @keywords datasets
 #'
-#
 #' @details
 #'
-#'  Walker (1962) studied the mating songs of male
-#'  tree crickets. Each wingstroke by a cricket produces a pulse of
-#'  song, and females may use the number of pulses per second to
-#'  identify males of the correct species. Walker (1962) wanted to
-#'  know whether the chirps of the crickets Oecanthus
-#'  exclamationis and Oecanthus niveus had different pulse
-#'  rates. See \url{https://www.biostathandbook.com/} for
-#'  details.  He measured the pulse rate of the crickets (variable
-#'  `pps`) at a variety of temperatures (`temp`):
+#'  Walker (1962) studied the mating songs of male tree crickets. Each
+#'  wingstroke by a cricket produces a pulse of song, and females may
+#'  use the number of pulses per second to identify males of the
+#'  correct species. Walker (1962) wanted to know whether the chirps
+#'  of the crickets Oecanthus exclamationis (abbreviated exis) and
+#'  Oecanthus niveus (abbreviated nius) had different pulse rates. See
+#'  \url{https://www.biostathandbook.com/} for details.  (The
+#'  abbreviations are made from the the first two and last two letters
+#'  of the species.) He measured the pulse rate of the crickets
+#'  (variable `pps`) at a variety of temperatures (`temp`):
 #'
 #' @examples
 #' 	

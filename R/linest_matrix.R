@@ -177,7 +177,7 @@ summary.linest_matrix_class <- function(object, ...){
 ## This is the workhorse for generating the "contrast matrix"
 #' @export
 #' @rdname linest-matrix
-get_linest_list <- function(object, effect=NULL, at=NULL){
+get_linest_list <- function(object, effect=NULL, at=NULL) {
 
     pr <- FALSE
     ##cat(".get_linest_list\n")
@@ -201,6 +201,7 @@ get_linest_list <- function(object, effect=NULL, at=NULL){
                         else NULL        
     } else {
         zz  <- set_xlevels(fact.lev, at=at)
+        ## print(fact.lev)
         ## print(zz)
         new.fact.lev  <- zz[c(effect, at.factor.name)]
     }
@@ -240,19 +241,29 @@ get_linest_list <- function(object, effect=NULL, at=NULL){
     {
         if(pr)cat("The general case; there are 'effect' factors or 'at' factors.\n")
         grid.data <- expand.grid(new.fact.lev)
+        ## print(grid.data)
+        
         grid.data <- as.data.frame(lapply(grid.data, as.character), stringsAsFactors=FALSE)
+
+        ## if (length( cov.ave.name ) > 0){
+        ##     ##cat("there are covariates in the model\n")
+        ##     grid.data[, cov.ave.name] <- cov.ave ## Augment with covariates
+        ## }
         
         ## nfl <<- new.fact.lev
         ## gd <<- grid.data
-        ##str(list(new.fact.lev=new.fact.lev, grid.data=grid.data))
+        str(list(new.fact.lev=new.fact.lev, grid.data=grid.data))
         
         out_list    <- list()
         for (ii in 1:nrow(grid.data)){
             config    <- grid.data[ii, ,drop=FALSE ]
+            ## print(config)
             fact.lev2 <- set_xlevels(fact.lev, at=config)
             newdata   <- expand.grid(fact.lev2)
             newdata[, cov.ave.name]  <- cov.ave
             XX             <- get_X(object, newdata=newdata, at=at)
+            ## str(list(XX=XX))
+            ## print(XX)
             out_list[[ ii ]] <- XX
         }
 

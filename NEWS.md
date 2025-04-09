@@ -1,3 +1,11 @@
+doBy v4.6.26 (Release date: 2025-04-02)
+=======================================
+
+* split_by reworked
+* datasets added
+* add_pred, add_resid, reciprocal functions added
+
+
 doBy v4.6.25 (Release date: 2025-01-29)
 =======================================
 

@@ -4,19 +4,21 @@
 \alias{plot_lm}
 \title{Plot linear model object}
 \usage{
-plot_lm(lm_fit, format = "2x2")
+plot_lm(lm_fit, format = "2x2", global_aes = NULL)
 }
 \arguments{
 \item{lm_fit}{An object of class 'lm'}
 
 \item{format}{The format of the plot (or a list of plots if format is "list")}
+
+\item{global_aes}{Currently no effect.}
 }
 \description{
 Plot linear model object
 }
 \examples{
-
-m1 <- lm(speed ~ dist, data=cars)
+data(income)
+m1 <- lm(inc ~ race + educ, data=income)
 plot_lm(m1)
 plot_lm(m1, "2x2")
 plot_lm(m1, "1x4")

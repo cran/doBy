@@ -6,24 +6,32 @@
 \alias{splitBy}
 \alias{head.splitByData}
 \alias{tail.splitByData}
+\alias{split_by.legacy}
+\alias{splitBy.legacy}
 \title{Split a data frame}
 \usage{
-split_by(data, formula, drop = TRUE)
+split_by(data, ..., omit = TRUE)
 
-splitBy(formula, data = parent.frame(), drop = TRUE)
+splitBy(formula, data, omit = TRUE)
 
 \method{head}{splitByData}(x, n = 6L, ...)
 
 \method{tail}{splitByData}(x, n = 6L, ...)
+
+split_by.legacy(data, formula, drop = TRUE)
+
+splitBy.legacy(formula, data = parent.frame(), drop = TRUE)
 }
 \arguments{
 \item{data}{A data frame}
 
-\item{formula}{Variables to split data frame by, as \code{as.quoted}
-variables, a formula or character vector.}
+\item{...}{A character vector or, right hand sided formula or a
+listing of variables.}
 
-\item{drop}{Logical indicating if levels that do not occur should
-be dropped. Deprecated; levels that do not occur are ignored.}
+\item{omit}{Logical Should variables split on be omitted from the
+output. Defaults to TRUE.}
+
+\item{formula}{A character vector or a right hand sided formula.}
 
 \item{x}{An object.}
 
@@ -33,7 +41,7 @@ lists), rows for a matrix or data frame or lines for a
 function.  If negative, all but the "n" last/first number of
 elements of "x".}
 
-\item{...}{Arguments to be passed to or from other methods.}
+\item{drop}{Obsolete}
 }
 \value{
 A list of dataframes.
@@ -45,16 +53,23 @@ formula or as a character vector.
 }
 \examples{
 
-data(dietox, package="doBy")
-splitBy(formula = ~Evit + Cu, data = dietox)
-splitBy(formula = c("Evit", "Cu"), data = dietox)
+split_by(CO2, ~Treatment+Type)
+split_by(CO2, Treatment, Type)
+split_by(CO2, c("Treatment", "Type"))
+split_by(CO2, Treatment)
+x <- CO2 |> split_by(~Treatment)
+head(x, 3)
+tail(x, 3)
 
-splitBy(~Treatment + Type, data=CO2)
+x <- CO2 |> split_by(~Treatment, omit=FALSE)
+head(x, 3)
+tail(x, 3)
+
+## The "Old" interface
+splitBy(~Treatment+Type, CO2)
+splitBy(~Treatment+Type, data=CO2)
 splitBy(c("Treatment", "Type"), data=CO2)
 
-x <- splitBy(~Treatment, data=CO2)
-head(x)
-tail(x)
 }
 \seealso{
 \code{\link{orderBy}}, \code{\link{order_by}},

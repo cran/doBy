@@ -12,14 +12,14 @@
 \alias{getBy}
 \title{List of lm objects with a common model}
 \usage{
-lm_by(data, formula, id = NULL, ...)
+lm_by(data., formula., id = NULL, ...)
 
-lmBy(formula, data, id = NULL, ...)
+lmBy(formula., data., id = NULL, ...)
 }
 \arguments{
-\item{data}{A dataframe}
+\item{data.}{A dataframe}
 
-\item{formula}{A linear model formula object of the form
+\item{formula.}{A linear model formula object of the form
 \code{y ~ x1 + ... + xn | g1 + ... + gm}.  In the formula object, \code{y} represents
 the response, \verb{x1, ..., xn} the covariates, and the grouping
 factors specifying the partitioning of the data according to

@@ -17,6 +17,7 @@
 #' @export parseGroupFormula
 parseGroupFormula <- function(form)
 {
+
     if (!inherits(form, "formula") || length(form) != 3)
         stop("formula must be a two-sided formula object")
     rhs <- form[[3]]

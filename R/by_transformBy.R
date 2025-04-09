@@ -63,7 +63,7 @@ transformBy <- function (formula, data, ...) {
         return(data)
     }
     
-    ddd <- splitBy(formula, data=data, drop=TRUE)
+    ddd <- splitBy(formula, data=data, omit=TRUE)
     ee <- lapply(ddd, function(d){
         transform2(d, ...)
     })

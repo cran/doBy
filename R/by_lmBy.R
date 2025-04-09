@@ -10,12 +10,12 @@
 #'
 #' @aliases lmBy coef.lmBy coef.summary_lmBy summary.lmBy fitted.lmBy
 #'     residuals.lmBy getBy
-#' @param formula A linear model formula object of the form
+#' @param formula. A linear model formula object of the form
 #'     `y ~ x1 + ... + xn | g1 + ... + gm`.  In the formula object, `y` represents
 #'     the response, `x1, ..., xn` the covariates, and the grouping
 #'     factors specifying the partitioning of the data according to
 #'     which different lm fits should be performed.
-#' @param data A dataframe
+#' @param data. A dataframe
 #' @param id A formula describing variables from data which are to be
 #'     available also in the output.
 #' @param \dots Additional arguments passed on to \code{lm()}.
@@ -38,43 +38,53 @@
 
 #' @export
 #' @rdname by-lmby
-lm_by <- function (data, formula, id=NULL, ...) {
+lm_by <- function (data., formula., id=NULL, ...) {
     cl <- match.call(expand.dots = TRUE)
-    cl[[2]] <- formula
-    cl[[3]] <- data
-    names(cl)[2:3] <- c("formula", "data")
+    cl[[2]] <- formula.
+    cl[[3]] <- data.
+    names(cl)[2:3] <- c("formula.", "data.")
     cl[[1]] <- as.name("lmBy")
     eval(cl)
 }
 
 #' @export
 #' @rdname by-lmby
-lmBy <- function(formula, data, id=NULL, ...){
+lmBy <- function(formula., data., id=NULL, ...){
   cl   <- match.call()
-  mff  <- parseGroupFormula(formula)
-  groupData  <- splitBy(mff$groupFormula, data=data)
-
-  mmm <- mff$model
-  mm  <- lapply(groupData, function(wd) {
-    zzz <- lm(mmm, data=wd, ...)
-    zzz$call[[2]] <- mmm
-    zzz
-  })
+  mff  <- parseGroupFormula(formula.)
+  group_data  <- splitBy(mff$groupFormula, data=data., omit=FALSE)
+    
+  form <- mff$model
+  
+  model_list  <- lapply(group_data,
+                function(wd) {
+                    zzz <- lm(form, data=wd, ...)
+                    zzz$call[[2]] <- form
+                    zzz
+                })
 
   if (!is.null(id)){
-    id.vars <- unique(c(all.vars(id), all.vars(mff$groupFormula)))
+      id.vars <- unique(c(all.vars(id),
+                          all.vars(mff$groupFormula)))
   } else {
     id.vars <- all.vars(mff$groupFormula)
   }
-  id.data <- do.call(rbind, lapply(groupData, function(wd) {wd[1, id.vars, drop=FALSE]}))
 
-  attr(mm,  "call")     <- cl
-  attr(mm,  "dataList") <- groupData
-  attr(mm,  "idData")   <- id.data	
+
+  id.data <- do.call(rbind, lapply(group_data,
+                                   function(wd) {
+                                       wd[1, id.vars, drop=FALSE]
+                                   }))
   
-  class(mm) <- "lmBy"
-  mm
+
+  attr(model_list,  "call")     <- cl
+  attr(model_list,  "dataList") <- group_data
+  attr(model_list,  "idData")   <- id.data	
+  
+  class(model_list) <- "lmBy"
+  model_list
 }
+
 
 #' @export
 print.lmBy <- function(x, ...){
@@ -115,6 +125,10 @@ coef.summary_lmBy <- function(object, simplify=FALSE, ...){
   ans
 }
 
+
+
+
+
 #' @export
 getBy <- function(object, name=c()){
   if (missing(name)) 
@@ -137,6 +151,14 @@ coef.lmBy <- function(object, augment=FALSE, ...){
   }
   ans
 }
+
+#' @export
+sigma.lmBy <- function(object, ...){
+    out <- sapply(object, sigma, ...)
+    return(out)
+}
+
+
 
 #' @export
 fitted.lmBy <- function(object, augment=FALSE, ...){

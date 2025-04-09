@@ -3,46 +3,26 @@
 \docType{data}
 \name{income}
 \alias{income}
-\alias{shoes}
 \title{income data}
 \format{
 This data frame contains:
 \describe{
-\item{inc:}{Income: Yearly income.}
-\item{educ:}{Education: Number of years of education.}
+\item{inc:}{Income: Yearly income (thousands of dollars).}
+\item{educ:}{Education: Number of years of education (12=high school graduate, 16=college graduate).}
 \item{race:}{Racial-Ethnic group: "b" (black), "h" (hispanic) and "w" (white).}
-}
-
-This data frame contains:
-\describe{
-\item{A:}{Wear, material A}
-\item{B:}{Wear, material B}
-\item{boy:}{Id of boy}
-\item{footA:}{The foot with material A}
 }
 }
 \usage{
 income
-
-shoes
 }
 \description{
-Data on income, years of educations and ethnicity.
-
-Wear of soles of shoes of materials A and B for one foot each for of ten boys.
+Data on income, years of educations and ethnicity for a samle of adult Americans aged over 25. The year of sampling is not avalable in the source.
 }
 \details{
 Variable names are as in the reference.
-
-The shoes data are measurements of the amount wear of the
-soles of shoes worn by 10 boys. The soles were made to two
-different synthetic materials, a standard material A and a
-cheaper material B.
 }
 \references{
 Agresti, A. (2024) Statistical Methods for the Social
 Sciences, Global Edition (6th edition).  ISBN-13: 9781292449197. Table 13.1
-
-Box, Hunter, Hunter (2005) Statistics for Experimenters, 2nd edition Wiley, p. 81.
 }
 \keyword{datasets}
