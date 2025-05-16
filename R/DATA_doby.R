@@ -1,3 +1,19 @@
+#' @title Height of math teachers
+#' @description Height of a sample of math teachers in Danish high
+#'     schools collected at a continued education day at Mariager Fjord Gymnasium in 2019.
+#'
+#' Format:
+#' height: Height in centimeters
+#' sex: male or female
+#'
+#' @examples
+#'
+#' aggregate(height ~  sex, data=math_teachers, FUN=mean)
+#' aggregate(height ~  sex, data=math_teachers, FUN=function(x) {c(mean=mean(x), sd=sd(x))})
+#' 
+"math_teachers"
+
+
 ##' @title Berkeley Growth Study data
 ##' @description dataframe with heights of 39 boys and 54 girls from
 ##'     age 1 to 18 and the ages at which they were collected.

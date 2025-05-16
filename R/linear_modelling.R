@@ -83,8 +83,15 @@ add_resid <- function (data, model, var = "resid", type) {
             return(stats::rstudent(model))                       
         }
 
-        return(stats::residuals(model))
+        return(stats::residuals(model, type=type))
     }
+
+    resid2.merMod <- function(model,
+                              type=c("deviance", "response")){
+        return(residuals(model, type=type))
+    }
+    
+    
     if (missing(type))
         type="working"
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="generator" content="litedown 0.6">
+<meta name="generator" content="litedown 0.7">
 <title>doby: Groupwise computations and miscellaneous utilities</title>
 <style type="text/css">
 body {
@@ -12,6 +12,8 @@ body {
   margin: auto;
   padding: 1em;
   line-height: 1.5;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 body, .abstract, code, .footnotes, footer, #refs, .caption { font-size: .9em; }
 li li { font-size: .95em; }
@@ -486,7 +488,7 @@ tse
 event occurs and is increased by \(1\) at each subsequent event.
 \item \verb”tae”: Time after event.
 \item \verb”tbe”: Time before event.
-\end{itemize}XO@uI`</p>
+\end{itemize}ib!uE`</p>
 <pre><code class="language-r">plot(sign.tse ~ tvar, data=tse, type=&quot;b&quot;)
 grid()
 rug(tse$tvar[tse$yvar == 1], col=&quot;blue&quot;,lwd=4)
